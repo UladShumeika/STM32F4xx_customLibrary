@@ -210,6 +210,14 @@ USH_peripheryStatus RCC_initHSE(void);
 USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
 
 /**
+ * @brief 	This function configures SYSCLK, HCLK and PCLKs.
+ * @param	initStructure - A pointer to USH_RCC_clocksInitTypeDef structure that contains the configuration
+ * 							information for SYSCLK, HCLK and PCLKs.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure);
+
+/**
  * @brief 	This function returns flags status.
  * @param	flags - DMA flags. This parameter can be a value of @ref USH_DMA_flags.
  * @retval	Flags status.
