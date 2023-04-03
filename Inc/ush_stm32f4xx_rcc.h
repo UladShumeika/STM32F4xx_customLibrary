@@ -148,11 +148,6 @@ typedef enum
 
 #define IS_RCC_PLLQ_VALUE(VALUE) 				   ((2U <= (VALUE)) && ((VALUE) <= 15U))
 
-#define IS_RCC_SYSCLK_TYPES(TYPE)			   	  (((TYPE) == RCC_CLOCKTYPE_SYSCLK) || \
-												   ((TYPE) == RCC_CLOCKTYPE_HCLK) 	|| \
-												   ((TYPE) == RCC_CLOCKTYPE_PCLK1) 	|| \
-												   ((TYPE) == RCC_CLOCKTYPE_PCLK2))
-
 #define IS_RCC_SYSCLK_SOURCE(SOURCE)			  (((SOURCE) == RCC_SYSCLKSOURCE_HSI) || \
 												   ((SOURCE) == RCC_SYSCLKSOURCE_HSE) || \
 												   ((SOURCE) == RCC_SYSCLKSOURCE_PLL))
