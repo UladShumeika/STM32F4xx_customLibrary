@@ -87,6 +87,42 @@ USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
 	return status;
 }
 
+/**
+ * @brief 	This function configures SYSCLK, HCLK and PCLKs.
+ * @param	initStructure - A pointer to USH_RCC_clocksInitTypeDef structure that contains the configuration
+ * 							information for SYSCLK, HCLK and PCLKs.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure)
+{
+	uint32_t startTicks = 0;
+
+	// Check parameters
+	if(initStructure == 0) return STATUS_ERROR;
+	assert_param(IS_RCC_SYSCLK_SOURCE(initStructure->SYSCLK_source));
+	assert_param(IS_RCC_HCLK_DIVIDER(initStructure->HCLK_divider));
+	assert_param(IS_RCC_APB_DIVIDER(initStructure->APB1_divider));
+	assert_param(IS_RCC_APB_DIVIDER(initStructure->APB2_divider));
+
+	// Set HCLK, PCLKs dividers
+	RCC->CFGR |= initStructure->HCLK_divider | initStructure->APB1_divider | (initStructure->APB2_divider << 3U);
+
+	// Set SYSCLK source
+	RCC->CFGR |= initStructure->SYSCLK_source;
+
+	// Wait till PLL is enabled
+	startTicks = MISC_timeoutGetTick();
+	while((uint32_t)(RCC->CFGR & RCC_CFGR_SWS) != (initStructure->SYSCLK_source << RCC_CFGR_SWS_Pos))
+	{
+		if((MISC_timeoutGetTick() - startTicks) > CLOCKSWITCH_TIMEOUT_VALUE)
+		{
+			return STATUS_TIMEOUT;
+		}
+	}
+
+	return STATUS_OK;
+}
+
 //---------------------------------------------------------------------------
 // Library Functions
 //---------------------------------------------------------------------------
