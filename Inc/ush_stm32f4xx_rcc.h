@@ -152,7 +152,7 @@ typedef enum
 												   ((SOURCE) == RCC_SYSCLKSOURCE_HSE) || \
 												   ((SOURCE) == RCC_SYSCLKSOURCE_PLL))
 
-#define IS_RCC_SYSCLK_DIVIDER(DIVIDER)			  (((DIVIDER) == RCC_SYSCLK_DIVIDER_1)   || \
+#define IS_RCC_HCLK_DIVIDER(DIVIDER)			  (((DIVIDER) == RCC_SYSCLK_DIVIDER_1)   || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_2)   || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_4)   || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_8)   || \
@@ -163,11 +163,11 @@ typedef enum
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_256) || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_512))
 
-#define IS_RCC_PCLK_DIVIDER(DIVIDER)			 (((DIVIDER) == RCC_HCLK_DIVIDER_1)  || \
-												  ((DIVIDER) == RCC_HCLK_DIVIDER_2)  || \
-												  ((DIVIDER) == RCC_HCLK_DIVIDER_4)  || \
-												  ((DIVIDER) == RCC_HCLK_DIVIDER_8)	 || \
-												  ((DIVIDER) == RCC_HCLK_DIVIDER_16))
+#define IS_RCC_APB_DIVIDER(DIVIDER)			  	  (((DIVIDER) == RCC_HCLK_DIVIDER_1) || \
+												   ((DIVIDER) == RCC_HCLK_DIVIDER_2) || \
+												   ((DIVIDER) == RCC_HCLK_DIVIDER_4) || \
+												   ((DIVIDER) == RCC_HCLK_DIVIDER_8) || \
+												   ((DIVIDER) == RCC_HCLK_DIVIDER_16))
 
 //---------------------------------------------------------------------------
 // Other macros
