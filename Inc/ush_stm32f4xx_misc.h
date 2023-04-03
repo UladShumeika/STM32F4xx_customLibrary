@@ -135,6 +135,10 @@ void MISC_NVIC_EnableIRQ(IRQn_Type IRQn);
   */
 void MISC_NVIC_DisableIRQ(IRQn_Type IRQn);
 
+//---------------------------------------------------------------------------
+// The section of FLASH memory
+//---------------------------------------------------------------------------
+
 /**
   * @brief  This function enables or disables the prefetch buffer.
   * @param  newState - A new state of the prefetch buffer.
