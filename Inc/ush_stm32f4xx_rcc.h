@@ -42,7 +42,7 @@ typedef enum
 {
 	RCC_SYSCLKSOURCE_HSI		= RCC_CFGR_SWS_HSI,		/* HSI oscillator selected as system clock */
 	RCC_SYSCLKSOURCE_HSE		= RCC_CFGR_SWS_HSE,		/* HSE oscillator selected as system clock*/
-	RCC_SYSCLKSOURCE_PLLCLK		= RCC_CFGR_SWS_PLL		/* PLL selected as system clock	*/
+	RCC_SYSCLKSOURCE_PLL		= RCC_CFGR_SWS_PLL		/* PLL selected as system clock	*/
 } USH_RCC_SYSCLK_sources;
 
 /**
@@ -155,7 +155,7 @@ typedef enum
 
 #define IS_RCC_SYSCLK_SOURCE(SOURCE)			  (((SOURCE) == RCC_SYSCLKSOURCE_HSI) || \
 												   ((SOURCE) == RCC_SYSCLKSOURCE_HSE) || \
-												   ((SOURCE) == RCC_SYSCLKSOURCE_PLLCLK))
+												   ((SOURCE) == RCC_SYSCLKSOURCE_PLL))
 
 #define IS_RCC_SYSCLK_DIVIDER(DIVIDER)			  (((DIVIDER) == RCC_SYSCLK_DIVIDER_1)   || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_2)   || \
