@@ -188,25 +188,11 @@ typedef enum
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
-#define IS_RCC_HSE_STATE(STATE)			           (((STATE) == RCC_HSE_OFF)	|| \
-													((STATE) == RCC_HSE_ON)	  	|| \
-													((STATE) == RCC_HSE_BYPASS))
-
 #define IS_RCC_FLAGS(FLAG)						   (((FLAG) == RCC_FLAG_HSIRDY)		|| \
 													((FLAG) == RCC_FLAG_HSERDY) 	|| \
 													((FLAG) == RCC_FLAG_PLLRDY) 	|| \
 													((FLAG) == RCC_FLAG_PLLI2SRDY) 	|| \
 													((FLAG) == RCC_FLAG_PLLSAIRDY))
-
-#define IS_RCC_OSCTYPES(OSCTYPE)				   (((OSCTYPE) == RCC_OSCILLATORTYPE_NONE) || \
-													((OSCTYPE) == RCC_OSCILLATORTYPE_HSE)  || \
-													((OSCTYPE) == RCC_OSCILLATORTYPE_HSI)  || \
-													((OSCTYPE) == RCC_OSCILLATORTYPE_LSE)  || \
-													((OSCTYPE) == RCC_OSCILLATORTYPE_LSI))
-
-#define IS_RCC_PLL_STATE(STATE)					   (((STATE) == RCC_PLL_NONE) || \
-													((STATE) == RCC_PLL_ON)   || \
-													((STATE) == RCC_PLL_OFF))
 
 #define IS_RCC_PLL_SOURCE(SOURCE)				   (((SOURCE) == RCC_PLLSOURCE_HSI) || \
 													((SOURCE) == RCC_PLLSOURCE_HSE))
