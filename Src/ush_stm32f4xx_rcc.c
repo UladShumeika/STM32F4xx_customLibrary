@@ -19,8 +19,9 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
-#define HSE_STARTUP_TIMEOUT					(100U)	// 100 ms
-#define PLL_TIMEOUT							(2U)	// 2 ms
+#define HSE_TIMEOUT_VALUE						(100U)	// 100 ms
+#define PLL_TIMEOUT_VALUE						(2U)	// 2 ms
+#define CLOCKSWITCH_TIMEOUT_VALUE				(5000U) // 5 s
 
 //---------------------------------------------------------------------------
 // Static function prototypes
@@ -64,7 +65,7 @@ USH_peripheryStatus RCC_oscInit(USH_RCC_oscInitTypeDef *oscInitStructure)
 					RCC->CR &= ~RCC_CR_HSEON;
 
 					// Wait till HSE is disabled
-					if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_STARTUP_TIMEOUT, RESET))
+					if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_TIMEOUT_VALUE, RESET))
 					{
 						return STATUS_TIMEOUT;
 					}
@@ -74,7 +75,7 @@ USH_peripheryStatus RCC_oscInit(USH_RCC_oscInitTypeDef *oscInitStructure)
 				RCC->CR |= (RCC_CR_HSEON | RCC_CR_HSEBYP);
 
 				// Wait till HSE is enabled
-				if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_STARTUP_TIMEOUT, SET))
+				if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_TIMEOUT_VALUE, SET))
 				{
 					return STATUS_TIMEOUT;
 				}
@@ -84,7 +85,7 @@ USH_peripheryStatus RCC_oscInit(USH_RCC_oscInitTypeDef *oscInitStructure)
 				RCC->CR |= RCC_CR_HSEON;
 
 				// Wait till HSE is enabled
-				if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_STARTUP_TIMEOUT, SET))
+				if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_TIMEOUT_VALUE, SET))
 				{
 					return STATUS_TIMEOUT;
 				}
@@ -121,7 +122,7 @@ USH_peripheryStatus RCC_oscInit(USH_RCC_oscInitTypeDef *oscInitStructure)
 			RCC->CR &= ~RCC_CR_PLLON;
 
 			// Wait till PLL is disabled
-			if(!RCC_waitFlag(RCC_FLAG_PLLRDY, PLL_TIMEOUT, RESET)) return STATUS_TIMEOUT;
+			if(!RCC_waitFlag(RCC_FLAG_PLLRDY, PLL_TIMEOUT_VALUE, RESET)) return STATUS_TIMEOUT;
 
 			// Configure PLL
 			RCC->CFGR = (oscInitStructure->PLL.PLL_source 										| \
@@ -137,7 +138,7 @@ USH_peripheryStatus RCC_oscInit(USH_RCC_oscInitTypeDef *oscInitStructure)
 			startTicks = MISC_timeoutGetTick();
 			while(RCC_getFlagStatus(RCC_FLAG_PLLRDY) == RESET)
 			{
-				if((MISC_timeoutGetTick() - startTicks) > PLL_TIMEOUT)
+				if((MISC_timeoutGetTick() - startTicks) > PLL_TIMEOUT_VALUE)
 				{
 					return STATUS_TIMEOUT;
 				}
