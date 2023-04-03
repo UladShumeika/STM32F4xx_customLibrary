@@ -106,6 +106,16 @@ typedef enum
 	FLASH_LATENCY_15,		/* Flash fifteen latency cycle */
 } USH_FLASH_latency;
 
+/**
+ * @brief System tick time bases enumeration.
+ */
+typedef enum
+{
+	SYS_TICK_1MS	= 1000UL,	/* System timer period 1 ms */
+	SYS_TICK_10MS	= 100UL,	/* System timer period 10 ms */
+	SYS_TICK_100MS	= 10UL		/* System timer period 100 ms */
+} USH_SYSTICK_timeBases;
+
 //---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
