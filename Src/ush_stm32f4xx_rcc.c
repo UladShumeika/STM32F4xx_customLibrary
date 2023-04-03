@@ -49,6 +49,44 @@ USH_peripheryStatus RCC_initHSE(void)
 	return status;
 }
 
+/**
+ * @brief 	This function initializes PLL.
+ * @param	initStructure - A pointer to USH_RCC_PLL_settingsTypeDef structure that contains the configuration
+ * 							information for PLL.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
+{
+	USH_peripheryStatus status = STATUS_OK;
+
+	// Check parameters
+	if(initStructure == 0) return STATUS_ERROR;
+	assert_param(IS_RCC_PLL_SOURCE(initStructure->PLL_source));
+	assert_param(IS_RCC_PLLM_VALUE(initStructure->PLLM));
+	assert_param(IS_RCC_PLLN_VALUE(initStructure->PLLN));
+	assert_param(IS_RCC_PLLP_VALUE(initStructure->PLLP));
+	assert_param(IS_RCC_PLLQ_VALUE(initStructure->PLLQ));
+
+	// Configure PLL if it's disabled
+	if(RCC_getFlagStatus(RCC_FLAG_PLLRDY) == RESET)
+	{
+		// Configure PLL
+		RCC->CFGR = initStructure->PLL_source 									 | \
+				    initStructure->PLLM 										 | \
+				    (initStructure->PLLN << RCC_PLLCFGR_PLLN_Pos) 				 | \
+				    (((initStructure->PLLP >> 1U) - 1U) << RCC_PLLCFGR_PLLP_Pos) | \
+				    initStructure->PLLQ << RCC_PLLCFGR_PLLQ_Pos;
+
+		// Enable Main PLL
+		RCC->CR |= RCC_CR_PLLON;
+
+		// Wait till PLL is enabled
+		if(!RCC_waitFlag(RCC_FLAG_PLLRDY, PLL_TIMEOUT_VALUE, SET)) status = STATUS_TIMEOUT;
+	}
+
+	return status;
+}
+
 
 
 /**
