@@ -276,6 +276,14 @@ typedef enum
 //---------------------------------------------------------------------------
 
 /**
+ * @brief 	This function initializes HSE oscillator.
+ * @retval	The periphery status.
+ */
+USH_peripheryStatus RCC_initHSE(void);
+
+
+
+/**
  * @brief 	This function initializes the selected oscillator and initializes PLL as needed.
  * @note	In this version, only HSE is configured.
  * @param 	oscInitStructure - A pointer to a USH_RCC_oscInitTypeDef structure that contains the configuration

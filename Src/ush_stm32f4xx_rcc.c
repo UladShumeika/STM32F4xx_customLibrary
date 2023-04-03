@@ -33,6 +33,25 @@ static USH_peripheryStatus RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, Fla
 //---------------------------------------------------------------------------
 
 /**
+ * @brief 	This function initializes HSE oscillator.
+ * @retval	The periphery status.
+ */
+USH_peripheryStatus RCC_initHSE(void)
+{
+	USH_peripheryStatus status = STATUS_OK;
+
+	// Enable HSE oscillator
+	RCC->CR |= RCC_CR_HSEON;
+
+	// Wait till HSE is enabled
+	if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_TIMEOUT_VALUE, SET)) status =  STATUS_TIMEOUT;
+
+	return status;
+}
+
+
+
+/**
  * @brief 	This function initializes the selected oscillator and initializes PLL as needed.
  * @note	In this version, only HSE is configured.
  * @param 	oscInitStructure - A pointer to a USH_RCC_oscInitTypeDef structure that contains the configuration
