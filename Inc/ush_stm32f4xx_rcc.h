@@ -157,7 +157,6 @@ typedef enum
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_4)   || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_8)   || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_16)  || \
-												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_32)  || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_64)  || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_128) || \
 												   ((DIVIDER) == RCC_SYSCLK_DIVIDER_256) || \
