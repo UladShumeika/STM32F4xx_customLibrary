@@ -142,8 +142,23 @@ typedef enum
 // External function prototypes
 //---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+// The section of power controller
+//---------------------------------------------------------------------------
+
 /**
- * @brief 	This function sets up TIM14 timer to check for timeout.
+ * @brief 	This function configures the main internal regulator output voltage.
+ * @param 	voltageScaling - specifies the regulator output voltage to achieve
+ * 							 a tradeoff between performance and power consumption
+ * 							 when the device does not operate at the maximum frequency
+ * 							 (refer to the datasheets for more details).
+ * @retval 	None.
+ */
+void MISC_PWR_mainRegulatorModeConfig(USH_PWR_voltageScaling voltageScaling);
+
+/**
+ */
+/**
  * @retval	None.
  */
 void MISC_timeoutTimer(void);
