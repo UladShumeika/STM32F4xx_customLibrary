@@ -281,7 +281,13 @@ typedef enum
  */
 USH_peripheryStatus RCC_initHSE(void);
 
-
+/**
+ * @brief 	This function initializes PLL.
+ * @param	initStructure - A pointer to USH_RCC_PLL_settingsTypeDef structure that contains the configuration
+ * 							information for PLL.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
 
 /**
  * @brief 	This function initializes the selected oscillator and initializes PLL as needed.
