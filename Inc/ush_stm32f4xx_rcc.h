@@ -27,40 +27,6 @@
 //---------------------------------------------------------------------------
 
 /**
- * @brief Oscillator types enumeration.
- */
-typedef enum
-{
-	RCC_OSCILLATORTYPE_NONE		= 0x00UL,	/* No oscillator will be configured */
-	RCC_OSCILLATORTYPE_HSE		= 0x01UL,	/* HSE oscillator will be configured */
-	RCC_OSCILLATORTYPE_HSI		= 0x02UL,	/* HSI oscillator will be configured */
-	RCC_OSCILLATORTYPE_LSE		= 0x04UL,	/* LSE oscillator will be configured */
-	RCC_OSCILLATORTYPE_LSI		= 0x08UL	/* LSI oscillator will be configured */
-} USH_RCC_oscillatorTypes;
-
-/**
- * @brief HSE states enumeration
- * @note  Not used in this version, added for future features.
- */
-typedef enum
-{
-	RCC_HSE_OFF		= 0U,	/* HSE clock disabled */
-	RCC_HSE_ON,				/* HSE clock enabled */
-	RCC_HSE_BYPASS			/* HSE clock bypass */
-} USH_RCC_HSE_states;
-
-/**
- * @brief RCC PLL states enumeration.
- * @note  Not used in this version, added for future features.
- */
-typedef enum
-{
-	RCC_PLL_NONE 	= 0U,	/* PLL is not used */
-	RCC_PLL_ON,				/* PLL enabled */
-	RCC_PLL_OFF				/* PLL disabled */
-} USH_RCC_PLL_states;
-
-/**
  * @brief RCC PLL source enumeration.
  */
 typedef enum
@@ -68,25 +34,6 @@ typedef enum
 	RCC_PLLSOURCE_HSI	= RCC_PLLCFGR_PLLSRC_HSI,	/* HSI oscillator clock selected as PLL and PLLI2S clock entry */
 	RCC_PLLSOURCE_HSE	= RCC_PLLCFGR_PLLSRC_HSE	/* HSE oscillator clock selected as PLL and PLLI2S clock entry */
 } USH_RCC_PLL_source;
-
-/**
- * @brief RCC PLL settings structure definition.
- */
-typedef struct
-{
-	USH_RCC_PLL_states PLL_state;		/* PLL states. This parameter can be a value of @ref USH_RCC_PLL_states. */
-
-	USH_RCC_PLL_source PLL_source;		/* PLL source. This parameter can be a value of @ref USH_RCC_PLL_source. */
-
-	uint32_t PLLM;						/* Division factor for the main PLL (PLL) and audio PLL (PLLI2S) input clock. */
-
-	uint32_t PLLN;						/* Main PLL (PLL) multiplication factor for VCO. */
-
-	uint32_t PLLP;						/* Main PLL (PLL) division factor for main system clock. */
-
-	uint32_t PLLQ;						/* Main PLL (PLL) division factor for USB OTG FS, SDIO and random number generator clocks. */
-
-} USH_RCC_PLL_settingsTypeDef;
 
 /**
  * @brief RCC system clock type enumeration.
@@ -137,19 +84,26 @@ typedef enum
 	RCC_HCLK_DIVIDER_16		= RCC_CFGR_PPRE1_DIV16		/* HCLK divided by 16 */
 } USH_RCC_APB1_2clkDividerts;
 
+
+
 /**
- * @brief RCC oscillator initialization structure definition.
+ * @brief RCC PLL settings structure definition.
  */
 typedef struct
 {
-	USH_RCC_oscillatorTypes OscillatorTypes;	/* The oscillators to be configured.
-	 	 	 	 	 	 	 	 	 	 	 	   This parameter can be a value of @ref USH_RCC_oscillatorTypes. */
+	USH_RCC_PLL_source PLL_source;		/* PLL source. This parameter can be a value of @ref USH_RCC_PLL_source. */
 
-	USH_RCC_HSE_states HSE_state;				/* HSE state. This parameter can be a value of @ref USH_HSE_states. */
+	uint32_t PLLM;						/* Division factor for the main PLL (PLL) and audio PLL (PLLI2S) input clock. */
 
-	USH_RCC_PLL_settingsTypeDef PLL;			/* PLL settings structure. */
+	uint32_t PLLN;						/* Main PLL (PLL) multiplication factor for VCO. */
 
-} USH_RCC_oscInitTypeDef;
+	uint32_t PLLP;						/* Main PLL (PLL) division factor for main system clock. */
+
+	uint32_t PLLQ;						/* Main PLL (PLL) division factor for USB OTG FS, SDIO and random number generator clocks. */
+
+} USH_RCC_PLL_settingsTypeDef;
+
+
 
 /**
   * @brief RCC System, AHB and APB busses clock configuration structure definition.
