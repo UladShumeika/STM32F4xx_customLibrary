@@ -159,9 +159,10 @@ void MISC_PWR_mainRegulatorModeConfig(USH_PWR_voltageScaling voltageScaling);
 /**
  */
 /**
+ * @brief 	This function initializes TIM14 timer to check for timeout.
  * @retval	None.
  */
-void MISC_timeoutTimer(void);
+void MISC_timeoutTimerInit(void);
 
 /**
  * @brief 	This function increments a variable "timeoutTicks".
