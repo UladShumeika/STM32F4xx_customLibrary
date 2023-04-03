@@ -128,10 +128,10 @@ typedef enum
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
-#define IS_RCC_FLAGS(FLAG)						   (((FLAG) == RCC_FLAG_HSIRDY)		|| \
-													((FLAG) == RCC_FLAG_HSERDY) 	|| \
-													((FLAG) == RCC_FLAG_PLLRDY) 	|| \
-													((FLAG) == RCC_FLAG_PLLI2SRDY) 	|| \
+#define IS_RCC_FLAGS(FLAG)						   (((FLAG) == RCC_FLAG_HSIRDY)	   || \
+													((FLAG) == RCC_FLAG_HSERDY)    || \
+													((FLAG) == RCC_FLAG_PLLRDY)    || \
+													((FLAG) == RCC_FLAG_PLLI2SRDY) || \
 													((FLAG) == RCC_FLAG_PLLSAIRDY))
 
 #define IS_RCC_PLL_SOURCE(SOURCE)				   (((SOURCE) == RCC_PLLSOURCE_HSI) || \
