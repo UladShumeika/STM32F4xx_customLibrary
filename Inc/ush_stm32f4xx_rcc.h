@@ -290,15 +290,6 @@ USH_peripheryStatus RCC_initHSE(void);
 USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
 
 /**
- * @brief 	This function initializes the selected oscillator and initializes PLL as needed.
- * @note	In this version, only HSE is configured.
- * @param 	oscInitStructure - A pointer to a USH_RCC_oscInitTypeDef structure that contains the configuration
- * 							   information for oscillators and PLL.
- * @retval	The periphery status.
- */
-USH_peripheryStatus RCC_oscInit(USH_RCC_oscInitTypeDef *oscInitStructure);
-
-/**
  * @brief 	This function returns flags status.
  * @param	flags - DMA flags. This parameter can be a value of @ref USH_DMA_flags.
  * @retval	Flags status.
