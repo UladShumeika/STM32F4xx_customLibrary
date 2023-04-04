@@ -98,6 +98,24 @@ typedef struct
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
+#define IS_CAN_BAUDRATE_PRESCALER(PRESCALER) 	(((PRESCALER) >= 1U) && ((PRESCALER) <= 1024U))
+
+#define IS_CAN_TS1(TQ) 							(((TQ) == CAN_TS1_1TQ)  || ((TQ) == CAN_TS1_2TQ)  || \
+                         	 	 	 	 	 	 ((TQ) == CAN_TS1_3TQ)  || ((TQ) == CAN_TS1_4TQ)  || \
+												 ((TQ) == CAN_TS1_5TQ)  || ((TQ) == CAN_TS1_6TQ)  || \
+												 ((TQ) == CAN_TS1_7TQ)  || ((TQ) == CAN_TS1_8TQ)  || \
+												 ((TQ) == CAN_TS1_9TQ)  || ((TQ) == CAN_TS1_10TQ) || \
+												 ((TQ) == CAN_TS1_11TQ) || ((TQ) == CAN_TS1_12TQ) || \
+												 ((TQ) == CAN_TS1_13TQ) || ((TQ) == CAN_TS1_14TQ) || \
+												 ((TQ) == CAN_TS1_15TQ) || ((TQ) == CAN_TS1_16TQ))
+
+#define IS_CAN_TS2(TQ) 							(((TQ) == CAN_TS1_1TQ)  || ((TQ) == CAN_TS1_2TQ)  || \
+                         	 	 	 	 	 	 ((TQ) == CAN_TS1_3TQ)  || ((TQ) == CAN_TS1_4TQ)  || \
+												 ((TQ) == CAN_TS1_5TQ)  || ((TQ) == CAN_TS1_6TQ)  || \
+												 ((TQ) == CAN_TS1_7TQ)  || ((TQ) == CAN_TS1_8TQ)
+
+#define IS_CAN_SJW(TQ) 							(((TQ) == CAN_SJW_1TQ) || ((TQ) == CAN_SJW_2TQ) || \
+                         	 	 	 	 	 	 ((TQ) == CAN_SJW_3TQ) || ((TQ) == CAN_SJW_4TQ))
 
 //---------------------------------------------------------------------------
 // External function prototypes
