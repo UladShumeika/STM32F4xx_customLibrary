@@ -77,6 +77,24 @@ typedef enum
 
 
 
+/**
+ * @brief CAN timings structure definition.
+ */
+typedef struct
+{
+	uint16_t BaudratePrescaler;						/* Baud rate prescaler. This parameter must not exceed 1024. */
+
+	USH_CAN_timeSegment1 TimeSegment1;				/* Time segment 1.
+	 	 	 	 	 	 	 	 	 	 	 	 	   This parameter can be a value of @ref USH_CAN_timeSegment1. */
+
+	USH_CAN_timeSegment2 TimeSegment2;				/* Time segment 2.
+													   This parameter can be a value of @ref USH_CAN_timeSegment2. */
+
+	USH_CAN_resynchJimpWidth ResynchJumpWidth;		/* Resynchronization jump width.
+													   This parameter can be a value of @ref USH_CAN_resynchJimpWidth. */
+
+} USH_CAN_timingsTypeDef;
+
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
