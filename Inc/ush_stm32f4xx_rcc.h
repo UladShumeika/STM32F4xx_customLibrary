@@ -40,9 +40,9 @@ typedef enum
  */
 typedef enum
 {
-	RCC_SYSCLKSOURCE_HSI		= RCC_CFGR_SWS_HSI,		/* HSI oscillator selected as system clock */
-	RCC_SYSCLKSOURCE_HSE		= RCC_CFGR_SWS_HSE,		/* HSE oscillator selected as system clock*/
-	RCC_SYSCLKSOURCE_PLL		= RCC_CFGR_SWS_PLL		/* PLL selected as system clock	*/
+	RCC_SYSCLKSOURCE_HSI		= RCC_CFGR_SW_HSI,		/* HSI oscillator selected as system clock */
+	RCC_SYSCLKSOURCE_HSE		= RCC_CFGR_SW_HSE,		/* HSE oscillator selected as system clock*/
+	RCC_SYSCLKSOURCE_PLL		= RCC_CFGR_SW_PLL		/* PLL selected as system clock	*/
 } USH_RCC_SYSCLK_sources;
 
 /**
