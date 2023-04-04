@@ -71,11 +71,11 @@ USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
 	if(RCC_getFlagStatus(RCC_FLAG_PLLRDY) == RESET)
 	{
 		// Configure PLL
-		RCC->CFGR = initStructure->PLL_source 									 | \
-				    initStructure->PLLM 										 | \
-				    (initStructure->PLLN << RCC_PLLCFGR_PLLN_Pos) 				 | \
-				    (((initStructure->PLLP >> 1U) - 1U) << RCC_PLLCFGR_PLLP_Pos) | \
-				    initStructure->PLLQ << RCC_PLLCFGR_PLLQ_Pos;
+		RCC->PLLCFGR = initStructure->PLL_source								 	| \
+				       initStructure->PLLM 										 	| \
+				       (initStructure->PLLN << RCC_PLLCFGR_PLLN_Pos) 				| \
+				       (((initStructure->PLLP >> 1U) - 1U) << RCC_PLLCFGR_PLLP_Pos) | \
+				       initStructure->PLLQ << RCC_PLLCFGR_PLLQ_Pos;
 
 		// Enable Main PLL
 		RCC->CR |= RCC_CR_PLLON;
