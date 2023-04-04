@@ -181,6 +181,48 @@ typedef enum
 // Enable or disable peripheral clocking
 //---------------------------------------------------------------------------
 
+/*
+ * GPIOA clock enable/disable
+ */
+#define __RCC_GPIOAclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN)
+#define __RCC_GPIOAclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOARST)
+
+/*
+ * GPIOB clock enable/disable
+ */
+#define __RCC_GPIOBclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN)
+#define __RCC_GPIOBclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOBRST)
+
+/*
+ * GPIOC clock enable/disable
+ */
+#define __RCC_GPIOCclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN)
+#define __RCC_GPIOCclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOCRST)
+
+/*
+ * GPIOD clock enable/disable
+ */
+#define __RCC_GPIODclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN)
+#define __RCC_GPIODclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIODRST)
+
+/*
+ * GPIOE clock enable/disable
+ */
+#define __RCC_GPIOEclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN)
+#define __RCC_GPIOEclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOERST)
+
+/*
+ * GPIOF clock enable/disable
+ */
+#define __RCC_GPIOFclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOFEN)
+#define __RCC_GPIOFclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOFRST)
+
+/*
+ * GPIOG clock enable/disable
+ */
+#define __RCC_GPIOGclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN)
+#define __RCC_GPIOGclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOGRST)
+
 /**
  * @brief Power interface clock enable
  */
