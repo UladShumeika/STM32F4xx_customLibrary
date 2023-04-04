@@ -146,7 +146,7 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 		GPIO_init(&initGpioStructure);
 	}
 
-	#warning "There are only GPIO settings for USART1 pinsPack1 and pinsPack2"
+	//TODO There are only GPIO settings for USART1 pinsPack1 and pinsPack2
 
 	/* ----------------------- DMA configuration --------------------------- */
 
@@ -195,7 +195,7 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 			DMA_init(&initDMA_rxStructure);
 		}
 	}
-		#warning "There are only DMA settings for USART1"
+		//TODO There are only DMA settings for USART1
 
 	/* ----------------------- USART configuration ------------------------- */
 
