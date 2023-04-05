@@ -75,6 +75,17 @@ typedef enum
 	CAN_SJW_TQ4 	= 0x300000U		/* 4 time quantum */
 } USH_CAN_resynchJimpWidth;
 
+/**
+ * @brief CAN operating modes enumeration.
+ */
+typedef enum
+{
+	CAN_MODE_NORMAL				= 0x00U,							/* Normal mode */
+	CAN_MODE_LOOPBACK			= CAN_BTR_LBKM,						/* Loopback mode */
+	CAN_MODE_SILENT				= CAN_BTR_SILM,						/* Silent mode */
+	CAN_MODE_SILENT_LOOPBACK	= (CAN_BTR_LBKM | CAN_BTR_SILM)		/* Loopback combined with silent mode */
+} USH_CAN_operatingModes;
+
 
 
 /**
@@ -94,6 +105,40 @@ typedef struct
 													   This parameter can be a value of @ref USH_CAN_resynchJimpWidth. */
 
 } USH_CAN_timingsTypeDef;
+
+
+
+/**
+ * @brief CAN settings structure definition.
+ */
+typedef struct
+{
+	CAN_TypeDef* CANx;							/* A pointer to CANx peripheral to be used where x is 1 or 2. */
+
+	USH_CAN_timingsTypeDef Timings;				/* Timings for CAN. */
+
+	USH_CAN_operatingModes Mode;				/* CAN operating mode.
+	 	 	 	 	 	 	 	 	 	 	 	   This parameter can be a value of @ref USH_CAN_operatingModes */
+
+	FunctionalState TimeTriggeredMode;   		/* Enable or disable the time triggered communication mode.
+	                                               This parameter can be set to ENABLE or DISABLE. */
+
+	FunctionalState AutoBusOff;          		/* Enable or disable the automatic bus-off management.
+	                                               This parameter can be set to ENABLE or DISABLE. */
+
+	FunctionalState AutoWakeUp;          		/* Enable or disable the automatic wake-up mode.
+	                                               This parameter can be set to ENABLE or DISABLE. */
+
+	FunctionalState AutoRetransmission;  		/* Enable or disable the non-automatic retransmission mode.
+	                                               This parameter can be set to ENABLE or DISABLE. */
+
+	FunctionalState ReceiveFifoLocked;   		/* Enable or disable the Receive FIFO Locked mode.
+	                                               This parameter can be set to ENABLE or DISABLE. */
+
+	FunctionalState TransmitFifoPriority;		/* Enable or disable the transmit FIFO priority.
+	                                               This parameter can be set to ENABLE or DISABLE. */
+
+} USH_CAN_settingsTypeDef;
 
 //---------------------------------------------------------------------------
 // Test macros
