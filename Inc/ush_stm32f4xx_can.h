@@ -162,6 +162,11 @@ typedef struct
 #define IS_CAN_SJW(TQ) 							(((TQ) == CAN_SJW_1TQ) || ((TQ) == CAN_SJW_2TQ) || \
                          	 	 	 	 	 	 ((TQ) == CAN_SJW_3TQ) || ((TQ) == CAN_SJW_4TQ))
 
+#define IS_CAN_MODE(MODE) 						(((MODE) == CAN_MODE_NORMAL)   || \
+                           	   	   	   	   	   	 ((MODE) == CAN_MODE_LOOPBACK) || \
+												 ((MODE) == CAN_MODE_SILENT)   || \
+												 ((MODE) == CAN_MODE_SILENT_LOOPBACK))
+
 //---------------------------------------------------------------------------
 // External function prototypes
 //---------------------------------------------------------------------------
