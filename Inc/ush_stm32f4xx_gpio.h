@@ -2,9 +2,16 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_gpio.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    13-January-2023
   * @brief   Header file of GPIO module
+  *
+  *
+  *
+  * @Major changes v1.1
+  * 	- delete IS_GPIO_INSTANCE macro;
+  * 	- replaced warnings with TO_DO for module features;
+  *		- added alternative functions for CAN1/CAN2;
   *
   ******************************************************************************
   */
