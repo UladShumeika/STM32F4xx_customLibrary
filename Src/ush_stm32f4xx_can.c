@@ -37,6 +37,7 @@
  */
 USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 {
+	USH_GPIO_initTypeDef initGpioStructure = {0};
 
 	USH_peripheryStatus status = STATUS_OK;
 
@@ -59,6 +60,38 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 		assert_param(IS_FUNCTIONAL_STATE(initStructure->ReceiveFifoLocked));
 		assert_param(IS_FUNCTIONAL_STATE(initStructure->TransmitFifoPriority));
 
+		/* ----------------------- GPIO configuration -------------------------- */
+
+		// Fill in the initGpioStructure to initialize the GPIO pins, these parameters are used for both CAN
+		initGpioStructure.Mode 			= GPIO_MODE_ALTERNATE_PP;
+		initGpioStructure.Pull 			= GPIO_NOPULL;
+		initGpioStructure.Speed 		= GPIO_SPEED_HIGH;
+
+		if(initStructure->CANx == CAN1)
+		{
+			// Enable GPIOA clock
+			__RCC_GPIOA_CLOCK_ENABLE();
+
+			// CAN1 GPIO pins configuration
+			// PA11	   ------> CAN1_RX
+			// PA12    ------> CAN1_TX
+			initGpioStructure.GPIOx 		= GPIOA;
+			initGpioStructure.Pin 			= (GPIO_PIN_11 | GPIO_PIN_12);
+			initGpioStructure.Alternate 	= GPIO_AF9_CAN1;
+			status = GPIO_init(&initGpioStructure);
+		} else	// for CAN2
+		{
+			// Enable GPIOB clock
+			__RCC_GPIOB_CLOCK_ENABLE();
+
+			// CAN1 GPIO pins configuration
+			// PB12	   ------> CAN1_RX
+			// PB13    ------> CAN1_TX
+			initGpioStructure.GPIOx 		= GPIOB;
+			initGpioStructure.Pin 			= (GPIO_PIN_12 | GPIO_PIN_13);
+			initGpioStructure.Alternate 	= GPIO_AF9_CAN1;
+			status = GPIO_init(&initGpioStructure);
+		}
 	}
 
 	return status;
