@@ -220,8 +220,8 @@ typedef enum
 /*
  * GPIOG clock enable/disable
  */
-#define __RCC_GPIOGclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN)
-#define __RCC_GPIOGclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOGRST)
+#define __RCC_GPIOG_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN)
+#define __RCC_GPIOG_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOGRST)
 
 /*
  * CAN1 clock enable/disable
