@@ -206,6 +206,17 @@ typedef struct
 												 ((MODE) == CAN_MODE_SILENT)   || \
 												 ((MODE) == CAN_MODE_SILENT_LOOPBACK))
 
+#define IS_CAN_STDID(STDID)   					((STDID) <= 0x7FFU)
+
+#define IS_CAN_EXTID(EXTID)   					((EXTID) <= 0x1FFFFFFFU)
+
+#define IS_CAN_IDTYPE(IDTYPE)  					(((IDTYPE) == CAN_ID_STD) || \
+                                				 ((IDTYPE) == CAN_ID_EXT))
+
+#define IS_CAN_RTR(RTR) 						(((RTR) == CAN_RTR_DATA) || ((RTR) == CAN_RTR_REMOTE))
+
+#define IS_CAN_DLC(DLC)       					((DLC) <= 8U)
+
 //---------------------------------------------------------------------------
 // External function prototypes
 //---------------------------------------------------------------------------
