@@ -171,4 +171,13 @@ typedef struct
 // External function prototypes
 //---------------------------------------------------------------------------
 
+/**
+ * @brief 	This function initializes the CAN peripheral according to the specified parameters
+ * 			in the USH_CAN_settingsTypeDef.
+ * @param 	initStructure - A pointer to a USH_CAN_settingsTypeDef structure that contains the configuration
+ * 							information for the specified CAN peripheral.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure);
+
 #endif /* __USH_STM32F4XX_CAN_H */
