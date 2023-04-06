@@ -6,7 +6,7 @@
   * @date    04 April 2023
   * @brief	 This file contains the implementation of functions for working with CAN bus.
   *
-  * NOTE: This file is not a full-fledged RCC driver, but contains only some of
+  * NOTE: This file is not a full-fledged CAN driver, but contains only some of
   * 	  the functions that are needed for the current project.
   ******************************************************************************
   */
