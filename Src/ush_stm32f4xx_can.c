@@ -201,6 +201,74 @@ __WEAK void CAN_initGlobalInterrupts(void)
 
 }
 
+/**
+ * @brief 	This function is used to add a message to the first free Tx mailbox and activate
+ * 		  	the corresponding transmission request.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	pHeader - A pointer to a CAN_TxHeaderTypeDef structure.
+ * @param 	pData - A pointer to an array containing the payload of the Tx frame.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef *pHeader, uint8_t* pData)
+{
+	USH_peripheryStatus status = STATUS_OK;
+
+	uint32_t tsrReg = can->TSR;
+	uint32_t transmitMailbox = 0;
+
+	// Check parameters
+	assert_param(IS_CAN_IDTYPE(pHeader->IDE));
+	assert_param(IS_CAN_RTR(pHeader->RTR));
+	assert_param(IS_CAN_DLC(pHeader->DLC));
+
+	if(pHeader->IDE == CAN_ID_STD)
+	{
+		assert_param(IS_CAN_STDID(pHeader->StdId));
+	}
+	else
+	{
+		assert_param(IS_CAN_EXTID(pHeader->ExtId));
+	}
+
+	// Check that all the Tx mailboxes are not full
+	if((tsrReg & CAN_TSR_TME) != 0)
+	{
+		// Select an empty transmit mailbox
+		transmitMailbox = (tsrReg & CAN_TSR_CODE) >> CAN_TSR_CODE_Pos;
+
+		// Check transmit mailbox value
+		if(transmitMailbox > 2) status = STATUS_ERROR;
+
+		// Set up the ID
+		if(pHeader->IDE == CAN_ID_STD)
+		{
+			can->sTxMailBox[transmitMailbox].TIR = ((pHeader->StdId << CAN_TI0R_STID_Pos) | pHeader->RTR);
+		}else
+		{
+			can->sTxMailBox[transmitMailbox].TIR = (pHeader->ExtId << CAN_TI0R_EXID_Pos) | pHeader->RTR | pHeader->IDE;
+		}
+
+		// Set up the DLC
+		can->sTxMailBox[transmitMailbox].TDTR = pHeader->DLC;
+
+		// Set up the data field
+		can->sTxMailBox[transmitMailbox].TDHR = pData[7] << CAN_TDH0R_DATA7_Pos |
+												pData[6] << CAN_TDH0R_DATA6_Pos |
+												pData[5] << CAN_TDH0R_DATA5_Pos |
+												pData[4] << CAN_TDH0R_DATA4_Pos;
+
+		can->sTxMailBox[transmitMailbox].TDLR = pData[3] << CAN_TDL0R_DATA3_Pos |
+												pData[2] << CAN_TDL0R_DATA2_Pos |
+												pData[1] << CAN_TDL0R_DATA1_Pos |
+												pData[0] << CAN_TDL0R_DATA0_Pos;
+
+		// Request transmission
+		can->sTxMailBox[transmitMailbox].TIR |= CAN_TI0R_TXRQ;
+	}
+
+	return status;
+}
+
 //---------------------------------------------------------------------------
 // Static Functions
 //---------------------------------------------------------------------------
