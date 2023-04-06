@@ -223,6 +223,18 @@ typedef enum
 #define __RCC_GPIOG_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN)
 #define __RCC_GPIOG_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOGRST)
 
+/*
+ * CAN1 clock enable/disable
+ */
+#define __RCC_CAN1_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_CAN1EN)
+#define __RCC_CAN1_CLOCK_DISABLE()					(RCC->APB1ENR |= RCC_APB1RSTR_CAN1RST)
+
+/*
+ * CAN2 clock enable/disable
+ */
+#define __RCC_CAN2_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_CAN2EN)
+#define __RCC_CAN2_CLOCK_DISABLE()					(RCC->APB1ENR |= RCC_APB1RSTR_CAN2RST)
+
 /**
  * @brief Power interface clock enable
  */
