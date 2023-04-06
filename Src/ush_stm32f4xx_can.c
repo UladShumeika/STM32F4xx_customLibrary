@@ -19,6 +19,7 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
+#define CAN_TIMEOUT_VALUE		(10U)
 
 //---------------------------------------------------------------------------
 // Static function prototypes
@@ -40,6 +41,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 	USH_GPIO_initTypeDef initGpioStructure = {0};
 
 	USH_peripheryStatus status = STATUS_OK;
+	uint32_t ticksStart = 0;
 
 	// Check parameters
 	if(initStructure == 0) status = STATUS_ERROR;
@@ -60,7 +62,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 		assert_param(IS_FUNCTIONAL_STATE(initStructure->ReceiveFifoLocked));
 		assert_param(IS_FUNCTIONAL_STATE(initStructure->TransmitFifoPriority));
 
-		/* ----------------------- GPIO configuration -------------------------- */
+		/* -------------------------- GPIO configuration -------------------------- */
 
 		// Fill in the initGpioStructure to initialize the GPIO pins, these parameters are used for both CAN
 		initGpioStructure.Mode 			= GPIO_MODE_ALTERNATE_PP;
@@ -93,11 +95,102 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			status = GPIO_init(&initGpioStructure);
 		}
 
-		/* ----------------------- CAN interrupts configuration -------------------------- */
+		/* -------------------------- CAN interrupts configuration ---------------- */
 
 		if(status == STATUS_OK)
 		{
 			CAN_initGlobalInterrupts();
+		}
+
+		/* -------------------------- CAN configuration --------------------------- */
+
+		if(status == STATUS_OK)
+		{
+			// Request initialization
+			initStructure->CANx->MCR |= CAN_MCR_INRQ;
+
+			// Wait till the CAN initialization mode is enabled
+			ticksStart = MISC_timeoutGetTick();
+			while(((initStructure->CANx->MSR) & CAN_MSR_INAK) != CAN_MSR_INAK)
+			{
+				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE) status = STATUS_TIMEOUT;
+			}
+
+			// Exit from sleep mode (see Figure 336 RM0090)
+			initStructure->CANx->MCR &= ~CAN_MCR_SLEEP;
+
+			// Wait till the CAN sleep mode is disabled
+			ticksStart = MISC_timeoutGetTick();
+			while(((initStructure->CANx->MSR) & CAN_MSR_SLAK) != CAN_MSR_SLAK)
+			{
+				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE) status = STATUS_TIMEOUT;
+			}
+
+			// Set the time triggered communication mode
+			if(initStructure->TimeTriggeredMode == ENABLE)
+			{
+				initStructure->CANx->MCR |= CAN_MCR_TTCM;
+			}
+			else
+			{
+				initStructure->CANx->MCR &= ~CAN_MCR_TTCM;
+			}
+
+			// Set the automatic bus-off management
+			if(initStructure->AutoBusOff == ENABLE)
+			{
+				initStructure->CANx->MCR |= CAN_MCR_ABOM;
+			}
+			else
+			{
+				initStructure->CANx->MCR &= ~CAN_MCR_ABOM;
+			}
+
+			// Set the automatic wake-up mode
+			if(initStructure->AutoWakeUp == ENABLE)
+			{
+				initStructure->CANx->MCR |= CAN_MCR_AWUM;
+			}
+			else
+			{
+				initStructure->CANx->MCR &= ~CAN_MCR_AWUM;
+			}
+
+			// Set the automatic retransmission
+			if(initStructure->AutoRetransmission == ENABLE)
+			{
+				initStructure->CANx->MCR |= CAN_MCR_NART;
+			}
+			else
+			{
+				initStructure->CANx->MCR &= ~CAN_MCR_NART;
+			}
+
+			// Set the receive FIFO locked mode
+			if(initStructure->ReceiveFifoLocked == ENABLE)
+			{
+				initStructure->CANx->MCR |= CAN_MCR_RFLM;
+			}
+			else
+			{
+				initStructure->CANx->MCR &= ~CAN_MCR_RFLM;
+			}
+
+			// Set the transmit FIFO priority
+			if (initStructure->TransmitFifoPriority == ENABLE)
+			{
+				initStructure->CANx->MCR |= CAN_MCR_TXFP;
+			}
+			else
+			{
+				initStructure->CANx->MCR &= ~CAN_MCR_TXFP;
+			}
+
+			// Set the bit timing register
+			initStructure->CANx->BTR = ((initStructure->Timings.BaudratePrescaler - 1) | \
+									   initStructure->Timings.TimeSegment1			    | \
+									   initStructure->Timings.TimeSegment2			    | \
+									   initStructure->Timings.ResynchJumpWidth);
 		}
 	}
 
