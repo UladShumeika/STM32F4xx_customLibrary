@@ -184,38 +184,38 @@ typedef enum
 /*
  * GPIOA clock enable/disable
  */
-#define __RCC_GPIOAclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN)
-#define __RCC_GPIOAclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOARST)
+#define __RCC_GPIOA_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN)
+#define __RCC_GPIOA_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOARST)
 
 /*
  * GPIOB clock enable/disable
  */
-#define __RCC_GPIOBclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN)
-#define __RCC_GPIOBclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOBRST)
+#define __RCC_GPIOB_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN)
+#define __RCC_GPIOB_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOBRST)
 
 /*
  * GPIOC clock enable/disable
  */
-#define __RCC_GPIOCclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN)
-#define __RCC_GPIOCclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOCRST)
+#define __RCC_GPIOC_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN)
+#define __RCC_GPIOC_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOCRST)
 
 /*
  * GPIOD clock enable/disable
  */
-#define __RCC_GPIODclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN)
-#define __RCC_GPIODclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIODRST)
+#define __RCC_GPIOD_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN)
+#define __RCC_GPIOD_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIODRST)
 
 /*
  * GPIOE clock enable/disable
  */
-#define __RCC_GPIOEclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN)
-#define __RCC_GPIOEclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOERST)
+#define __RCC_GPIOE_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN)
+#define __RCC_GPIOE_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOERST)
 
 /*
  * GPIOF clock enable/disable
  */
-#define __RCC_GPIOFclockEnable()				(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOFEN)
-#define __RCC_GPIOFclockDisable()				(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOFRST)
+#define __RCC_GPIOF_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_GPIOFEN)
+#define __RCC_GPIOF_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_GPIOFRST)
 
 /*
  * GPIOG clock enable/disable
