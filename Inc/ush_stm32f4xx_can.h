@@ -86,6 +86,24 @@ typedef enum
 	CAN_MODE_SILENT_LOOPBACK	= (CAN_BTR_LBKM | CAN_BTR_SILM)		/* Loopback combined with silent mode */
 } USH_CAN_operatingModes;
 
+/**
+ * @brief CAN identifier type enumeration.
+ */
+typedef enum
+{
+	CAN_ID_STD		= 0x00UL,	/* Standard id */
+	CAN_ID_EXT		= 0x04UL	/* Extended id */
+} USH_CAN_identifierType;
+
+/**
+ * @brief CAN remote transmission request enumeration.
+ */
+typedef enum
+{
+	CAN_RTR_DATA		= 0x00UL,	/* Data frame */
+	CAN_RTR_REMOTE		= 0x02UL	/* Remote frame */
+} USH_CAN_remoteTransRequest;
+
 
 
 /**
