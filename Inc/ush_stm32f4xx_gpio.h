@@ -103,7 +103,10 @@ typedef enum
 	GPIO_AF8_UART5		= 0x07UL,		/* UART5 alternative function mapping */
 	GPIO_AF8_USART6		= 0x07UL,		/* USART6 alternative function mapping */
 	GPIO_AF8_UART7		= 0x07UL,		/* UART7 alternative function mapping */
-	GPIO_AF8_UART8		= 0x07UL		/* UART8 alternative function mapping */
+	GPIO_AF8_UART8		= 0x07UL,		/* UART8 alternative function mapping */
+
+	GPIO_AF9_CAN1		= 0x09UL,		/* CAN1 alternative function mapping */
+	GPIO_AF9_CAN2		= 0x09UL		/* CAN2 alternative function mapping */
 } USH_GPIO_alternate;
 
 /**
