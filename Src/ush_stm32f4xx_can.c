@@ -92,6 +92,13 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			initGpioStructure.Alternate 	= GPIO_AF9_CAN1;
 			status = GPIO_init(&initGpioStructure);
 		}
+
+		/* ----------------------- CAN interrupts configuration -------------------------- */
+
+		if(status == STATUS_OK)
+		{
+			CAN_initGlobalInterrupts();
+		}
 	}
 
 	return status;
@@ -100,6 +107,17 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 //---------------------------------------------------------------------------
 // Library Functions
 //---------------------------------------------------------------------------
+
+/**
+ * @brief  	This function is used to initialize CAN modules global interrupts.
+ * @note	This function should not be modified, when global interrupts of CAN modules are required,
+ * 			this function must be implemented in the user file.
+ * @retval	None.
+ */
+__WEAK void CAN_initGlobalInterrupts(void)
+{
+
+}
 
 //---------------------------------------------------------------------------
 // Static Functions

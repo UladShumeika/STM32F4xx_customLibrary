@@ -180,4 +180,12 @@ typedef struct
  */
 USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure);
 
+/**
+ * @brief  	This function is used to initialize CAN modules global interrupts.
+ * @note	This function should not be modified, when global interrupts of CAN modules are required,
+ * 			this function must be implemented in the user file.
+ * @retval	None.
+ */
+__WEAK void CAN_initGlobalInterrupts(void);
+
 #endif /* __USH_STM32F4XX_CAN_H */
