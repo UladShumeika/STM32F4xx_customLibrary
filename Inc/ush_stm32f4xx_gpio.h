@@ -12,6 +12,7 @@
   * 	- delete IS_GPIO_INSTANCE macro;
   * 	- replaced warnings with TO_DO for module features;
   *		- added alternative functions for CAN1/CAN2;
+  *		- GPIO_init function has been changed to take into account the use of flag strategy;
   *
   ******************************************************************************
   */
@@ -193,12 +194,13 @@ typedef enum
 //---------------------------------------------------------------------------
 
 /**
- * @brief 	This function initializes the GPIOx peripheral according to the specified parameters in the USH_GPIO_initTypeDef.
+ * @brief 	This function initializes the GPIOx peripheral according to the specified parameters
+ * 			in the USH_GPIO_initTypeDef.
  * @param 	initStructure - a pointer to a USH_GPIO_initTypeDef structure that contains the configuration information
  * 						    for the specified GPIO peripheral.
- * @retval	None
+ * @retval	The periphery status.
  */
-void GPIO_init(USH_GPIO_initTypeDef *initStructure);
+USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure);
 
 /**
  * @brief	This function sets or clears the selected data port bits.
