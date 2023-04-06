@@ -55,7 +55,6 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 		assert_param(IS_CAN_TS2(initStructure->Timings->TimeSegment2));
 		assert_param(IS_CAN_SJW(initStructure->Timings->ResynchJumpWidth));
 		assert_param(IS_CAN_MODE(initStructure->Mode));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->TimeTriggeredMode));
 		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoBusOff));
 		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoWakeUp));
 		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoRetransmission));
@@ -124,16 +123,6 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			while(((initStructure->CANx->MSR) & CAN_MSR_SLAK) != CAN_MSR_SLAK)
 			{
 				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE) status = STATUS_TIMEOUT;
-			}
-
-			// Set the time triggered communication mode
-			if(initStructure->TimeTriggeredMode == ENABLE)
-			{
-				initStructure->CANx->MCR |= CAN_MCR_TTCM;
-			}
-			else
-			{
-				initStructure->CANx->MCR &= ~CAN_MCR_TTCM;
 			}
 
 			// Set the automatic bus-off management
