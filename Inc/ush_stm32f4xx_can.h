@@ -155,6 +155,30 @@ typedef struct
 
 } USH_CAN_settingsTypeDef;
 
+
+
+/**
+ * @brief CAN Tx message header structure definition.
+ */
+typedef struct
+{
+	uint32_t StdId;    					/* The standard identifier.
+                          	  	  	  	   This parameter must be a number between Min_Data = 0 and Max_Data = 0x7FF. */
+
+	uint32_t ExtId;    					/* The extended identifier.
+                          	  	  	  	   This parameter must be a number between Min_Data = 0 and Max_Data = 0x1FFFFFFF. */
+
+	USH_CAN_identifierType IDE;      	/* The type of identifier for the message that will be transmitted.
+                          	  	  	  	   This parameter can be a value of @ref USH_CAN_identifierType */
+
+	USH_CAN_remoteTransRequest RTR;     /* Specifies the type of frame for the message that will be transmitted.
+                          	  	  	  	   This parameter can be a value of @ref USH_CAN_remoteTransRequest */
+
+	uint32_t DLC;      					/* Specifies the length of the frame that will be transmitted.
+                          	  	  	  	   This parameter must be a number between Min_Data = 0 and Max_Data = 8. */
+
+} CAN_TxHeaderTypeDef;
+
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
