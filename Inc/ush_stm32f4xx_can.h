@@ -120,9 +120,6 @@ typedef struct
 	USH_CAN_operatingModes Mode;				/* CAN operating mode.
 	 	 	 	 	 	 	 	 	 	 	 	   This parameter can be a value of @ref USH_CAN_operatingModes */
 
-	FunctionalState TimeTriggeredMode;   		/* Enable or disable the time triggered communication mode.
-	                                               This parameter can be set to ENABLE or DISABLE. */
-
 	FunctionalState AutoBusOff;          		/* Enable or disable the automatic bus-off management.
 	                                               This parameter can be set to ENABLE or DISABLE. */
 
