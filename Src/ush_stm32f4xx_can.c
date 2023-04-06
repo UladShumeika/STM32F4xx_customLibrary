@@ -28,6 +28,42 @@
 // Initialization functions
 //---------------------------------------------------------------------------
 
+/**
+ * @brief 	This function initializes the CAN peripheral according to the specified parameters
+ * 			in the USH_CAN_settingsTypeDef.
+ * @param 	initStructure - A pointer to a USH_CAN_settingsTypeDef structure that contains the configuration
+ * 							information for the specified CAN peripheral.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
+{
+
+	USH_peripheryStatus status = STATUS_OK;
+
+	// Check parameters
+	if(initStructure == 0) status = STATUS_ERROR;
+
+	if(status == STATUS_OK)
+	{
+		// Check parameters
+		assert_param(IS_CAN_ALL_INSTANCE(initStructure->CANx));
+		assert_param(IS_CAN_BAUDRATE_PRESCALER(initStructure->Timings->BaudratePrescaler));
+		assert_param(IS_CAN_TS1(initStructure->Timings->TimeSegment1));
+		assert_param(IS_CAN_TS2(initStructure->Timings->TimeSegment2));
+		assert_param(IS_CAN_SJW(initStructure->Timings->ResynchJumpWidth));
+		assert_param(IS_CAN_MODE(initStructure->Mode));
+		assert_param(IS_FUNCTIONAL_STATE(initStructure->TimeTriggeredMode));
+		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoBusOff));
+		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoWakeUp));
+		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoRetransmission));
+		assert_param(IS_FUNCTIONAL_STATE(initStructure->ReceiveFifoLocked));
+		assert_param(IS_FUNCTIONAL_STATE(initStructure->TransmitFifoPriority));
+
+	}
+
+	return status;
+}
+
 //---------------------------------------------------------------------------
 // Library Functions
 //---------------------------------------------------------------------------
