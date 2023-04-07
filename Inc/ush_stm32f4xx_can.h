@@ -260,10 +260,10 @@ typedef struct
 	USH_CAN_identifierType IDE;      	/* The type of identifier for the message that will be transmitted.
                           	  	  	  	   This parameter can be a value of @ref USH_CAN_identifierType */
 
-	USH_CAN_remoteTransRequest RTR;     /* Specifies the type of frame for the message that will be transmitted.
+	USH_CAN_remoteTransRequest RTR;     /* The type of frame for the message that will be transmitted.
                           	  	  	  	   This parameter can be a value of @ref USH_CAN_remoteTransRequest */
 
-	uint32_t DLC;      					/* Specifies the length of the frame that will be transmitted.
+	uint32_t DLC;      					/* The length of the frame that will be transmitted.
                           	  	  	  	   This parameter must be a number between Min_Data = 0 and Max_Data = 8. */
 
 } CAN_TxHeaderTypeDef;
