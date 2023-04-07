@@ -379,6 +379,54 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef* pHea
 	return status;
 }
 
+/**
+ * @brief 	This function is used to get an CAN frame from the Rx FIFO zone into the message RAM.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	rxFifo - A number of FIFO mailbox.
+ * @param 	pHeader - A pointer to a CAN_RxHeaderTypeDef structure.
+ * @param 	pData - A pointer to an array containing the payload of the Rx frame.
+ * @retval	None.
+ */
+void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, CAN_RxHeaderTypeDef* pHeader, uint8_t* pData)
+{
+	// Check parameters
+	assert_param(IS_CAN_FILTER_FIFO(rxFifo));
+
+	// Get the frame information
+	pHeader->IDE = can->sFIFOMailBox[rxFifo].RIR & CAN_RI0R_IDE;
+
+	if(pHeader->IDE == CAN_ID_STD)
+	{
+		pHeader->StdId = (can->sFIFOMailBox[rxFifo].RIR & CAN_RI0R_STID) >> CAN_RI0R_STID_Pos;
+	} else // for CAN_ID_EXT
+	{
+		pHeader->ExtId = (can->sFIFOMailBox[rxFifo].RIR & (CAN_RI0R_STID | CAN_RI0R_EXID)) >> CAN_RI0R_EXID_Pos;
+	}
+
+	pHeader->RTR = can->sFIFOMailBox[rxFifo].RIR & CAN_RI0R_RTR;
+	pHeader->DLC = can->sFIFOMailBox[rxFifo].RDTR & CAN_RDT0R_DLC;
+	pHeader->FilterMatchIndex = (can->sFIFOMailBox[rxFifo].RDTR & CAN_RDT0R_FMI) >> CAN_RDT0R_FMI_Pos;
+
+	// Get the data
+	pData[0] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDLR & CAN_RDL0R_DATA0) >> CAN_RDL0R_DATA0_Pos);
+	pData[1] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDLR & CAN_RDL0R_DATA1) >> CAN_RDL0R_DATA1_Pos);
+	pData[2] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDLR & CAN_RDL0R_DATA2) >> CAN_RDL0R_DATA2_Pos);
+	pData[3] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDLR & CAN_RDL0R_DATA3) >> CAN_RDL0R_DATA3_Pos);
+	pData[4] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDHR & CAN_RDH0R_DATA4) >> CAN_RDH0R_DATA4_Pos);
+	pData[5] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDHR & CAN_RDH0R_DATA5) >> CAN_RDH0R_DATA5_Pos);
+	pData[6] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDHR & CAN_RDH0R_DATA6) >> CAN_RDH0R_DATA6_Pos);
+	pData[7] = (uint8_t)((can->sFIFOMailBox[rxFifo].RDHR & CAN_RDH0R_DATA7) >> CAN_RDH0R_DATA7_Pos);
+
+	// Release FIFO mailbox
+	if(rxFifo == CAN_FILTER_FIFO_0)
+	{
+		can->RF0R |= CAN_RF0R_RFOM0;
+	} else
+	{
+		can->RF1R |= CAN_RF1R_RFOM1;
+	}
+}
+
 //---------------------------------------------------------------------------
 // Static Functions
 //---------------------------------------------------------------------------
