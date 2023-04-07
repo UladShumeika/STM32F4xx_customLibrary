@@ -389,4 +389,14 @@ __WEAK void CAN_initGlobalInterrupts(void);
  */
 USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef *pHeader, uint8_t* pData);
 
+/**
+ * @brief 	This function is used to get an CAN frame from the Rx FIFO zone into the message RAM.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	rxFifo - A number of FIFO mailbox.
+ * @param 	pHeader - A pointer to a CAN_RxHeaderTypeDef structure.
+ * @param 	pData - A pointer to an array containing the payload of the Rx frame.
+ * @retval	None.
+ */
+void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, CAN_RxHeaderTypeDef* pHeader, uint8_t* pData);
+
 #endif /* __USH_STM32F4XX_CAN_H */
