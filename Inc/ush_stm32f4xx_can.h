@@ -104,6 +104,42 @@ typedef enum
 	CAN_RTR_REMOTE		= 0x02UL	/* Remote frame */
 } USH_CAN_remoteTransRequest;
 
+/**
+ * @brief CAN filter FIFO enumeration.
+ */
+typedef enum
+{
+	CAN_FILTER_FIFO_0 	= 0x00UL,	/* Filter FIFO 0 assignment for filter x */
+	CAN_FILTER_FIFO_1	= 0x01UL	/* Filter FIFO 1 assignment for filter x */
+} USH_CAN_filterFIFO;
+
+/**
+ * @brief CAN filter modes enumeration.
+ */
+typedef enum
+{
+	CAN_FILTER_MODE_IDMASK 		= 0x00UL,	/* Filter FIFO 0 assignment for filter x */
+	CAN_FILTER_MODE_IDLIST		= 0x01UL	/* Filter FIFO 1 assignment for filter x */
+} USH_CAN_filterModes;
+
+/**
+ * @brief CAN filter scales enumeration.
+ */
+typedef enum
+{
+	CAN_FILTERSCALE_16BIT 		= 0x00UL,	/* Two 16-bit filters */
+	CAN_FILTERSCALE_32BIT		= 0x01UL	/* One 32-bit filter */
+} USH_CAN_filterScales;
+
+/**
+ * @brief CAN filter activation enumeration.
+ */
+typedef enum
+{
+	CAN_FILTER_DISABLE 		= 0x00UL,	/* Disable filter */
+	CAN_FILTER_ENABLE		= 0x01UL	/* Enable filter */
+} USH_CAN_filterActivation;
+
 
 
 /**
@@ -154,6 +190,59 @@ typedef struct
 	                                               This parameter can be set to ENABLE or DISABLE. */
 
 } USH_CAN_settingsTypeDef;
+
+
+
+/**
+ * @brief  CAN filter configuration structure definition.
+ */
+typedef struct
+{
+	uint32_t FilterIdHigh;          			/* The filter identification number (MSBs for a 32-bit configuration,
+                                       	   	   	   first one for a 16-bit configuration). This parameter must be
+                                       	   	   	   a number between Min_Data = 0x0000 and Max_Data = 0xFFFF. */
+
+	uint32_t FilterIdLow;           			/* The filter identification number (LSBs for a 32-bit configuration,
+                                       	   	   	   second one for a 16-bit configuration). This parameter must be
+                                       	   	   	   a number between Min_Data = 0x0000 and Max_Data = 0xFFFF. */
+
+	uint32_t FilterMaskIdHigh;      			/* The filter mask number or identification number, according to
+                                       	   	   	   the mode (MSBs for a 32-bit configuration, first one for a 16-bit
+                                       	   	   	   configuration). This parameter must be a number between
+                                       	   	   	   Min_Data = 0x0000 and Max_Data = 0xFFFF. */
+
+	uint32_t FilterMaskIdLow;      				/* The filter mask number or identification number, according to
+                                       	   	   	   the mode (LSBs for a 32-bit configuration, second one
+                                       	   	   	   for a 16-bit configuration). This parameter must be a number
+                                       	   	   	   between Min_Data = 0x0000 and Max_Data = 0xFFFF. */
+
+	USH_CAN_filterFIFO FilterFIFOAssignment;  	/* The FIFO (0 or 1U) which will be assigned to the filter.
+                                       	   	   	   This parameter can be a value of @ref USH_CAN_filterFIFO */
+
+	uint32_t FilterBank;            			/* The filter bank which will be initialized. For single
+												   CAN instance(14 dedicated filter banks), this parameter must
+                                       	   	   	   be a number between Min_Data = 0 and  Max_Data = 13. For dual
+                                       	   	   	   CAN instances(28 filter banks shared), this parameter must be
+                                       	   	   	   a number between Min_Data = 0 and Max_Data = 27. */
+
+	USH_CAN_filterModes FilterMode;            	/* The filter mode to be initialized.
+                                       	   	   	   This parameter can be a value of @ref USH_CAN_filterModes. */
+
+	USH_CAN_filterScales FilterScale;           /* The filter scale.
+                                       	   	   	   This parameter can be a value of @ref USH_CAN_filterScales. */
+
+	USH_CAN_filterActivation FilterActivation;	/* Enable or disable the filter.
+                                       	   	   	   This parameter can be a value of @ref USH_CAN_filterActivation. */
+
+	uint32_t SlaveStartFilterBank;  			/* Select the start filter bank for the slave CAN instance.
+                                       	   	   	   For single CAN instances, this parameter is meaningless.
+                                       	   	   	   For dual CAN instances, all filter banks with lower index are
+                                       	   	   	   assigned to master CAN instance, whereas all filter banks with
+                                       	   	   	   greater index are assigned to slave CAN instance.
+                                       	   	   	   This parameter must be a number between Min_Data = 0 and
+                                       	   	   	   Max_Data = 27. */
+
+} USH_CAN_filterTypeDef;
 
 
 
