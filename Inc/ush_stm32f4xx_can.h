@@ -306,6 +306,22 @@ typedef struct
 
 #define IS_CAN_DLC(DLC)       					((DLC) <= 8U)
 
+#define IS_CAN_FILTER_ID_HALFWORD(HALFWORD) 	((HALFWORD) <= 0xFFFFU)
+
+#define IS_CAN_FILTER_FIFO(FIFO) 				(((FIFO) == CAN_FILTER_FIFO0) || \
+                                  	  	  	  	 ((FIFO) == CAN_FILTER_FIFO1))
+
+#define IS_CAN_FILTER_BANK_DUAL(BANK) 			((BANK) <= 27U)
+
+#define IS_CAN_FILTER_MODE(MODE) 				(((MODE) == CAN_FILTERMODE_IDMASK) || \
+                                  	  	  	  	 ((MODE) == CAN_FILTERMODE_IDLIST))
+
+#define IS_CAN_FILTER_SCALE(SCALE) 				(((SCALE) == CAN_FILTERSCALE_16BIT) || \
+                                    			 ((SCALE) == CAN_FILTERSCALE_32BIT))
+
+#define IS_CAN_FILTER_ACTIVATION(ACTIVATION) 	(((ACTIVATION) == CAN_FILTER_DISABLE) || \
+                                              	 ((ACTIVATION) == CAN_FILTER_ENABLE))
+
 //---------------------------------------------------------------------------
 // External function prototypes
 //---------------------------------------------------------------------------
