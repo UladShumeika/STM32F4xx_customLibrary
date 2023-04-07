@@ -336,6 +336,15 @@ typedef struct
 USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure);
 
 /**
+ * @brief 	This function configures the CAN reception filter according to the specified parameters
+ *          in the USH_CAN_filterTypeDef.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	initFilterStructure - A pointer to a USH_CAN_filterTypeDef structure.
+ * @return	The peripheral status.
+ */
+USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure);
+
+/**
  * @brief  	This function is used to initialize CAN modules global interrupts.
  * @note	This function should not be modified, when global interrupts of CAN modules are required,
  * 			this function must be implemented in the user file.
