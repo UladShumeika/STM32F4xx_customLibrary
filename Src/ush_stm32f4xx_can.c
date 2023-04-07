@@ -186,6 +186,116 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 	return status;
 }
 
+/**
+ * @brief 	This function configures the CAN reception filter according to the specified parameters
+ *          in the USH_CAN_filterTypeDef.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	initFilterStructure - A pointer to a USH_CAN_filterTypeDef structure.
+ * @return	The peripheral status.
+ */
+USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
+{
+	USH_peripheryStatus status = STATUS_OK;
+
+	uint32_t filterNumberBitPos = 0;
+
+	// Check parameters
+	if(initFilterStructure == 0) status = STATUS_ERROR;
+
+	if(status == STATUS_OK)
+	{
+		// Check parameters
+		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdHigh));
+		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdLow));
+		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdHigh));
+		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdLow));
+		assert_param(IS_CAN_FILTER_FIFO(initFilterStructure->FilterFIFOAssignment));
+		assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->FilterBank));
+		assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->SlaveStartFilterBank));
+		assert_param(IS_CAN_FILTER_MODE(initFilterStructure->FilterMode));
+		assert_param(IS_CAN_FILTER_SCALE(initFilterStructure->FilterScale));
+		assert_param(IS_CAN_FILTER_ACTIVATION(initFilterStructure->FilterActivation));
+
+		// Enable initialization mode for the filter
+		can->FMR |= CAN_FMR_FINIT;
+
+		// Select the start filter number of CAN2 slave instance
+		can->FMR &= ~CAN_FMR_CAN2SB;
+		can->FMR |= initFilterStructure->SlaveStartFilterBank << CAN_FMR_CAN2SB_Pos;
+
+		// Convert filter number into bit position
+		filterNumberBitPos = 1UL << (initFilterStructure->FilterBank & 0x1FU);
+
+		// Filter deactivation
+		can->FA1R &= ~filterNumberBitPos;
+
+		// Configuration filter scale
+		if(initFilterStructure->FilterScale == CAN_FILTERSCALE_16BIT)
+		{
+			// Set 16-bit scale for the filter
+			can->FS1R &= ~filterNumberBitPos;
+
+			// First 16-bit identifier and first 16-bit mask
+			// or first 16-bit identifier and second 16-bit identifier
+			can->sFilterRegister[initFilterStructure->FilterBank].FR1 =
+					((initFilterStructure->FilterMaskIdLow & 0x0000FFFFU) << 16U) | (initFilterStructure->FilterIdLow);
+
+			// Second 16-bit identifier and second 16-bit mask
+			// or third 16-bit identifier and fourth 16-bit identifier
+			can->sFilterRegister[initFilterStructure->FilterBank].FR2 =
+					((initFilterStructure->FilterMaskIdHigh & 0x0000FFFFU) << 16U) | (initFilterStructure->FilterIdHigh);
+
+		} else // for CAN_FILTERSCALE_32BIT
+		{
+			// Set 32-bit scale for the filter
+			can->FS1R |= filterNumberBitPos;
+
+			// 32-bit identifier or First 32-bit identifier
+			can->sFilterRegister[initFilterStructure->FilterBank].FR1 =
+					(initFilterStructure->FilterIdHigh << 16U) | initFilterStructure->FilterIdLow;
+
+			// 32-bit mask or second 32-bit identifier
+			can->sFilterRegister[initFilterStructure->FilterBank].FR2 =
+					(initFilterStructure->FilterMaskIdHigh << 16U) | initFilterStructure->FilterMaskIdLow;
+		}
+
+		// Set filter mode
+		if(initFilterStructure->FilterMode == CAN_FILTER_MODE_IDMASK)
+		{
+			// Set identifier mask mode
+			can->FM1R &= ~filterNumberBitPos;
+
+		} else // for CAN_FILTER_MODE_IDLIST
+		{
+			// Set identifier list mode
+			can->FM1R |= filterNumberBitPos;
+		}
+
+		// Set filter FIFO assignment
+		if(initFilterStructure->FilterFIFOAssignment == CAN_FILTER_FIFO_0)
+		{
+			// Set filter assigned to FIFO 0
+			can->FFA1R &= ~filterNumberBitPos;
+
+		} else // for CAN_FILTER_FIFO_1
+		{
+			// Set filter assigned to FIFO 1
+			can->FFA1R |= filterNumberBitPos;
+		}
+
+		// Set filter activation
+		if(initFilterStructure->FilterActivation == CAN_FILTER_ENABLE)
+		{
+			can->FA1R |= filterNumberBitPos;
+		}
+
+		// Leave the initialization mode for the filter
+		can->FMR &= ~CAN_FMR_FINIT;
+	}
+
+	return status;
+}
+
 //---------------------------------------------------------------------------
 // Library Functions
 //---------------------------------------------------------------------------
