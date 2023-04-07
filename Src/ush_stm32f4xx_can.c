@@ -319,7 +319,7 @@ __WEAK void CAN_initGlobalInterrupts(void)
  * @param 	pData - A pointer to an array containing the payload of the Tx frame.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef *pHeader, uint8_t* pData)
+USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef* pHeader, uint8_t* pData)
 {
 	USH_peripheryStatus status = STATUS_OK;
 
