@@ -370,6 +370,21 @@ typedef enum
 #define IS_CAN_FILTER_ACTIVATION(ACTIVATION) 	(((ACTIVATION) == CAN_FILTER_DISABLE) || \
                                               	 ((ACTIVATION) == CAN_FILTER_ENABLE))
 
+#define IS_CAN_INTERRUPT(INTERRUPT) 			((INTERRUPT) <= (CAN_IT_SLEEP     		 	 | \
+																 CAN_IT_WAKEUP               | \
+													 	 	 	 CAN_IT_ERROR        	 	 | \
+																 CAN_IT_LAST_ERROR_CODE      | \
+																 CAN_IT_BUSOFF 			 	 | \
+																 CAN_IT_ERROR_PASSIVE        | \
+																 CAN_IT_ERROR_WARNING    	 | \
+																 CAN_IT_RX_FIFO1_OVERRUN     | \
+																 CAN_IT_RX_FIFO1_FULL    	 | \
+																 CAN_IT_RX_FIFO1_MSG_PENDING | \
+																 CAN_IT_RX_FIFO0_OVERRUN     | \
+																 CAN_IT_RX_FIFO0_FULL        | \
+																 CAN_IT_RX_FIFO0_MSG_PENDING | \
+																 CAN_IT_TX_MAILBOX_EMPTY))
+
 //---------------------------------------------------------------------------
 // External function prototypes
 //---------------------------------------------------------------------------
