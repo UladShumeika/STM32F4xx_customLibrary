@@ -295,6 +295,27 @@ typedef struct
 
 } CAN_RxHeaderTypeDef;
 
+/**
+ * @brief CAN interrupts enumeration.
+ */
+typedef enum
+{
+	CAN_IT_SLEEP 					= CAN_IER_SLKIE,		// Sleep interrupt
+	CAN_IT_WAKEUP					= CAN_IER_WKUIE,		// Wake-up interrupt
+	CAN_IT_ERROR					= CAN_IER_ERRIE,		// Error interrupt
+	CAN_IT_LAST_ERROR_CODE			= CAN_IER_LECIE,		// Last error code interrupt
+	CAN_IT_BUSOFF					= CAN_IER_BOFIE,		// Bus-off interrupt
+	CAN_IT_ERROR_PASSIVE			= CAN_IER_EPVIE, 		// Error passive interrupt
+	CAN_IT_ERROR_WARNING			= CAN_IER_EWGIE,		// Error warning interrupt
+	CAN_IT_RX_FIFO1_OVERRUN			= CAN_IER_FOVIE1,		// FIFO 1 overrun interrupt
+	CAN_IT_RX_FIFO1_FULL			= CAN_IER_FFIE1, 		// FIFO 1 full interrupt
+	CAN_IT_RX_FIFO1_MSG_PENDING		= CAN_IER_FMPIE1,		// FIFO 1 message pending interrupt
+	CAN_IT_RX_FIFO0_OVERRUN			= CAN_IER_FOVIE0, 		// FIFO 0 overrun interrupt
+	CAN_IT_RX_FIFO0_FULL			= CAN_IER_FFIE0,		// FIFO 0 message pending interrupt
+	CAN_IT_RX_FIFO0_MSG_PENDING		= CAN_IER_FMPIE0,		// FIFO 0 message pending interrupt
+	CAN_IT_TX_MAILBOX_EMPTY			= CAN_IER_TMEIE			// Transmit mailbox empty interrupt
+} USH_CAN_interrupts;
+
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
