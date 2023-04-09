@@ -2,9 +2,13 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_conf.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    03-March-2023
   * @brief   Library configuration file.
+  *
+  *
+  *	@Major changes v1.1
+  *		- added STATUS_ERROR in USH_peripheryStatus enumeration;
   *
   ******************************************************************************
   */
@@ -29,8 +33,9 @@
  */
 typedef enum
 {
-	STATUS_TIMEOUT		= 0,				/* Periphery status timeout */
-	STATUS_OK	 		= !STATUS_TIMEOUT	/* Periphery status ok */
+	STATUS_TIMEOUT	= 0,	/* Periphery status timeout */
+	STATUS_ERROR,			/* Periphery status error */
+	STATUS_OK				/* Periphery status OK */
 } USH_peripheryStatus;
 
 //---------------------------------------------------------------------------
@@ -38,9 +43,10 @@ typedef enum
 //---------------------------------------------------------------------------
 #include "ush_stm32f4xx_misc.h"
 #include "ush_stm32f4xx_gpio.h"
-#include "ush_stm32f4xx_dma.h"
-#include "ush_stm32f4xx_spi.h"
+//#include "ush_stm32f4xx_dma.h"
+//#include "ush_stm32f4xx_spi.h"
 #include "ush_stm32f4xx_uart.h"
+#include "ush_stm32f4xx_rcc.h"
 
 //---------------------------------------------------------------------------
 // Function's parameters check.

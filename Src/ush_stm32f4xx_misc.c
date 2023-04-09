@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_misc.c
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    27-February-2023
   * @brief	 This file contains the implementation of functions for the miscellaneous
   * 		 firmware library functions.
@@ -35,17 +35,79 @@ int _write(int file, char *ptr, int len)
 }
 
 //---------------------------------------------------------------------------
+// The section of power controller
+//---------------------------------------------------------------------------
+
+/**
+ * @brief 	This function configures the main internal regulator output voltage.
+ * @param 	voltageScaling - specifies the regulator output voltage to achieve
+ * 							 a tradeoff between performance and power consumption
+ * 							 when the device does not operate at the maximum frequency
+ * 							 (refer to the datasheets for more details).
+ * @retval 	None.
+ */
+void MISC_PWR_mainRegulatorModeConfig(USH_PWR_voltageScaling voltageScaling)
+{
+	uint32_t tempReg = 0;
+
+	// Check parameters
+	assert_param(IS_MISC_PWR_VOLTAGE_SCALING(voltageScaling));
+
+	// Enable power interface clock
+	RCC_powerInterfaceClockEnable();
+
+	// Read PWR_CR register and clear PWR_CR_VOS bits
+	tempReg = PWR->CR;
+	tempReg &= ~PWR_CR_VOS;
+
+	// Set voltageScaling and write to PWR_CR register
+	tempReg |= voltageScaling;
+	PWR->CR = tempReg;
+}
+
+/**
+ * @brief 	This function returns flag status.
+ * @param	flags - PWR flags. This parameter can be a value of @ref USH_DMA_flags.
+ * @retval	Flags status.
+ */
+FlagStatus MISC_PWR_getFlagStatus(USH_PWR_flags flags)
+{
+	uint32_t statusReg = 0;
+	FlagStatus status = RESET;
+
+	// check parameters
+	assert_param(IS_MISC_PWR_FLAGS(flags));
+
+	// Read PWR->CR register
+	statusReg = PWR->CR;
+
+	// Set flags status
+	if(statusReg & flags)
+	{
+		status = SET;
+	} else
+	{
+		status = RESET;
+	}
+
+	return status;
+}
+
+//---------------------------------------------------------------------------
 // The section of timeout timer
 //---------------------------------------------------------------------------
 
 /**
- * @brief 	This function sets up TIM14 timer to check for timeout.
+ * @brief 	This function initializes TIM14 timer to check for timeout.
  * @retval	None.
  */
-void MISC_timeoutTimer(void)
+void MISC_timeoutTimerInit(void)
 {
 	// Enable TIM14 clock
-	RCC->APB1ENR |= RCC_APB1ENR_TIM14EN;
+	RCC_TIM14_ClockEnable();
+
+	// Disable TIM14
+	TIM14->CR1 &= ~TIM_CR1_CEN;
 
 	// Set the clock division
 	TIM14->CR1 &= ~TIM_CR1_CKD;
@@ -57,7 +119,13 @@ void MISC_timeoutTimer(void)
 	TIM14->ARR = (uint32_t)((500U) - 1U);
 
 	// Set the Prescaler value
-	TIM14->PSC = 180 - 1;
+	if(RCC_getFlagStatus(RCC_FLAG_HSIRDY))
+	{
+		TIM14->PSC = 16 - 1;		// HSI enabled. 16 MHz
+	} else
+	{
+		TIM14->PSC = 180 - 1;		// HSE enabled and system clock is 180 MHz
+	}
 
 	TIM14->EGR = TIM_EGR_UG;
 
@@ -93,6 +161,23 @@ uint32_t MISC_timeoutGetTick(void)
 //---------------------------------------------------------------------------
 // The section of NVIC
 //---------------------------------------------------------------------------
+
+/**
+  * @brief  This function sets the priority grouping field (preemption priority and subpriority)
+  *         using the required unlock sequence.
+  * @param  priorityGroup - The priority grouping bits length.
+  * @note   When the NVIC_PriorityGroup_0 is selected, IRQ preemption is no more possible.
+  *         The pending IRQ priority will be managed only by the subpriority.
+  * @retval None.
+  */
+void MISC_NVIC_setPriorityGrouping(USH_NVIC_priorityGroup priorityGroup)
+{
+	// Check the parameters
+	assert_param(IS_MISC_NVIC_PRIORITY_GROUP(priorityGroup));
+
+	// Set the PRIGROUP[10:8] bits according to the PriorityGroup parameter value
+	NVIC_SetPriorityGrouping(priorityGroup);
+}
 
 /**
   * @brief  This function sets the priority of an interrupt.
