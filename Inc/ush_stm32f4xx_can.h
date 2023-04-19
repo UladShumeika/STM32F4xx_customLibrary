@@ -478,6 +478,14 @@ void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, Functio
  */
 void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag);
 
+/**
+ * @brief 	This function handles CAN interrupt request.
+ * @param 	initStructure - A pointer to a USH_CAN_settingsTypeDef structure that contains the configuration information
+ * 							for the specified CAN peripheral.
+ * @retval	None.
+ */
+void CAN_IRQHandler(USH_CAN_settingsTypeDef *initStructure);
+
 //---------------------------------------------------------------------------
 // CAN interrupt user callbacks
 //---------------------------------------------------------------------------
