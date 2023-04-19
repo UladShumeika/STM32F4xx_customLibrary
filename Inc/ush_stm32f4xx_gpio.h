@@ -2,9 +2,17 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_gpio.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    13-January-2023
   * @brief   Header file of GPIO module
+  *
+  *
+  *
+  * @Major changes v1.1
+  * 	- delete IS_GPIO_INSTANCE macro;
+  * 	- replaced warnings with TO_DO for module features;
+  *		- added alternative functions for CAN1/CAN2;
+  *		- GPIO_init function has been changed to take into account the use of flag strategy;
   *
   ******************************************************************************
   */
@@ -103,7 +111,10 @@ typedef enum
 	GPIO_AF8_UART5		= 0x07UL,		/* UART5 alternative function mapping */
 	GPIO_AF8_USART6		= 0x07UL,		/* USART6 alternative function mapping */
 	GPIO_AF8_UART7		= 0x07UL,		/* UART7 alternative function mapping */
-	GPIO_AF8_UART8		= 0x07UL		/* UART8 alternative function mapping */
+	GPIO_AF8_UART8		= 0x07UL,		/* UART8 alternative function mapping */
+
+	GPIO_AF9_CAN1		= 0x09UL,		/* CAN1 alternative function mapping */
+	GPIO_AF9_CAN2		= 0x09UL		/* CAN2 alternative function mapping */
 } USH_GPIO_alternate;
 
 /**
@@ -183,12 +194,13 @@ typedef enum
 //---------------------------------------------------------------------------
 
 /**
- * @brief 	This function initializes the GPIOx peripheral according to the specified parameters in the USH_GPIO_initTypeDef.
+ * @brief 	This function initializes the GPIOx peripheral according to the specified parameters
+ * 			in the USH_GPIO_initTypeDef.
  * @param 	initStructure - a pointer to a USH_GPIO_initTypeDef structure that contains the configuration information
  * 						    for the specified GPIO peripheral.
- * @retval	None
+ * @retval	The periphery status.
  */
-void GPIO_init(USH_GPIO_initTypeDef *initStructure);
+USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure);
 
 /**
  * @brief	This function sets or clears the selected data port bits.
