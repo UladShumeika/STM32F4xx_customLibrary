@@ -178,8 +178,8 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 			// Set the bit timing register
 			initStructure->CANx->BTR = ((initStructure->Timings.BaudratePrescaler - 1) | \
-									   initStructure->Timings.TimeSegment1			    | \
-									   initStructure->Timings.TimeSegment2			    | \
+									   initStructure->Timings.TimeSegment1			   | \
+									   initStructure->Timings.TimeSegment2			   | \
 									   initStructure->Timings.ResynchJumpWidth);
 		}
 	}
