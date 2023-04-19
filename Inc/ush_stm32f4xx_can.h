@@ -316,6 +316,32 @@ typedef enum
 	CAN_IT_TX_MAILBOX_EMPTY			= CAN_IER_TMEIE			// Transmit mailbox empty interrupt
 } USH_CAN_interrupts;
 
+/**
+ * @brief CAN flags enumeration.
+ */
+typedef enum
+{
+	CAN_FLAG_RQCP0		= 0x00U,		// Request complete MailBox 0 Flag
+	CAN_FLAG_TXOK0		= 0x01U,		// Transmission OK MailBox 0 Flag
+	CAN_FLAG_ALST0		= 0x02U,		// Arbitration Lost MailBox 0 Flag
+	CAN_FLAG_TERR0		= 0x03U,		// Transmission error MailBox 0 Flag
+
+	CAN_FLAG_RQCP1		= 0x08U,		// Request complete MailBox 1 Flag
+	CAN_FLAG_TXOK1		= 0x09U,		// Transmission OK MailBox 1 Flag
+	CAN_FLAG_ALST1		= 0x0AU,		// Arbitration Lost MailBox 1 Flag
+	CAN_FLAG_TERR1		= 0x0BU,		// Transmission error MailBox 1 Flag
+
+	CAN_FLAG_RQCP2		= 0x10U,		// Request complete MailBox 2 Flag
+	CAN_FLAG_TXOK2		= 0x11U,		// Transmission OK MailBox 2 Flag
+	CAN_FLAG_ALST2		= 0x12U,		// Arbitration Lost MailBox 2 Flag
+	CAN_FLAG_TERR2		= 0x13U,		// Transmission error MailBox 2 Flag
+
+	CAN_FLAG_FF0		= 0x103U,   	// RX FIFO 0 Full Flag
+	CAN_FLAG_FOV0		= 0x104U,		// RX FIFO 0 Overrun Flag
+	CAN_FLAG_FF1		= 0x203U,		// RX FIFO 1 Full Flag
+	CAN_FLAG_FOV1		= 0x204U,		// RX FIFO 1 Overrun Flag
+} USH_CAN_flags;
+
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
