@@ -478,4 +478,11 @@ void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, Functio
  */
 void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag);
 
+//---------------------------------------------------------------------------
+// CAN interrupt user callbacks
+//---------------------------------------------------------------------------
+__WEAK void CAN_txMailbox0CompleteCallback(CAN_TypeDef* can);
+__WEAK void CAN_txMailbox1CompleteCallback(CAN_TypeDef* can);
+__WEAK void CAN_txMailbox2CompleteCallback(CAN_TypeDef* can);
+
 #endif /* __USH_STM32F4XX_CAN_H */

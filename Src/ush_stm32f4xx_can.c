@@ -476,3 +476,43 @@ void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag)
 //---------------------------------------------------------------------------
 // Static Functions
 //---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// CAN interrupt user callbacks
+//---------------------------------------------------------------------------
+
+/**
+  * @brief  TX mailbox 0 complete callback.
+  * @note	This function should not be modified, when the callback is needed,
+  * 		the CAN_txMailbox0CompleteCallback could be implemented in the user file.
+  * @param  can - A pointer to CAN peripheral to be used where x is 1 or 2.
+  * @retval None.
+  */
+__WEAK void CAN_txMailbox0CompleteCallback(CAN_TypeDef* can)
+{
+	(void)can;
+}
+
+/**
+  * @brief  TX mailbox 1 complete callback.
+  * @note	This function should not be modified, when the callback is needed,
+  * 		the CAN_txMailbox1CompleteCallback could be implemented in the user file.
+  * @param  can - A pointer to CAN peripheral to be used where x is 1 or 2.
+  * @retval None.
+  */
+__WEAK void CAN_txMailbox1CompleteCallback(CAN_TypeDef* can)
+{
+	(void)can;
+}
+
+/**
+  * @brief  TX mailbox 2 complete callback.
+  * @note	This function should not be modified, when the callback is needed,
+  * 		the CAN_txMailbox2CompleteCallback could be implemented in the user file.
+  * @param  can - A pointer to CAN peripheral to be used where x is 1 or 2.
+  * @retval None.
+  */
+__WEAK void CAN_txMailbox2CompleteCallback(CAN_TypeDef* can)
+{
+	(void)can;
+}
