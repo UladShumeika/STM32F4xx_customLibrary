@@ -20,6 +20,7 @@
 // Defines
 //---------------------------------------------------------------------------
 #define CAN_TIMEOUT_VALUE		(10U)
+#define CAN_FLAG_MASK			(0xFFU)
 
 //---------------------------------------------------------------------------
 // Static function prototypes
@@ -450,6 +451,26 @@ void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, Functio
 	{
 		ierReg &= ~interrupt;
 	}
+}
+
+/**
+ * @brief	This function clears the specified CAN pending flag.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	flag - A flag to clear.
+ * @retval	None.
+ */
+void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag)
+{
+	if(flag <= CAN_FLAG_TERR2)
+	{
+		can->TSR = (1 << flag);
+	} else if((flag == CAN_FLAG_FF0) || (flag == CAN_FLAG_FOV0))
+		   {
+				can->RF0R = (1 << (flag & CAN_FLAG_MASK));
+		   } else 					// for CAN_FLAG_FF1 and CAN_FLAG_FOV1
+		   {
+			   	can->RF1R = (1 << (flag & CAN_FLAG_MASK));
+		   }
 }
 
 //---------------------------------------------------------------------------

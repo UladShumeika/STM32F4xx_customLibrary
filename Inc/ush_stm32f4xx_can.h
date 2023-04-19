@@ -470,4 +470,12 @@ void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, CAN_RxHeaderT
  */
 void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, FunctionalState state);
 
+/**
+ * @brief	This function clears the specified CAN pending flag.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	flag - A flag to clear.
+ * @retval	None.
+ */
+void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag);
+
 #endif /* __USH_STM32F4XX_CAN_H */
