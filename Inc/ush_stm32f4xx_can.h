@@ -434,6 +434,13 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure);
 USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure);
 
 /**
+ * @brief 	This function is used to enable the specified CAN module.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus CAN_enable(CAN_TypeDef* can);
+
+/**
  * @brief  	This function is used to initialize CAN modules global interrupts.
  * @note	This function should not be modified, when global interrupts of CAN modules are required,
  * 			this function must be implemented in the user file.
