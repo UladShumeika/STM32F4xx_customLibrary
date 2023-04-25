@@ -529,28 +529,28 @@ void CAN_IRQHandler(USH_CAN_settingsTypeDef *initStructure)
 		// Mailbox 0 is empty?
 		if((tsrReg & CAN_TSR_RQCP0) != 0U)
 		{
-			//CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP0);
+			CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP0);
 
 			// Transmission OK of mailbox 0
-			if(tsrReg & CAN_TSR_TXOK0)
+			if((tsrReg & CAN_TSR_TXOK0) != 0)
 			{
 				CAN_txMailbox0CompleteCallback(initStructure->CANx);
 			}
 		} else if((tsrReg & CAN_TSR_RQCP1) != 0U) // Mailbox 1 is empty?
 			   {
-					//CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP1);
+					CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP1);
 
 					// Transmission OK of mailbox 1
-					if(tsrReg & CAN_TSR_TXOK1)
+					if((tsrReg & CAN_TSR_TXOK1) != 0U)
 					{
 						CAN_txMailbox1CompleteCallback(initStructure->CANx);
 					}
 			   } else if((tsrReg & CAN_TSR_RQCP2) != 0U) // Mailbox 2 is empty?
 			   {
-				   //CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP1);
+				   CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP2);
 
 				   // Transmission OK of mailbox 2
-				   if(tsrReg & CAN_TSR_TXOK1)
+				   if((tsrReg & CAN_TSR_TXOK1) != 0U)
 				   {
 					   CAN_txMailbox2CompleteCallback(initStructure->CANx);
 				   }
