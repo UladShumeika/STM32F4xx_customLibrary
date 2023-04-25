@@ -488,6 +488,8 @@ void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, Functio
 	{
 		ierReg &= ~interrupt;
 	}
+
+	can->IER = ierReg;
 }
 
 /**
