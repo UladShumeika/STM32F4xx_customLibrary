@@ -492,5 +492,6 @@ void CAN_IRQHandler(USH_CAN_settingsTypeDef *initStructure);
 __WEAK void CAN_txMailbox0CompleteCallback(CAN_TypeDef* can);
 __WEAK void CAN_txMailbox1CompleteCallback(CAN_TypeDef* can);
 __WEAK void CAN_txMailbox2CompleteCallback(CAN_TypeDef* can);
+__WEAK void CAN_rxFifo0MsgPendingCallback(CAN_TypeDef* can);
 
 #endif /* __USH_STM32F4XX_CAN_H */
