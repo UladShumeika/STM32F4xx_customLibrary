@@ -112,7 +112,11 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			ticksStart = MISC_timeoutGetTick();
 			while(((initStructure->CANx->MSR) & CAN_MSR_INAK) != CAN_MSR_INAK)
 			{
-				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE) status = STATUS_TIMEOUT;
+				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
+				{
+					status = STATUS_TIMEOUT;
+					break;
+				}
 			}
 
 			// Exit from sleep mode (see Figure 336 RM0090)
@@ -122,7 +126,11 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			ticksStart = MISC_timeoutGetTick();
 			while(((initStructure->CANx->MSR) & CAN_MSR_SLAK) != CAN_MSR_SLAK)
 			{
-				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE) status = STATUS_TIMEOUT;
+				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
+				{
+					status = STATUS_TIMEOUT;
+					break;
+				}
 			}
 
 			// Set the automatic bus-off management
