@@ -23,10 +23,6 @@
 #define CAN_FLAG_MASK			(0xFFU)
 
 //---------------------------------------------------------------------------
-// Static function prototypes
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
 // Initialization functions
 //---------------------------------------------------------------------------
 
@@ -195,7 +191,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
  *          in the USH_CAN_filterTypeDef.
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @param 	initFilterStructure - A pointer to a USH_CAN_filterTypeDef structure.
- * @return	The peripheral status.
+ * @retval	The peripheral status.
  */
 USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
 {
