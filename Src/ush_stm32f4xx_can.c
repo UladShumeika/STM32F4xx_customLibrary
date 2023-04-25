@@ -522,6 +522,18 @@ void CAN_IRQHandler(USH_CAN_settingsTypeDef *initStructure)
 				   }
 			   }
 	}
+
+/* -------------- FIFO 0 message pending interrupt handling -------------- */
+
+	// Check if there is a message waiting interrupt
+	if((interrupts & CAN_IT_RX_FIFO0_MSG_PENDING) != 0U)
+	{
+		// Additionally, check if there are any unaccepted messages
+		if((initStructure->CANx->RF0R & CAN_RF0R_FMP0) != 0U)
+		{
+			CAN_rxFifo0MsgPendingCallback(initStructure->CANx);
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
