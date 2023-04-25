@@ -487,8 +487,10 @@ void CAN_IRQHandler(USH_CAN_settingsTypeDef *initStructure)
 	uint32_t interrupts = initStructure->CANx->IER;
 	uint32_t tsrReg		= initStructure->CANx->TSR;
 
+/* -------------- Mailbox interrupt handling -------------- */
+
 	// Сheck if interrupt on empty mailbox is enabled
-	if((interrupts & CAN_IER_TMEIE) != 0U)
+	if((interrupts & CAN_IT_TX_MAILBOX_EMPTY) != 0U)
 	{
 		// Mailbox 0 is empty?
 		if((tsrReg & CAN_TSR_RQCP0) != 0U)
