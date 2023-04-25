@@ -124,7 +124,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 			// Wait till the CAN sleep mode is disabled
 			ticksStart = MISC_timeoutGetTick();
-			while(((initStructure->CANx->MSR) & CAN_MSR_SLAK) != CAN_MSR_SLAK)
+			while(((initStructure->CANx->MSR) & CAN_MSR_SLAK) != 0U)
 			{
 				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
 				{
