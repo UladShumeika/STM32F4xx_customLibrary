@@ -23,10 +23,6 @@
 #define CAN_FLAG_MASK			(0xFFU)
 
 //---------------------------------------------------------------------------
-// Static function prototypes
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
 // Initialization functions
 //---------------------------------------------------------------------------
 
@@ -106,6 +102,9 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 		if(status == STATUS_OK)
 		{
+			// Enable CAN1 clock
+			__RCC_CAN1_CLOCK_ENABLE();
+
 			// Request initialization
 			initStructure->CANx->MCR |= CAN_MCR_INRQ;
 
@@ -113,7 +112,11 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			ticksStart = MISC_timeoutGetTick();
 			while(((initStructure->CANx->MSR) & CAN_MSR_INAK) != CAN_MSR_INAK)
 			{
-				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE) status = STATUS_TIMEOUT;
+				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
+				{
+					status = STATUS_TIMEOUT;
+					break;
+				}
 			}
 
 			// Exit from sleep mode (see Figure 336 RM0090)
@@ -121,9 +124,13 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 			// Wait till the CAN sleep mode is disabled
 			ticksStart = MISC_timeoutGetTick();
-			while(((initStructure->CANx->MSR) & CAN_MSR_SLAK) != CAN_MSR_SLAK)
+			while(((initStructure->CANx->MSR) & CAN_MSR_SLAK) != 0U)
 			{
-				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE) status = STATUS_TIMEOUT;
+				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
+				{
+					status = STATUS_TIMEOUT;
+					break;
+				}
 			}
 
 			// Set the automatic bus-off management
@@ -177,9 +184,10 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			}
 
 			// Set the bit timing register
-			initStructure->CANx->BTR = ((initStructure->Timings.BaudratePrescaler - 1) | \
-									   initStructure->Timings.TimeSegment1			   | \
-									   initStructure->Timings.TimeSegment2			   | \
+			initStructure->CANx->BTR = (initStructure->Mode							  | \
+									   (initStructure->Timings.BaudratePrescaler - 1) | \
+									   initStructure->Timings.TimeSegment1			  | \
+									   initStructure->Timings.TimeSegment2			  | \
 									   initStructure->Timings.ResynchJumpWidth);
 		}
 	}
@@ -192,7 +200,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
  *          in the USH_CAN_filterTypeDef.
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @param 	initFilterStructure - A pointer to a USH_CAN_filterTypeDef structure.
- * @return	The peripheral status.
+ * @retval	The peripheral status.
  */
 USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
 {
@@ -300,6 +308,36 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
 //---------------------------------------------------------------------------
 // Library Functions
 //---------------------------------------------------------------------------
+
+/**
+ * @brief 	This function is used to enable the specified CAN module.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @retval	The peripheral status.
+ */
+USH_peripheryStatus CAN_enable(CAN_TypeDef* can)
+{
+	USH_peripheryStatus status = STATUS_OK;
+	uint32_t ticksStart = 0;
+
+	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
+
+	// Request leave initialization
+	can->MCR &= ~CAN_MCR_INRQ;
+
+	// Wait till the CAN initialization mode is enabled
+	ticksStart = MISC_timeoutGetTick();
+	while(((can->MSR) & CAN_MSR_INAK) != 0U)
+	{
+		if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
+		{
+			status = STATUS_TIMEOUT;
+			break;
+		}
+	}
+
+	return status;
+}
 
 /**
  * @brief  	This function is used to initialize CAN modules global interrupts.
@@ -451,6 +489,8 @@ void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, Functio
 	{
 		ierReg &= ~interrupt;
 	}
+
+	can->IER = ierReg;
 }
 
 /**
@@ -484,38 +524,52 @@ void CAN_IRQHandler(USH_CAN_settingsTypeDef *initStructure)
 	uint32_t interrupts = initStructure->CANx->IER;
 	uint32_t tsrReg		= initStructure->CANx->TSR;
 
+/* -------------- Mailbox interrupt handling -------------- */
+
 	// Сheck if interrupt on empty mailbox is enabled
-	if((interrupts & CAN_IER_TMEIE) != 0U)
+	if((interrupts & CAN_IT_TX_MAILBOX_EMPTY) != 0U)
 	{
 		// Mailbox 0 is empty?
 		if((tsrReg & CAN_TSR_RQCP0) != 0U)
 		{
-			//CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP0);
+			CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP0);
 
 			// Transmission OK of mailbox 0
-			if(tsrReg & CAN_TSR_TXOK0)
+			if((tsrReg & CAN_TSR_TXOK0) != 0)
 			{
 				CAN_txMailbox0CompleteCallback(initStructure->CANx);
 			}
 		} else if((tsrReg & CAN_TSR_RQCP1) != 0U) // Mailbox 1 is empty?
 			   {
-					//CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP1);
+					CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP1);
 
 					// Transmission OK of mailbox 1
-					if(tsrReg & CAN_TSR_TXOK1)
+					if((tsrReg & CAN_TSR_TXOK1) != 0U)
 					{
 						CAN_txMailbox1CompleteCallback(initStructure->CANx);
 					}
 			   } else if((tsrReg & CAN_TSR_RQCP2) != 0U) // Mailbox 2 is empty?
 			   {
-				   //CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP1);
+				   CAN_clearFlag(initStructure->CANx, CAN_FLAG_RQCP2);
 
 				   // Transmission OK of mailbox 2
-				   if(tsrReg & CAN_TSR_TXOK1)
+				   if((tsrReg & CAN_TSR_TXOK1) != 0U)
 				   {
 					   CAN_txMailbox2CompleteCallback(initStructure->CANx);
 				   }
 			   }
+	}
+
+/* -------------- FIFO 0 message pending interrupt handling -------------- */
+
+	// Check if there is a message waiting interrupt
+	if((interrupts & CAN_IT_RX_FIFO0_MSG_PENDING) != 0U)
+	{
+		// Additionally, check if there are any unaccepted messages
+		if((initStructure->CANx->RF0R & CAN_RF0R_FMP0) != 0U)
+		{
+			CAN_rxFifo0MsgPendingCallback(initStructure->CANx);
+		}
 	}
 }
 
@@ -559,6 +613,18 @@ __WEAK void CAN_txMailbox1CompleteCallback(CAN_TypeDef* can)
   * @retval None.
   */
 __WEAK void CAN_txMailbox2CompleteCallback(CAN_TypeDef* can)
+{
+	(void)can;
+}
+
+/**
+  * @brief  FIFO 0 message pending callback.
+  * @note	This function should not be modified, when the callback is needed,
+  * 		the CAN_rxFifo0MsgPendingCallback could be implemented in the user file.
+  * @param  can - A pointer to CAN peripheral to be used where x is 1 or 2.
+  * @retval None.
+  */
+__WEAK void CAN_rxFifo0MsgPendingCallback(CAN_TypeDef* can)
 {
 	(void)can;
 }
