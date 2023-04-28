@@ -36,6 +36,24 @@
 // Structures and enumerations
 //---------------------------------------------------------------------------
 
+#if defined(STM32F407xx)
+
+/**
+ * @brief Voltage regulator scaling enumeration
+ */
+typedef enum
+{
+	PWR_VOLTAGE_SCALE_1			= PWR_CR_VOS,		/* Regulator voltage output Scale 1 mode.
+													   System frequency up to 168 MHz. */
+
+	PWR_VOLTAGE_SCALE_2			= 0x00U,			/* Regulator voltage output Scale 2 mode.
+													   System frequency up to 144 MHz. */
+} USH_PWR_voltageScaling;
+
+#endif
+
+#if defined(STM32F429xx)
+
 /**
  * @brief Voltage regulator scaling enumeration
  */
@@ -44,17 +62,14 @@ typedef enum
 	PWR_VOLTAGE_SCALE_1			= PWR_CR_VOS,		/* Regulator voltage output Scale 1 mode.
 													   If overdrive mode OFF then system frequency up to 168 MHz.
 													   If overdrive mode ON then system frequency up to 180 MHz. */
-#if defined(STM32F429xx)
+
 	PWR_VOLTAGE_SCALE_2			= PWR_CR_VOS_1,		/* Regulator voltage output Scale 2 mode.
 													   If overdrive mode OFF then system frequency up to 144 MHz.
 													   If overdrive mode ON then system frequency up to 168 MHz. */
 
 	PWR_VOLTAGE_SCALE_3			= PWR_CR_VOS_0		/* Regulator voltage output Scale 3 mode.
  												       System frequency up to 120 MHz. */
-#endif
 } USH_PWR_voltageScaling;
-
-#if defined(STM32F429xx)
 
 /**
  * @brief PWR flags enumeration
