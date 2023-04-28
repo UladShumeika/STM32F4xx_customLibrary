@@ -17,6 +17,7 @@
 #include "ush_stm32f4xx_gpio.h"
 #include "ush_stm32f4xx_dma.h"
 #include "ush_stm32f4xx_uart.h"
+#include <stddef.h>
 
 //---------------------------------------------------------------------------
 // Defines
@@ -49,6 +50,7 @@ USH_DMA_initTypeDef initDMA_rxStructure = {0,};
 static uint16_t USART_BRRSampling16(uint32_t pclk, uint32_t bautrate);
 static uint32_t USART_getPCLK1Freq(void);
 static uint32_t USART_getPCLK2Freq(void);
+static DMA_Stream_TypeDef* USART_getDmaStream(USART_TypeDef* usart, USH_USART_mode mode);
 
 //---------------------------------------------------------------------------
 // Initialization functions
@@ -75,12 +77,10 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	uint32_t pclk = 0;
 
 	// Check parameters
-	assert_param(IS_USART_ALL_INSTANCE(initStructure->USARTx));
+	assert_param(IS_UART_INSTANCE(initStructure->USARTx));
 	assert_param(IS_USART_PINSPACK(initStructure->PinsPack));
 	assert_param(IS_USART_BAUDRATE(initStructure->BaudRate));
 	assert_param(IS_USART_MODE(initStructure->Mode));
-
-	USH_USART_DISABLE(initStructure->USARTx);
 
 	/* ----------------------- GPIO configuration -------------------------- */
 
@@ -237,7 +237,7 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	// USART BRR configuration
 	initStructure->USARTx->BRR = USART_BRRSampling16(pclk, initStructure->BaudRate);
 
-	USH_USART_ENABLE(initStructure->USARTx);
+	__USART_ENABLE(initStructure->USARTx);
 
 	MISC_NVIC_SetPriority(USART1_IRQn, PREEMPTION_PRIORITY_UART, SUBPRIORITY_UART);
 	MISC_NVIC_EnableIRQ(USART1_IRQn);
@@ -259,7 +259,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
 	uint32_t startTicks = MISC_timeoutGetTick();
 
 	// Check parameters
-	assert_param(IS_USART_ALL_INSTANCE(usart));
+	assert_param(IS_UART_INSTANCE(usart));
 	assert_param(IS_USART_MESSAGE_SIZE(size));
 
 	if(!(usart->SR & USART_SR_TC))
@@ -313,7 +313,7 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
 	uint32_t startTicks = MISC_timeoutGetTick();
 
 	// check parameters
-	assert_param(IS_USART_ALL_INSTANCE(usart));
+	assert_param(IS_UART_INSTANCE(usart));
 	assert_param(IS_USART_MESSAGE_SIZE(size));
 
 	if(!(usart->SR & USART_SR_TC))
@@ -362,7 +362,7 @@ void USART_clearFlags(USART_TypeDef* usart, USH_USART_flags flags)
 	uint16_t temp = 0;
 
 	// Check parameters
-	assert_param(IS_USART_ALL_INSTANCE(usart));
+	assert_param(IS_UART_INSTANCE(usart));
 	assert_param(IS_USART_CLEAR_FLAGS(flags));
 
 	if((flags == USART_FLAG_TXE) || (flags < USART_FLAG_RXNE))
@@ -374,47 +374,6 @@ void USART_clearFlags(USART_TypeDef* usart, USH_USART_flags flags)
 	{
 		usart->SR = ~(flags);
 	}
-}
-
-/**
- * @brief 	This function returns a pointer to DMA stream depending on the received pointer to U(S)ART.
- * @param 	usart - A pointer to U(S)ART peripheral to be used where x is between 1 to 8.
- * @param 	mode - U(S)ART modes selection. This parameter can be a value of @ref USH_USART_mode. if mode is USART_MODE_RX_TX than the function
- * 				   will use mode like USART_MODE_TX.
- * @return	A pointer to DMA stream.
- */
-DMA_Stream_TypeDef* USART_getDmaStream(USART_TypeDef* usart, USH_USART_mode mode)
-{
-	DMA_Stream_TypeDef* DMA_Stream;
-
-	if(mode == USART_MODE_RX_TX) mode = USART_MODE_TX;
-
-	if(usart == USART1)
-	{
-		DMA_Stream = (mode == USART_MODE_TX) ? DMA2_Stream7 : DMA2_Stream2;
-	} else if(usart == USART2)
-		   {
-		   	   DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream6 : DMA1_Stream5;
-		   } else if(usart == USART3)
-		   	   	  {
-			   	  	  DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream3 : DMA1_Stream1;
-		   	   	  } else if(usart == UART4)
-		   	   	  	  	 {
-		   	   		  	 	 DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream4 : DMA1_Stream2;
-		   	   	  	  	 } else if(usart == UART5)
-		   	   	  	  	 	 	{
-		   	   	  	  		 		DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream7 : DMA1_Stream0;
-		   	   	  	  	 	 	} else if(usart == USART6)
-		   	   	  	  	 	 		   {
-		   	   	  	  	 	 		   	   DMA_Stream = (mode == USART_MODE_TX) ? DMA2_Stream6 : DMA2_Stream1;
-		   	   	  	  	 	 		   } else if(usart == UART7)
-		   	   	  	  	 	 		   	   	  {
-		   	   	  	  	 	 			   	   	  DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream1 : DMA1_Stream3;
-		   	   	  	  	 	 		   	   	  } else	// UART8
-		   	   	  	  	 	 		   	   	  {
-		   	   	  	  	 	 		   	   		  DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream0 : DMA1_Stream6;
-		   	   	  	  	 	 		   	   	  }
-	return DMA_Stream;
 }
 
 /**
@@ -495,6 +454,66 @@ static uint32_t USART_getPCLK1Freq(void)
 static uint32_t USART_getPCLK2Freq(void)
 {
 	return (SystemCoreClock >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE2) >> 13]); // 13 - a position in CFGR register
+}
+
+/**
+ * @brief 	This function returns a pointer to DMA stream depending on the received pointer to U(S)ART.
+ * @param 	usart - A pointer to U(S)ART peripheral to be used where x is between 1 to 8.
+ * @param 	mode - U(S)ART modes selection. This parameter can be a value of @ref USH_USART_mode. if mode is USART_MODE_RX_TX than the function
+ * 				   will use mode like USART_MODE_TX.
+ * @return	A pointer to DMA stream.
+ */
+static DMA_Stream_TypeDef* USART_getDmaStream(USART_TypeDef* usart, USH_USART_mode mode)
+{
+	DMA_Stream_TypeDef* DMA_Stream;
+
+	// Check parameters
+	assert_param(IS_UART_INSTANCE(usart));
+	assert_param(IS_USART_MODE(mode));
+
+	if(mode == USART_MODE_RX_TX) mode = USART_MODE_TX;
+
+	switch((uint32_t)usart)
+	{
+		case (uint32_t)USART1:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA2_Stream7 : DMA2_Stream2;
+			break;
+
+		case (uint32_t)USART2:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream6 : DMA1_Stream5;
+			break;
+
+		case (uint32_t)USART3:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream3 : DMA1_Stream1;
+			break;
+
+		case (uint32_t)UART4:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream4 : DMA1_Stream2;
+			break;
+
+		case (uint32_t)UART5:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream7 : DMA1_Stream0;
+			break;
+
+		case (uint32_t)USART6:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA2_Stream6 : DMA2_Stream1;
+			break;
+
+#if defined(STM32F429xx)
+		case (uint32_t)UART7:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream1 : DMA1_Stream3;
+			break;
+
+		case (uint32_t)UART8:
+			DMA_Stream = (mode == USART_MODE_TX) ? DMA1_Stream0 : DMA1_Stream6;
+			break;
+#endif
+
+		default:
+			DMA_Stream = NULL;
+	}
+
+	return DMA_Stream;
 }
 
 //---------------------------------------------------------------------------

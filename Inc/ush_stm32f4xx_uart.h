@@ -2,12 +2,20 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_usart.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    21-February-2023
   * @brief   Header file of U(S)ART module.
   *
   * NOTE: This file is not a full-fledged U(S)ART driver, but contains only some of
   * 	  the functions that are needed for the current project.
+  *
+  *
+  *
+  * @Major changes v1.1
+  *		- USART_getDmaStream function changed and moved to "static" section;
+  *		- split macro section into two sections and renamed USART enable/disable macros;
+  *		- deleted IS_USART_ALL_INSTENCE macro;
+  *
   ******************************************************************************
   */
 
@@ -131,27 +139,8 @@ typedef enum
 } USH_USART_flags;
 
 //---------------------------------------------------------------------------
-// Macros
+// Test macros
 //---------------------------------------------------------------------------
-
-/**
- * @brief	Enable U(S)ART
- */
-#define USH_USART_ENABLE(HANDLE)			((HANDLE)->CR1 |= USART_CR1_UE);
-
-/**
- * @brief	Disable U(S)ART
- */
-#define USH_USART_DISABLE(HANDLE)			((HANDLE)->CR1 &= ~USART_CR1_UE);
-
-#define IS_USART_ALL_INSTANCE(INSTANCE)  	(((INSTANCE) == USART1)	|| \
-										 	 ((INSTANCE) == USART2)	|| \
-											 ((INSTANCE) == USART3)	|| \
-											 ((INSTANCE) == UART4)	|| \
-											 ((INSTANCE) == UART5)	|| \
-											 ((INSTANCE) == USART6)	|| \
-											 ((INSTANCE) == UART7)  || \
-											 ((INSTANCE) == UART8))
 
 #define IS_USART_PINSPACK(PINSPACK)			(((PINSPACK) == USART_PINSPACK_1) || \
 											 ((PINSPACK) == USART_PINSPACK_2))
@@ -175,6 +164,16 @@ typedef enum
 											 ((FLAG) == USART_FLAG_LBD)  || \
 											 ((FLAG) == USART_FLAG_CTS)  || \
 											 ((FLAG) == USART_FLAG_ALL))
+
+//---------------------------------------------------------------------------
+// Enable or disable peripherals
+//---------------------------------------------------------------------------
+
+/*
+ * U(S)ART enable/disable
+ */
+#define __USART_ENABLE(HANDLE)					((HANDLE)->CR1 |= USART_CR1_UE);
+#define __USART_DISABLE(HANDLE)					((HANDLE)->CR1 &= ~USART_CR1_UE);
 
 //---------------------------------------------------------------------------
 // External function prototypes
@@ -220,15 +219,6 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
  * @retval	None.
  */
 void USART_clearFlags(USART_TypeDef* usart, USH_USART_flags flags);
-
-/**
- * @brief 	This function returns a pointer to DMA stream depending on the received pointer to U(S)ART.
- * @param 	usart - A pointer to U(S)ART peripheral to be used where x is between 1 to 8.
- * @param 	mode - U(S)ART modes selection. This parameter can be a value of @ref USH_USART_mode. if mode is USART_MODE_RX_TX than the function
- * 				   will use mode like USART_MODE_TX.
- * @return	A pointer to DMA stream.
- */
-DMA_Stream_TypeDef* USART_getDmaStream(USART_TypeDef* usart, USH_USART_mode mode);
 
 /**
  * @brief 	This function handles U(S)ART interrupt request.

@@ -121,18 +121,32 @@ typedef enum
 	RCC_FLAG_HSIRDY			= RCC_CR_HSIRDY,		/* HSI clock ready flag */
 	RCC_FLAG_HSERDY			= RCC_CR_HSERDY,		/* HSE clock ready flag */
 	RCC_FLAG_PLLRDY			= RCC_CR_PLLRDY,		/* PLL clock ready flag */
-	RCC_FLAG_PLLI2SRDY		= RCC_CR_PLLI2SRDY,		/* PLLI2S clock ready flag */
-	RCC_FLAG_PLLSAIRDY		= RCC_CR_PLLSAIRDY		/* PLLSAI clock ready flag */
+
+#if defined(STM32F429)
+	RCC_FLAG_PLLSAIRDY		= RCC_CR_PLLSAIRDY,		/* PLLSAI clock ready flag */
+#endif
+
+	RCC_FLAG_PLLI2SRDY		= RCC_CR_PLLI2SRDY		/* PLLI2S clock ready flag */
 } USH_RCC_flags;
 
 //---------------------------------------------------------------------------
 // Test macros
 //---------------------------------------------------------------------------
+
+#if defined(STM32F429xx)
+
 #define IS_RCC_FLAGS(FLAG)						   (((FLAG) == RCC_FLAG_HSIRDY)	   || \
 													((FLAG) == RCC_FLAG_HSERDY)    || \
 													((FLAG) == RCC_FLAG_PLLRDY)    || \
 													((FLAG) == RCC_FLAG_PLLI2SRDY) || \
 													((FLAG) == RCC_FLAG_PLLSAIRDY))
+#elif defined(STM32F407xx)
+
+#define IS_RCC_FLAGS(FLAG)						   (((FLAG) == RCC_FLAG_HSIRDY)	   || \
+													((FLAG) == RCC_FLAG_HSERDY)    || \
+													((FLAG) == RCC_FLAG_PLLRDY)    || \
+													((FLAG) == RCC_FLAG_PLLI2SRDY))
+#endif
 
 #define IS_RCC_PLL_SOURCE(SOURCE)				   (((SOURCE) == RCC_PLLSOURCE_HSI) || \
 													((SOURCE) == RCC_PLLSOURCE_HSE))
@@ -227,13 +241,13 @@ typedef enum
  * CAN1 clock enable/disable
  */
 #define __RCC_CAN1_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_CAN1EN)
-#define __RCC_CAN1_CLOCK_DISABLE()					(RCC->APB1ENR |= RCC_APB1RSTR_CAN1RST)
+#define __RCC_CAN1_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_CAN1RST)
 
 /*
  * CAN2 clock enable/disable
  */
 #define __RCC_CAN2_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_CAN2EN)
-#define __RCC_CAN2_CLOCK_DISABLE()					(RCC->APB1ENR |= RCC_APB1RSTR_CAN2RST)
+#define __RCC_CAN2_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_CAN2RST)
 
 /**
  * @brief Power interface clock enable

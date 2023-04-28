@@ -10,8 +10,8 @@
   *
   *	@Major changes v1.1
   *		- added the ability to configure a preemption priority group;
-  *		- added PWR section
-  *   - redisigned MISC_timeoutTimerInit function;
+  *		- added PWR section for stm32f407 and stm32f429;
+  *   	- redisigned MISC_timeoutTimerInit function;
   *
   ******************************************************************************
   */
@@ -30,11 +30,29 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
-#define MIN_PRIORITY	(15U)
+#define MIN_PRIORITY			(15U)
 
 //---------------------------------------------------------------------------
 // Structures and enumerations
 //---------------------------------------------------------------------------
+
+#if defined(STM32F407xx)
+
+/**
+ * @brief Voltage regulator scaling enumeration
+ */
+typedef enum
+{
+	PWR_VOLTAGE_SCALE_1			= PWR_CR_VOS,		/* Regulator voltage output Scale 1 mode.
+													   System frequency up to 168 MHz. */
+
+	PWR_VOLTAGE_SCALE_2			= 0x00U,			/* Regulator voltage output Scale 2 mode.
+													   System frequency up to 144 MHz. */
+} USH_PWR_voltageScaling;
+
+#endif
+
+#if defined(STM32F429xx)
 
 /**
  * @brief Voltage regulator scaling enumeration
@@ -50,7 +68,7 @@ typedef enum
 													   If overdrive mode ON then system frequency up to 168 MHz. */
 
 	PWR_VOLTAGE_SCALE_3			= PWR_CR_VOS_0		/* Regulator voltage output Scale 3 mode.
-													   System frequency up to 120 MHz. */
+ 												       System frequency up to 120 MHz. */
 } USH_PWR_voltageScaling;
 
 /**
@@ -61,6 +79,8 @@ typedef enum
 	PWR_FLAG_ODSWRDY 	= PWR_CSR_ODSWRDY,		/* Over-drive mode switching ready flag */
 	PWR_FLAG_ODRDY   	= PWR_CSR_ODRDY			/* Over-drive mode ready flag */
 } USH_PWR_flags;
+
+#endif
 
 /**
  * @brief Preemption priority group enumeration
@@ -122,9 +142,16 @@ typedef enum
 #define IS_MISC_PWR_FLAGS(FLAG)						   (((FLAG) == PWR_FLAG_ODSWRDY) || \
 														((FLAG) == PWR_FLAG_ODRDY))
 
+#if defined(STM32F429xx)
+
 #define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   (((SCALE) == PWR_VOLTAGE_SCALE_1)  || \
 														((SCALE) == PWR_VOLTAGE_SCALE_2)  || \
 														((SCALE) == PWR_VOLTAGE_SCALE_3))
+#elif defined(STM32F407xx)
+
+#define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   ((SCALE) == PWR_VOLTAGE_SCALE_1)	 || \
+													   ((SCALE) == PWR_VOLTAGE_SCALE_2))
+#endif
 
 #define IS_MISC_NVIC_PRIORITY_GROUP(GROUP) 			   (((GROUP) == NVIC_PRIORITYGROUP_0) || \
                                        	   	   	 	 	((GROUP) == NVIC_PRIORITYGROUP_1) || \
@@ -137,6 +164,8 @@ typedef enum
 #define IS_MISC_NVIC_SUB_PRIORITY(PRIORITY)  			((PRIORITY) < 16U)
 
 #define IS_MISC_NVIC_DEVICE_IRQ(IRQ)                	((IRQ) >= (IRQn_Type)0x00U)
+
+#if defined(STM32F429xx)
 
 #define IS_MISC_FLASH_LATENCY(LATENCY)					(((LATENCY) == FLASH_LATENCY_0) || \
 														 ((LATENCY) == FLASH_LATENCY_1) || \
@@ -154,6 +183,18 @@ typedef enum
 														 ((LATENCY) == FLASH_LATENCY_13) || \
 														 ((LATENCY) == FLASH_LATENCY_14) || \
 														 ((LATENCY) == FLASH_LATENCY_15))
+
+#elif defined(STM32F407xx)
+
+#define IS_MISC_FLASH_LATENCY(LATENCY)					(((LATENCY) == FLASH_LATENCY_0) || \
+														 ((LATENCY) == FLASH_LATENCY_1) || \
+														 ((LATENCY) == FLASH_LATENCY_2) || \
+														 ((LATENCY) == FLASH_LATENCY_3) || \
+														 ((LATENCY) == FLASH_LATENCY_4) || \
+														 ((LATENCY) == FLASH_LATENCY_5) || \
+														 ((LATENCY) == FLASH_LATENCY_6) || \
+														 ((LATENCY) == FLASH_LATENCY_7))
+#endif
 
 //---------------------------------------------------------------------------
 // External function prototypes
@@ -173,12 +214,16 @@ typedef enum
  */
 void MISC_PWR_mainRegulatorModeConfig(USH_PWR_voltageScaling voltageScaling);
 
+#if defined(STM32F429xx)
+
 /**
  * @brief 	This function returns flag status.
  * @param	flags - PWR flags. This parameter can be a value of @ref USH_DMA_flags.
  * @retval	Flags status.
  */
 FlagStatus MISC_PWR_getFlagStatus(USH_PWR_flags flags);
+
+#endif
 
 //---------------------------------------------------------------------------
 // The section of timeout timer
