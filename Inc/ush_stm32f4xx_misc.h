@@ -139,6 +139,8 @@ typedef enum
 
 #define IS_MISC_NVIC_DEVICE_IRQ(IRQ)                	((IRQ) >= (IRQn_Type)0x00U)
 
+#if defined(STM32F429xx)
+
 #define IS_MISC_FLASH_LATENCY(LATENCY)					(((LATENCY) == FLASH_LATENCY_0) || \
 														 ((LATENCY) == FLASH_LATENCY_1) || \
 														 ((LATENCY) == FLASH_LATENCY_2) || \
@@ -155,6 +157,18 @@ typedef enum
 														 ((LATENCY) == FLASH_LATENCY_13) || \
 														 ((LATENCY) == FLASH_LATENCY_14) || \
 														 ((LATENCY) == FLASH_LATENCY_15))
+
+#elif defined(STM32F407xx)
+
+#define IS_MISC_FLASH_LATENCY(LATENCY)					(((LATENCY) == FLASH_LATENCY_0) || \
+														 ((LATENCY) == FLASH_LATENCY_1) || \
+														 ((LATENCY) == FLASH_LATENCY_2) || \
+														 ((LATENCY) == FLASH_LATENCY_3) || \
+														 ((LATENCY) == FLASH_LATENCY_4) || \
+														 ((LATENCY) == FLASH_LATENCY_5) || \
+														 ((LATENCY) == FLASH_LATENCY_6) || \
+														 ((LATENCY) == FLASH_LATENCY_7))
+#endif
 
 //---------------------------------------------------------------------------
 // External function prototypes
