@@ -127,9 +127,17 @@ typedef enum
 #define IS_MISC_PWR_FLAGS(FLAG)						   (((FLAG) == PWR_FLAG_ODSWRDY) || \
 														((FLAG) == PWR_FLAG_ODRDY))
 
+#if defined(STM32F429xx)
+
 #define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   (((SCALE) == PWR_VOLTAGE_SCALE_1)  || \
 														((SCALE) == PWR_VOLTAGE_SCALE_2)  || \
 														((SCALE) == PWR_VOLTAGE_SCALE_3))
+#elif defined(STM32F407xx)
+
+#define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   ((SCALE) == PWR_VOLTAGE_SCALE_1)
+
+#endif
+
 
 #define IS_MISC_NVIC_PRIORITY_GROUP(GROUP) 			   (((GROUP) == NVIC_PRIORITYGROUP_0) || \
                                        	   	   	 	 	((GROUP) == NVIC_PRIORITYGROUP_1) || \
