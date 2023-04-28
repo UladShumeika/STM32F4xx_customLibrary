@@ -227,13 +227,13 @@ typedef enum
  * CAN1 clock enable/disable
  */
 #define __RCC_CAN1_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_CAN1EN)
-#define __RCC_CAN1_CLOCK_DISABLE()					(RCC->APB1ENR |= RCC_APB1RSTR_CAN1RST)
+#define __RCC_CAN1_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_CAN1RST)
 
 /*
  * CAN2 clock enable/disable
  */
 #define __RCC_CAN2_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_CAN2EN)
-#define __RCC_CAN2_CLOCK_DISABLE()					(RCC->APB1ENR |= RCC_APB1RSTR_CAN2RST)
+#define __RCC_CAN2_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_CAN2RST)
 
 /**
  * @brief Power interface clock enable
