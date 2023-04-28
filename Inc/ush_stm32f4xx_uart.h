@@ -222,15 +222,6 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
 void USART_clearFlags(USART_TypeDef* usart, USH_USART_flags flags);
 
 /**
- * @brief 	This function returns a pointer to DMA stream depending on the received pointer to U(S)ART.
- * @param 	usart - A pointer to U(S)ART peripheral to be used where x is between 1 to 8.
- * @param 	mode - U(S)ART modes selection. This parameter can be a value of @ref USH_USART_mode. if mode is USART_MODE_RX_TX than the function
- * 				   will use mode like USART_MODE_TX.
- * @return	A pointer to DMA stream.
- */
-DMA_Stream_TypeDef* USART_getDmaStream(USART_TypeDef* usart, USH_USART_mode mode);
-
-/**
  * @brief 	This function handles U(S)ART interrupt request.
  * @param 	initStructure - A pointer to a USH_USART_initTypeDef structure that contains the configuration information
  * 							for the specified U(S)ART peripheral.
