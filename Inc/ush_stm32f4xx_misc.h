@@ -10,7 +10,7 @@
   *
   *	@Major changes v1.1
   *		- added the ability to configure a preemption priority group;
-  *		- added PWR section
+  *		- added PWR section for stm32f407 and stm32f429;
   *   	- redisigned MISC_timeoutTimerInit function;
   *
   ******************************************************************************
