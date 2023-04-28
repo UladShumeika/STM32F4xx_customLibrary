@@ -139,15 +139,6 @@ typedef enum
 // Test macros
 //---------------------------------------------------------------------------
 
-#define IS_USART_ALL_INSTANCE(INSTANCE)  	(((INSTANCE) == USART1)	|| \
-										 	 ((INSTANCE) == USART2)	|| \
-											 ((INSTANCE) == USART3)	|| \
-											 ((INSTANCE) == UART4)	|| \
-											 ((INSTANCE) == UART5)	|| \
-											 ((INSTANCE) == USART6)	|| \
-											 ((INSTANCE) == UART7)  || \
-											 ((INSTANCE) == UART8))
-
 #define IS_USART_PINSPACK(PINSPACK)			(((PINSPACK) == USART_PINSPACK_1) || \
 											 ((PINSPACK) == USART_PINSPACK_2))
 
