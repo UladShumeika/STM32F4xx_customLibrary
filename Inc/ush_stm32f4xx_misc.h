@@ -149,10 +149,9 @@ typedef enum
 														((SCALE) == PWR_VOLTAGE_SCALE_3))
 #elif defined(STM32F407xx)
 
-#define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   ((SCALE) == PWR_VOLTAGE_SCALE_1)
-
+#define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   ((SCALE) == PWR_VOLTAGE_SCALE_1)	 || \
+													   ((SCALE) == PWR_VOLTAGE_SCALE_2))
 #endif
-
 
 #define IS_MISC_NVIC_PRIORITY_GROUP(GROUP) 			   (((GROUP) == NVIC_PRIORITYGROUP_0) || \
                                        	   	   	 	 	((GROUP) == NVIC_PRIORITYGROUP_1) || \
