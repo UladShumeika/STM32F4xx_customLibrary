@@ -136,18 +136,8 @@ typedef enum
 } USH_USART_flags;
 
 //---------------------------------------------------------------------------
-// Macros
+// Test macros
 //---------------------------------------------------------------------------
-
-/**
- * @brief	Enable U(S)ART
- */
-#define USH_USART_ENABLE(HANDLE)			((HANDLE)->CR1 |= USART_CR1_UE);
-
-/**
- * @brief	Disable U(S)ART
- */
-#define USH_USART_DISABLE(HANDLE)			((HANDLE)->CR1 &= ~USART_CR1_UE);
 
 #define IS_USART_ALL_INSTANCE(INSTANCE)  	(((INSTANCE) == USART1)	|| \
 										 	 ((INSTANCE) == USART2)	|| \
@@ -180,6 +170,16 @@ typedef enum
 											 ((FLAG) == USART_FLAG_LBD)  || \
 											 ((FLAG) == USART_FLAG_CTS)  || \
 											 ((FLAG) == USART_FLAG_ALL))
+
+//---------------------------------------------------------------------------
+// Enable or disable peripherals
+//---------------------------------------------------------------------------
+
+/*
+ * U(S)ART enable/disable
+ */
+#define __USART_ENABLE(HANDLE)					((HANDLE)->CR1 |= USART_CR1_UE);
+#define __USART_DISABLE(HANDLE)					((HANDLE)->CR1 &= ~USART_CR1_UE);
 
 //---------------------------------------------------------------------------
 // External function prototypes

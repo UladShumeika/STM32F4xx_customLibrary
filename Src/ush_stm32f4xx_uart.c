@@ -82,8 +82,6 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	assert_param(IS_USART_BAUDRATE(initStructure->BaudRate));
 	assert_param(IS_USART_MODE(initStructure->Mode));
 
-	USH_USART_DISABLE(initStructure->USARTx);
-
 	/* ----------------------- GPIO configuration -------------------------- */
 
 	// Fill in the initGpioStructure to initialize the GPIO pins, these parameters are used for all pinsPacks
@@ -239,7 +237,7 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	// USART BRR configuration
 	initStructure->USARTx->BRR = USART_BRRSampling16(pclk, initStructure->BaudRate);
 
-	USH_USART_ENABLE(initStructure->USARTx);
+	__USART_ENABLE(initStructure->USARTx);
 
 	MISC_NVIC_SetPriority(USART1_IRQn, PREEMPTION_PRIORITY_UART, SUBPRIORITY_UART);
 	MISC_NVIC_EnableIRQ(USART1_IRQn);
