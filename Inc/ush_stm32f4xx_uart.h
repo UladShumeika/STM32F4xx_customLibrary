@@ -10,8 +10,11 @@
   * 	  the functions that are needed for the current project.
   *
   *
+  *
   * @Major changes v1.1
   *		- USART_getDmaStream function changed and moved to "static" section;
+  *		- split macro section into two sections and renamed USART enable/disable macros;
+  *		- deleted IS_USART_ALL_INSTENCE macro;
   *
   ******************************************************************************
   */
