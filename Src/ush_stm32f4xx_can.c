@@ -87,7 +87,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			// PB13    ------> CAN1_TX
 			initGpioStructure.GPIOx 		= GPIOB;
 			initGpioStructure.Pin 			= (GPIO_PIN_12 | GPIO_PIN_13);
-			initGpioStructure.Alternate 	= GPIO_AF9_CAN1;
+			initGpioStructure.Alternate 	= GPIO_AF9_CAN2;
 			status = GPIO_init(&initGpioStructure);
 		}
 
