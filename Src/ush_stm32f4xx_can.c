@@ -102,8 +102,9 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 		if(status == STATUS_OK)
 		{
-			// Enable CAN1 clock
+			// Enable CAN1/CAN2 clock
 			__RCC_CAN1_CLOCK_ENABLE();
+			if(initStructure->CANx == CAN2) __RCC_CAN2_CLOCK_ENABLE();
 
 			// Request initialization
 			initStructure->CANx->MCR |= CAN_MCR_INRQ;
