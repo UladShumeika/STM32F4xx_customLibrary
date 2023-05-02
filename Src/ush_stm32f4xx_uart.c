@@ -159,8 +159,8 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 		if(initStructure->Mode == USART_MODE_TX || initStructure->Mode == USART_MODE_RX_TX)
 		{
 			// DMA interrupt init
-			MISC_NVIC_SetPriority(DMA2_Stream7_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
-			MISC_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+			MISC_NVIC_setPriority(DMA2_Stream7_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
+			MISC_NVIC_enableIRQ(DMA2_Stream7_IRQn);
 
 			initDMA_txStructure.DMAy_Streamx  			= DMA2_Stream7;
 			initDMA_txStructure.Channel 				= DMA_CHANNEL_4;
@@ -179,8 +179,8 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 		if(initStructure->Mode == USART_MODE_RX || initStructure->Mode == USART_MODE_RX_TX)
 		{
 			// DMA interrupt init
-			MISC_NVIC_SetPriority(DMA2_Stream2_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
-			MISC_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+			MISC_NVIC_setPriority(DMA2_Stream2_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
+			MISC_NVIC_enableIRQ(DMA2_Stream2_IRQn);
 
 			initDMA_rxStructure.DMAy_Streamx			= DMA2_Stream2;
 			initDMA_rxStructure.Channel 				= DMA_CHANNEL_4;
@@ -239,8 +239,8 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 
 	__USART_ENABLE(initStructure->USARTx);
 
-	MISC_NVIC_SetPriority(USART1_IRQn, PREEMPTION_PRIORITY_UART, SUBPRIORITY_UART);
-	MISC_NVIC_EnableIRQ(USART1_IRQn);
+	MISC_NVIC_setPriority(USART1_IRQn, PREEMPTION_PRIORITY_UART, SUBPRIORITY_UART);
+	MISC_NVIC_enableIRQ(USART1_IRQn);
 }
 
 //---------------------------------------------------------------------------

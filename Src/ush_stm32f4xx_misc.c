@@ -140,8 +140,8 @@ void MISC_timeoutTimerInit(void)
 	TIM14->CR1 |= TIM_CR1_CEN;
 
 	// Enable the TIM14 global interrupt
-	MISC_NVIC_EnableIRQ(TIM8_TRG_COM_TIM14_IRQn);
-	MISC_NVIC_SetPriority(TIM8_TRG_COM_TIM14_IRQn, MIN_PRIORITY, 0U);
+	MISC_NVIC_enableIRQ(TIM8_TRG_COM_TIM14_IRQn);
+	MISC_NVIC_setPriority(TIM8_TRG_COM_TIM14_IRQn, MIN_PREEMPPRIORITY, MIN_SUBPRIORITY);
 }
 
 /**
@@ -196,7 +196,7 @@ void MISC_NVIC_setPriorityGrouping(USH_NVIC_priorityGroup priorityGroup)
   *         A lower priority value indicates a higher priority.
   * @retval	None.
   */
-void MISC_NVIC_SetPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t subPriority)
+void MISC_NVIC_setPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t subPriority)
 {
   uint32_t prioritygroup = 0x00U;
 
@@ -219,7 +219,7 @@ void MISC_NVIC_SetPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t su
   *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None.
   */
-void MISC_NVIC_EnableIRQ(IRQn_Type IRQn)
+void MISC_NVIC_enableIRQ(IRQn_Type IRQn)
 {
 	// Check the parameters
 	assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));
@@ -235,7 +235,7 @@ void MISC_NVIC_EnableIRQ(IRQn_Type IRQn)
   *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None.
   */
-void MISC_NVIC_DisableIRQ(IRQn_Type IRQn)
+void MISC_NVIC_disableIRQ(IRQn_Type IRQn)
 {
   // Check the parameters
   assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));

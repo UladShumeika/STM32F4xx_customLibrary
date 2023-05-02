@@ -30,7 +30,8 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
-#define MIN_PRIORITY			(15U)
+#define MIN_PREEMPPRIORITY				(15U)
+#define MIN_SUBPRIORITY					(0U)
 
 //---------------------------------------------------------------------------
 // Structures and enumerations
@@ -274,7 +275,7 @@ void MISC_NVIC_setPriorityGrouping(USH_NVIC_priorityGroup priorityGroup);
   *         A lower priority value indicates a higher priority.
   * @retval	None.
   */
-void MISC_NVIC_SetPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t subPriority);
+void MISC_NVIC_setPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t subPriority);
 
 /**
   * @brief  This function enables a device specific interrupt in the NVIC interrupt controller.
@@ -285,7 +286,7 @@ void MISC_NVIC_SetPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t su
   *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None.
   */
-void MISC_NVIC_EnableIRQ(IRQn_Type IRQn);
+void MISC_NVIC_enableIRQ(IRQn_Type IRQn);
 
 /**
   * @brief  This function disables a device specific interrupt in the NVIC interrupt controller.
@@ -294,7 +295,7 @@ void MISC_NVIC_EnableIRQ(IRQn_Type IRQn);
   *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None.
   */
-void MISC_NVIC_DisableIRQ(IRQn_Type IRQn);
+void MISC_NVIC_disableIRQ(IRQn_Type IRQn);
 
 //---------------------------------------------------------------------------
 // The section of FLASH memory
