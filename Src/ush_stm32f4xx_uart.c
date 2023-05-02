@@ -41,8 +41,8 @@
 //---------------------------------------------------------------------------
 // Private variables
 //---------------------------------------------------------------------------
-USH_DMA_initTypeDef initDMA_txStructure = {0,};
-USH_DMA_initTypeDef initDMA_rxStructure = {0,};
+USH_DMA_initTypeDef initDMA_txStructure = {0};
+USH_DMA_initTypeDef initDMA_rxStructure = {0};
 
 //---------------------------------------------------------------------------
 // Static function prototypes
