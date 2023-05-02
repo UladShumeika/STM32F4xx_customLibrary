@@ -108,7 +108,7 @@ FlagStatus MISC_PWR_getFlagStatus(USH_PWR_flags flags)
 void MISC_timeoutTimerInit(void)
 {
 	// Enable TIM14 clock
-	RCC_TIM14_ClockEnable();
+	__RCC_TIM14_CLOCK_ENABLE();
 
 	// Disable TIM14
 	TIM14->CR1 &= ~TIM_CR1_CEN;
