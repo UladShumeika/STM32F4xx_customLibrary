@@ -249,15 +249,17 @@ typedef enum
 #define __RCC_CAN2_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_CAN2EN)
 #define __RCC_CAN2_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_CAN2RST)
 
-/**
- * @brief Power interface clock enable
+/*
+ * PWR clock enable/disable
  */
-#define RCC_powerInterfaceClockEnable()		RCC->APB1ENR |= RCC_APB1ENR_PWREN
+#define __RCC_PWR_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_PWREN)
+#define __RCC_PWR_CLOCK_DISABLE()					(RCC->APB1RSTR) |= RCC_APB1RSTR_PWRRST)
 
-/**
- * @brief TIM14 clock enable
+/*
+ * TIM14 clock enable/disable
  */
-#define RCC_TIM14_ClockEnable()				RCC->APB1ENR |= RCC_APB1ENR_TIM14EN
+#define __RCC_TIM14_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_TIM14EN)
+#define __RCC_TIM14_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_TIM14RST)
 
 //---------------------------------------------------------------------------
 // External function prototypes
