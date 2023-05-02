@@ -218,6 +218,7 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
 	if(status == STATUS_OK)
 	{
 		// Check parameters
+		assert_param(IS_CAN_ALL_INSTANCE(can));
 		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdHigh));
 		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdLow));
 		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdHigh));
@@ -370,6 +371,7 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef* pHea
 	uint32_t transmitMailbox = 0;
 
 	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
 	assert_param(IS_CAN_IDTYPE(pHeader->IDE));
 	assert_param(IS_CAN_RTR(pHeader->RTR));
 	assert_param(IS_CAN_DLC(pHeader->DLC));
@@ -433,6 +435,7 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef* pHea
 void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, CAN_RxHeaderTypeDef* pHeader, uint8_t* pData)
 {
 	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
 	assert_param(IS_CAN_FILTER_FIFO(rxFifo));
 
 	// Get the frame information
@@ -505,6 +508,9 @@ void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, Functio
  */
 void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag)
 {
+	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
+
 	if(flag <= CAN_FLAG_TERR2)
 	{
 		can->TSR = (1 << flag);
