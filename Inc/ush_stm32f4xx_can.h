@@ -469,13 +469,20 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef *
 void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, USH_CAN_rxHeaderTypeDef* pHeader, uint8_t* pData);
 
 /**
- * @brief	This function is used to enable or disable the specified interrupt.
+ * @brief	This function is used to enable the specified interrupt.
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @param 	interrupt - Interrupts to be enabled.
- * @param 	state - The state of the selected stream. This parameter can be a value of @ref FunctionalState.
  * @retval	None.
  */
-void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, FunctionalState state);
+void CAN_interruptEnable(CAN_TypeDef* can, USH_CAN_interrupts interrupt);
+
+/**
+ * @brief	This function is used to disable the specified interrupt.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	interrupt - Interrupts to be enabled.
+ * @retval	None.
+ */
+void CAN_interruptDisable(CAN_TypeDef* can, USH_CAN_interrupts interrupt);
 
 /**
  * @brief	This function clears the specified CAN pending flag.
