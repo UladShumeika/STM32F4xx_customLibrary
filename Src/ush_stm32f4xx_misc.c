@@ -54,7 +54,7 @@ void MISC_PWR_mainRegulatorModeConfig(USH_PWR_voltageScaling voltageScaling)
 	assert_param(IS_MISC_PWR_VOLTAGE_SCALING(voltageScaling));
 
 	// Enable power interface clock
-	RCC_powerInterfaceClockEnable();
+	__RCC_PWR_CLOCK_ENABLE();
 
 	// Read PWR_CR register and clear PWR_CR_VOS bits
 	tempReg = PWR->CR;
