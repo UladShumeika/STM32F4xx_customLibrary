@@ -266,7 +266,7 @@ typedef struct
 	uint32_t DLC;      					/* The length of the frame that will be transmitted.
                           	  	  	  	   This parameter must be a number between Min_Data = 0 and Max_Data = 8. */
 
-} CAN_TxHeaderTypeDef;
+} USH_CAN_txHeaderTypeDef;
 
 
 
@@ -293,7 +293,7 @@ typedef struct
 	uint32_t FilterMatchIndex;			/* The index of matching acceptance filter element.
 										   This parameter must be a number between Min_Data = 0 and Max_Data = 0xFF. */
 
-} CAN_RxHeaderTypeDef;
+} USH_CAN_rxHeaderTypeDef;
 
 /**
  * @brief CAN interrupts enumeration.
@@ -456,7 +456,7 @@ __WEAK void CAN_initGlobalInterrupts(void);
  * @param 	pData - A pointer to an array containing the payload of the Tx frame.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef *pHeader, uint8_t* pData);
+USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef *pHeader, uint8_t* pData);
 
 /**
  * @brief 	This function is used to get an CAN frame from the Rx FIFO zone into the message RAM.
@@ -466,16 +466,23 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef *pHea
  * @param 	pData - A pointer to an array containing the payload of the Rx frame.
  * @retval	None.
  */
-void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, CAN_RxHeaderTypeDef* pHeader, uint8_t* pData);
+void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, USH_CAN_rxHeaderTypeDef* pHeader, uint8_t* pData);
 
 /**
- * @brief	This function is used to enable or disable the specified interrupt.
+ * @brief	This function is used to enable the specified interrupt.
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @param 	interrupt - Interrupts to be enabled.
- * @param 	state - The state of the selected stream. This parameter can be a value of @ref FunctionalState.
  * @retval	None.
  */
-void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, FunctionalState state);
+void CAN_interruptEnable(CAN_TypeDef* can, USH_CAN_interrupts interrupt);
+
+/**
+ * @brief	This function is used to disable the specified interrupt.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	interrupt - Interrupts to be enabled.
+ * @retval	None.
+ */
+void CAN_interruptDisable(CAN_TypeDef* can, USH_CAN_interrupts interrupt);
 
 /**
  * @brief	This function clears the specified CAN pending flag.

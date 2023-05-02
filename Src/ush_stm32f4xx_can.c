@@ -87,7 +87,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			// PB13    ------> CAN1_TX
 			initGpioStructure.GPIOx 		= GPIOB;
 			initGpioStructure.Pin 			= (GPIO_PIN_12 | GPIO_PIN_13);
-			initGpioStructure.Alternate 	= GPIO_AF9_CAN1;
+			initGpioStructure.Alternate 	= GPIO_AF9_CAN2;
 			status = GPIO_init(&initGpioStructure);
 		}
 
@@ -102,8 +102,9 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 		if(status == STATUS_OK)
 		{
-			// Enable CAN1 clock
+			// Enable CAN1/CAN2 clock
 			__RCC_CAN1_CLOCK_ENABLE();
+			if(initStructure->CANx == CAN2) __RCC_CAN2_CLOCK_ENABLE();
 
 			// Request initialization
 			initStructure->CANx->MCR |= CAN_MCR_INRQ;
@@ -205,8 +206,11 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
 {
 	USH_peripheryStatus status = STATUS_OK;
+	CAN_TypeDef *can_ip = can;
 
 	uint32_t filterNumberBitPos = 0;
+
+	if(can_ip == CAN2) can_ip = CAN1;
 
 	// Check parameters
 	if(initFilterStructure == 0) status = STATUS_ERROR;
@@ -214,6 +218,7 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
 	if(status == STATUS_OK)
 	{
 		// Check parameters
+		assert_param(IS_CAN_ALL_INSTANCE(can));
 		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdHigh));
 		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdLow));
 		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdHigh));
@@ -226,45 +231,45 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
 		assert_param(IS_CAN_FILTER_ACTIVATION(initFilterStructure->FilterActivation));
 
 		// Enable initialization mode for the filter
-		can->FMR |= CAN_FMR_FINIT;
+		can_ip->FMR |= CAN_FMR_FINIT;
 
 		// Select the start filter number of CAN2 slave instance
-		can->FMR &= ~CAN_FMR_CAN2SB;
-		can->FMR |= initFilterStructure->SlaveStartFilterBank << CAN_FMR_CAN2SB_Pos;
+		can_ip->FMR &= ~CAN_FMR_CAN2SB;
+		can_ip->FMR |= initFilterStructure->SlaveStartFilterBank << CAN_FMR_CAN2SB_Pos;
 
 		// Convert filter number into bit position
 		filterNumberBitPos = 1UL << (initFilterStructure->FilterBank & 0x1FU);
 
 		// Filter deactivation
-		can->FA1R &= ~filterNumberBitPos;
+		can_ip->FA1R &= ~filterNumberBitPos;
 
 		// Configuration filter scale
 		if(initFilterStructure->FilterScale == CAN_FILTERSCALE_16BIT)
 		{
 			// Set 16-bit scale for the filter
-			can->FS1R &= ~filterNumberBitPos;
+			can_ip->FS1R &= ~filterNumberBitPos;
 
 			// First 16-bit identifier and first 16-bit mask
 			// or first 16-bit identifier and second 16-bit identifier
-			can->sFilterRegister[initFilterStructure->FilterBank].FR1 =
+			can_ip->sFilterRegister[initFilterStructure->FilterBank].FR1 =
 					((initFilterStructure->FilterMaskIdLow & 0x0000FFFFU) << 16U) | (initFilterStructure->FilterIdLow);
 
 			// Second 16-bit identifier and second 16-bit mask
 			// or third 16-bit identifier and fourth 16-bit identifier
-			can->sFilterRegister[initFilterStructure->FilterBank].FR2 =
+			can_ip->sFilterRegister[initFilterStructure->FilterBank].FR2 =
 					((initFilterStructure->FilterMaskIdHigh & 0x0000FFFFU) << 16U) | (initFilterStructure->FilterIdHigh);
 
 		} else // for CAN_FILTERSCALE_32BIT
 		{
 			// Set 32-bit scale for the filter
-			can->FS1R |= filterNumberBitPos;
+			can_ip->FS1R |= filterNumberBitPos;
 
 			// 32-bit identifier or First 32-bit identifier
-			can->sFilterRegister[initFilterStructure->FilterBank].FR1 =
+			can_ip->sFilterRegister[initFilterStructure->FilterBank].FR1 =
 					(initFilterStructure->FilterIdHigh << 16U) | initFilterStructure->FilterIdLow;
 
 			// 32-bit mask or second 32-bit identifier
-			can->sFilterRegister[initFilterStructure->FilterBank].FR2 =
+			can_ip->sFilterRegister[initFilterStructure->FilterBank].FR2 =
 					(initFilterStructure->FilterMaskIdHigh << 16U) | initFilterStructure->FilterMaskIdLow;
 		}
 
@@ -272,34 +277,34 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
 		if(initFilterStructure->FilterMode == CAN_FILTER_MODE_IDMASK)
 		{
 			// Set identifier mask mode
-			can->FM1R &= ~filterNumberBitPos;
+			can_ip->FM1R &= ~filterNumberBitPos;
 
 		} else // for CAN_FILTER_MODE_IDLIST
 		{
 			// Set identifier list mode
-			can->FM1R |= filterNumberBitPos;
+			can_ip->FM1R |= filterNumberBitPos;
 		}
 
 		// Set filter FIFO assignment
 		if(initFilterStructure->FilterFIFOAssignment == CAN_FILTER_FIFO_0)
 		{
 			// Set filter assigned to FIFO 0
-			can->FFA1R &= ~filterNumberBitPos;
+			can_ip->FFA1R &= ~filterNumberBitPos;
 
 		} else // for CAN_FILTER_FIFO_1
 		{
 			// Set filter assigned to FIFO 1
-			can->FFA1R |= filterNumberBitPos;
+			can_ip->FFA1R |= filterNumberBitPos;
 		}
 
 		// Set filter activation
 		if(initFilterStructure->FilterActivation == CAN_FILTER_ENABLE)
 		{
-			can->FA1R |= filterNumberBitPos;
+			can_ip->FA1R |= filterNumberBitPos;
 		}
 
 		// Leave the initialization mode for the filter
-		can->FMR &= ~CAN_FMR_FINIT;
+		can_ip->FMR &= ~CAN_FMR_FINIT;
 	}
 
 	return status;
@@ -358,7 +363,7 @@ __WEAK void CAN_initGlobalInterrupts(void)
  * @param 	pData - A pointer to an array containing the payload of the Tx frame.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef* pHeader, uint8_t* pData)
+USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* pHeader, uint8_t* pData)
 {
 	USH_peripheryStatus status = STATUS_OK;
 
@@ -366,6 +371,7 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef* pHea
 	uint32_t transmitMailbox = 0;
 
 	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
 	assert_param(IS_CAN_IDTYPE(pHeader->IDE));
 	assert_param(IS_CAN_RTR(pHeader->RTR));
 	assert_param(IS_CAN_DLC(pHeader->DLC));
@@ -426,9 +432,10 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, CAN_TxHeaderTypeDef* pHea
  * @param 	pData - A pointer to an array containing the payload of the Rx frame.
  * @retval	None.
  */
-void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, CAN_RxHeaderTypeDef* pHeader, uint8_t* pData)
+void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, USH_CAN_rxHeaderTypeDef* pHeader, uint8_t* pData)
 {
 	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
 	assert_param(IS_CAN_FILTER_FIFO(rxFifo));
 
 	// Get the frame information
@@ -467,29 +474,38 @@ void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, CAN_RxHeaderT
 }
 
 /**
- * @brief	This function is used to enable or disable the specified interrupt.
+ * @brief	This function is used to enable the specified interrupt.
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @param 	interrupt - Interrupts to be enabled.
- * @param 	state - The state of the selected stream. This parameter can be a value of @ref FunctionalState.
  * @retval	None.
  */
-void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, FunctionalState state)
+void CAN_interruptEnable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 {
 	// Check parameters
 	assert_param(IS_CAN_ALL_INSTANCE(can));
 	assert_param(IS_CAN_INTERRUPT(interrupt));
-	assert_param(IS_FUNCTIONAL_STATE(state));
 
 	uint32_t ierReg = can->IER;
 
-	if(state == ENABLE)
-	{
-		ierReg |= interrupt;
-	} else
-	{
-		ierReg &= ~interrupt;
-	}
+	ierReg |= interrupt;
+	can->IER = ierReg;
+}
 
+/**
+ * @brief	This function is used to disable the specified interrupt.
+ * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
+ * @param 	interrupt - Interrupts to be enabled.
+ * @retval	None.
+ */
+void CAN_interruptDisable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
+{
+	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
+	assert_param(IS_CAN_INTERRUPT(interrupt));
+
+	uint32_t ierReg = can->IER;
+
+	ierReg &= ~interrupt;
 	can->IER = ierReg;
 }
 
@@ -501,6 +517,9 @@ void CAN_interruptConfig(CAN_TypeDef* can, USH_CAN_interrupts interrupt, Functio
  */
 void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag)
 {
+	// Check parameters
+	assert_param(IS_CAN_ALL_INSTANCE(can));
+
 	if(flag <= CAN_FLAG_TERR2)
 	{
 		can->TSR = (1 << flag);
