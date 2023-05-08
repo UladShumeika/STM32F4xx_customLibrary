@@ -256,6 +256,12 @@ typedef enum
 #define __RCC_PWR_CLOCK_DISABLE()					(RCC->APB1RSTR) |= RCC_APB1RSTR_PWRRST)
 
 /*
+ * TIM13 clock enable/disable
+ */
+#define __RCC_TIM13_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_TIM13EN)
+#define __RCC_TIM13_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_TIM13RST)
+
+/*
  * TIM14 clock enable/disable
  */
 #define __RCC_TIM14_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_TIM14EN)
