@@ -2,9 +2,16 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_misc.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    27-February-2023
   * @brief   Header file of miscellaneous module.
+  *
+  *
+  *
+  *	@Major changes v1.1
+  *		- added the ability to configure a preemption priority group;
+  *		- added PWR section for stm32f407 and stm32f429;
+  *   	- redisigned MISC_timeoutTimerInit function;
   *
   ******************************************************************************
   */
@@ -23,11 +30,79 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
-#define MIN_PRIORITY	(15U)
+#define MIN_PREEMPPRIORITY				(15U)
+#define MIN_SUBPRIORITY					(0U)
 
 //---------------------------------------------------------------------------
 // Structures and enumerations
 //---------------------------------------------------------------------------
+
+#if defined(STM32F407xx)
+
+/**
+ * @brief Voltage regulator scaling enumeration
+ */
+typedef enum
+{
+	PWR_VOLTAGE_SCALE_1			= PWR_CR_VOS,		/* Regulator voltage output Scale 1 mode.
+													   System frequency up to 168 MHz. */
+
+	PWR_VOLTAGE_SCALE_2			= 0x00U,			/* Regulator voltage output Scale 2 mode.
+													   System frequency up to 144 MHz. */
+} USH_PWR_voltageScaling;
+
+#endif
+
+#if defined(STM32F429xx)
+
+/**
+ * @brief Voltage regulator scaling enumeration
+ */
+typedef enum
+{
+	PWR_VOLTAGE_SCALE_1			= PWR_CR_VOS,		/* Regulator voltage output Scale 1 mode.
+													   If overdrive mode OFF then system frequency up to 168 MHz.
+													   If overdrive mode ON then system frequency up to 180 MHz. */
+
+	PWR_VOLTAGE_SCALE_2			= PWR_CR_VOS_1,		/* Regulator voltage output Scale 2 mode.
+													   If overdrive mode OFF then system frequency up to 144 MHz.
+													   If overdrive mode ON then system frequency up to 168 MHz. */
+
+	PWR_VOLTAGE_SCALE_3			= PWR_CR_VOS_0		/* Regulator voltage output Scale 3 mode.
+ 												       System frequency up to 120 MHz. */
+} USH_PWR_voltageScaling;
+
+/**
+ * @brief PWR flags enumeration
+ */
+typedef enum
+{
+	PWR_FLAG_ODSWRDY 	= PWR_CSR_ODSWRDY,		/* Over-drive mode switching ready flag */
+	PWR_FLAG_ODRDY   	= PWR_CSR_ODRDY			/* Over-drive mode ready flag */
+} USH_PWR_flags;
+
+#endif
+
+/**
+ * @brief Preemption priority group enumeration
+ */
+typedef enum
+{
+	NVIC_PRIORITYGROUP_0	= 0x00000007U,		/* 0 bits for pre-emption priority
+	 	 	 	 	 	 	 	 	 	 	 	   4 bits for subpriority */
+
+	NVIC_PRIORITYGROUP_1	= 0x00000006U,		/* 1 bits for pre-emption priority
+												   3 bits for subpriority */
+
+	NVIC_PRIORITYGROUP_2	= 0x00000005U,		/* 2 bits for pre-emption priority
+												   2 bits for subpriority */
+
+	NVIC_PRIORITYGROUP_3	= 0x00000004U,		/* 3 bits for pre-emption priority
+												   1 bits for subpriority */
+
+	NVIC_PRIORITYGROUP_4	= 0x00000003U,		/* 4 bits for pre-emption priority
+												   0 bits for subpriority */
+} USH_NVIC_priorityGroup;
 
 /**
  * @brief Flash latency enumeration
@@ -52,14 +127,46 @@ typedef enum
 	FLASH_LATENCY_15,		/* Flash fifteen latency cycle */
 } USH_FLASH_latency;
 
+/**
+ * @brief System tick time bases enumeration.
+ */
+typedef enum
+{
+	SYS_TICK_1MS	= 1000UL,	/* System timer period 1 ms */
+	SYS_TICK_10MS	= 100UL,	/* System timer period 10 ms */
+	SYS_TICK_100MS	= 10UL		/* System timer period 100 ms */
+} USH_SYSTICK_timeBases;
+
 //---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
+#define IS_MISC_PWR_FLAGS(FLAG)						   (((FLAG) == PWR_FLAG_ODSWRDY) || \
+														((FLAG) == PWR_FLAG_ODRDY))
+
+#if defined(STM32F429xx)
+
+#define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   (((SCALE) == PWR_VOLTAGE_SCALE_1)  || \
+														((SCALE) == PWR_VOLTAGE_SCALE_2)  || \
+														((SCALE) == PWR_VOLTAGE_SCALE_3))
+#elif defined(STM32F407xx)
+
+#define IS_MISC_PWR_VOLTAGE_SCALING(SCALE)			   ((SCALE) == PWR_VOLTAGE_SCALE_1)	 || \
+													   ((SCALE) == PWR_VOLTAGE_SCALE_2))
+#endif
+
+#define IS_MISC_NVIC_PRIORITY_GROUP(GROUP) 			   (((GROUP) == NVIC_PRIORITYGROUP_0) || \
+                                       	   	   	 	 	((GROUP) == NVIC_PRIORITYGROUP_1) || \
+												 	 	((GROUP) == NVIC_PRIORITYGROUP_2) || \
+												 	 	((GROUP) == NVIC_PRIORITYGROUP_3) || \
+												 	 	((GROUP) == NVIC_PRIORITYGROUP_4))
+
 #define IS_MISC_NVIC_PREEMPTION_PRIORITY(PRIORITY)  	((PRIORITY) < 16U)
 
 #define IS_MISC_NVIC_SUB_PRIORITY(PRIORITY)  			((PRIORITY) < 16U)
 
 #define IS_MISC_NVIC_DEVICE_IRQ(IRQ)                	((IRQ) >= (IRQn_Type)0x00U)
+
+#if defined(STM32F429xx)
 
 #define IS_MISC_FLASH_LATENCY(LATENCY)					(((LATENCY) == FLASH_LATENCY_0) || \
 														 ((LATENCY) == FLASH_LATENCY_1) || \
@@ -78,15 +185,56 @@ typedef enum
 														 ((LATENCY) == FLASH_LATENCY_14) || \
 														 ((LATENCY) == FLASH_LATENCY_15))
 
+#elif defined(STM32F407xx)
+
+#define IS_MISC_FLASH_LATENCY(LATENCY)					(((LATENCY) == FLASH_LATENCY_0) || \
+														 ((LATENCY) == FLASH_LATENCY_1) || \
+														 ((LATENCY) == FLASH_LATENCY_2) || \
+														 ((LATENCY) == FLASH_LATENCY_3) || \
+														 ((LATENCY) == FLASH_LATENCY_4) || \
+														 ((LATENCY) == FLASH_LATENCY_5) || \
+														 ((LATENCY) == FLASH_LATENCY_6) || \
+														 ((LATENCY) == FLASH_LATENCY_7))
+#endif
+
 //---------------------------------------------------------------------------
 // External function prototypes
 //---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+// The section of power controller
+//---------------------------------------------------------------------------
+
 /**
- * @brief 	This function sets up TIM14 timer to check for timeout.
+ * @brief 	This function configures the main internal regulator output voltage.
+ * @param 	voltageScaling - specifies the regulator output voltage to achieve
+ * 							 a tradeoff between performance and power consumption
+ * 							 when the device does not operate at the maximum frequency
+ * 							 (refer to the datasheets for more details).
+ * @retval 	None.
+ */
+void MISC_PWR_mainRegulatorModeConfig(USH_PWR_voltageScaling voltageScaling);
+
+#if defined(STM32F429xx)
+
+/**
+ * @brief 	This function returns flag status.
+ * @param	flags - PWR flags. This parameter can be a value of @ref USH_DMA_flags.
+ * @retval	Flags status.
+ */
+FlagStatus MISC_PWR_getFlagStatus(USH_PWR_flags flags);
+
+#endif
+
+//---------------------------------------------------------------------------
+// The section of timeout timer
+//---------------------------------------------------------------------------
+
+/**
+ * @brief 	This function initializes TIM14 timer to check for timeout.
  * @retval	None.
  */
-void MISC_timeoutTimer(void);
+void MISC_timeoutTimerInit(void);
 
 /**
  * @brief 	This function increments a variable "timeoutTicks".
@@ -99,6 +247,20 @@ void MISC_timeoutTimerIncTick(void);
  * @retval	None.
  */
 uint32_t MISC_timeoutGetTick(void);
+
+//---------------------------------------------------------------------------
+// The section of NVIC
+//---------------------------------------------------------------------------
+
+/**
+  * @brief  This function sets the priority grouping field (preemption priority and subpriority)
+  *         using the required unlock sequence.
+  * @param  priorityGroup - The priority grouping bits length.
+  * @note   When the NVIC_PriorityGroup_0 is selected, IRQ preemption is no more possible.
+  *         The pending IRQ priority will be managed only by the subpriority.
+  * @retval None.
+  */
+void MISC_NVIC_setPriorityGrouping(USH_NVIC_priorityGroup priorityGroup);
 
 /**
   * @brief  This function sets the priority of an interrupt.
@@ -113,7 +275,7 @@ uint32_t MISC_timeoutGetTick(void);
   *         A lower priority value indicates a higher priority.
   * @retval	None.
   */
-void MISC_NVIC_SetPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t subPriority);
+void MISC_NVIC_setPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t subPriority);
 
 /**
   * @brief  This function enables a device specific interrupt in the NVIC interrupt controller.
@@ -124,7 +286,7 @@ void MISC_NVIC_SetPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t su
   *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None.
   */
-void MISC_NVIC_EnableIRQ(IRQn_Type IRQn);
+void MISC_NVIC_enableIRQ(IRQn_Type IRQn);
 
 /**
   * @brief  This function disables a device specific interrupt in the NVIC interrupt controller.
@@ -133,7 +295,11 @@ void MISC_NVIC_EnableIRQ(IRQn_Type IRQn);
   *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None.
   */
-void MISC_NVIC_DisableIRQ(IRQn_Type IRQn);
+void MISC_NVIC_disableIRQ(IRQn_Type IRQn);
+
+//---------------------------------------------------------------------------
+// The section of FLASH memory
+//---------------------------------------------------------------------------
 
 /**
   * @brief  This function enables or disables the prefetch buffer.
