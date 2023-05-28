@@ -2,41 +2,31 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_conf.h
   * @author  Ulad Shumeika
-  * @version v1.1
+  * @version v1.2
   * @date    03-March-2023
   * @brief   Library configuration file.
   *
   *
   *	@Major changes v1.1
-  *		- added STATUS_ERROR in USH_peripheryStatus enumeration;
+  *		- added STATUS_ERROR in USH_peripheryStatus enumeration.
+  *
+  *	@Major changes v1.2
+  *		- changed code style;
+  *		- periphery status enumeration replaced with definitions;
+  *		- added i2c driver.
   *
   ******************************************************************************
   */
 
-//---------------------------------------------------------------------------
-// Define to prevent recursive inclusion
-//---------------------------------------------------------------------------
 #ifndef __USH_STM32F4xx_CONF_H
 #define __USH_STM32F4xx_CONF_H
 
 //---------------------------------------------------------------------------
-// Macros
+// Definitions
 //---------------------------------------------------------------------------
-#define IS_FUNCTIONAL_STATE(STATE) 		(((STATE) == DISABLE) || ((STATE) == ENABLE))
-
-//---------------------------------------------------------------------------
-// Structures and enumerations
-//---------------------------------------------------------------------------
-
-/**
- * @brief Periphery status enumeration.
- */
-typedef enum
-{
-	STATUS_TIMEOUT	= 0,	/* Periphery status timeout */
-	STATUS_ERROR,			/* Periphery status error */
-	STATUS_OK				/* Periphery status OK */
-} USH_peripheryStatus;
+#define PRJ_STATUS_OK						(0x00000000U)	/*!< Periphery status OK */
+#define PRJ_STATUS_ERROR					(0x00000001U)	/*!< Periphery status error */
+#define PRJ_STATUS_TIMEOUT					(0x00000002U)	/*!< Periphery status timeout */
 
 //---------------------------------------------------------------------------
 // Includes
@@ -48,6 +38,11 @@ typedef enum
 #include "ush_stm32f4xx_uart.h"
 #include "ush_stm32f4xx_rcc.h"
 #include "ush_stm32f4xx_can.h"
+
+//---------------------------------------------------------------------------
+// Macros
+//---------------------------------------------------------------------------
+#define IS_FUNCTIONAL_STATE(STATE) 			(((STATE) == DISABLE) || ((STATE) == ENABLE))
 
 //---------------------------------------------------------------------------
 // Function's parameters check.

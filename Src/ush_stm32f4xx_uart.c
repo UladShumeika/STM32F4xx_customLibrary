@@ -254,7 +254,7 @@ void USART_init(USH_USART_initTypeDef *initStructure)
  * @param 	size - The data transfer size.
  * @return	The periphery status.
  */
-USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
+uint32_t USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
 {
 	uint32_t startTicks = MISC_timeoutGetTick();
 
@@ -267,7 +267,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
 		// Check timeout
 		if((MISC_timeoutGetTick() - startTicks) > TIMEOUT)
 		{
-			return STATUS_TIMEOUT;
+			return PRJ_STATUS_TIMEOUT;
 		}
 	}
 
@@ -298,7 +298,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
 	// Enable IDLE interrupt
 	usart->CR1 |= USART_CR1_IDLEIE;
 
-	return STATUS_OK;
+	return PRJ_STATUS_OK;
 }
 
 /**
@@ -308,7 +308,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
  * @param 	size - The data transfer size.
  * @retval	The periphery status.
  */
-USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
+uint32_t USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
 {
 	uint32_t startTicks = MISC_timeoutGetTick();
 
@@ -321,7 +321,7 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
 		// Check timeout
 		if((MISC_timeoutGetTick() - startTicks) > TIMEOUT)
 		{
-			return STATUS_TIMEOUT;
+			return PRJ_STATUS_TIMEOUT;
 		}
 	}
 
@@ -348,7 +348,7 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
 	// Enable U(S)ART TX DMA
 	usart->CR3 |= USART_CR3_DMAT;
 
-	return STATUS_OK;
+	return PRJ_STATUS_OK;
 }
 
 /**

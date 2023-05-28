@@ -39,16 +39,16 @@
  * 						    for the specified GPIO peripheral.
  * @retval	The periphery status.
  */
-USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure)
+uint32_t GPIO_init(USH_GPIO_initTypeDef *initStructure)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 
 	uint32_t pinPos, pos, currentPin, temp;
 
 	// Check parameters
-	if(initStructure == 0) status = STATUS_ERROR;
+	if(initStructure == 0) status = PRJ_STATUS_ERROR;
 
-	if(status == STATUS_OK)
+	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
 		assert_param(IS_GPIO_ALL_INSTANCE(initStructure->GPIOx));

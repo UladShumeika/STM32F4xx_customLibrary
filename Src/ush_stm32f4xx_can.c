@@ -33,17 +33,17 @@
  * 							information for the specified CAN peripheral.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
+uint32_t CAN_init(USH_CAN_settingsTypeDef* initStructure)
 {
 	USH_GPIO_initTypeDef initGpioStructure = {0};
 
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 	uint32_t ticksStart = 0;
 
 	// Check parameters
-	if(initStructure == 0) status = STATUS_ERROR;
+	if(initStructure == 0) status = PRJ_STATUS_ERROR;
 
-	if(status == STATUS_OK)
+	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
 		assert_param(IS_CAN_ALL_INSTANCE(initStructure->CANx));
@@ -93,14 +93,14 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 		/* -------------------------- CAN interrupts configuration ---------------- */
 
-		if(status == STATUS_OK)
+		if(status == PRJ_STATUS_OK)
 		{
 			CAN_initGlobalInterrupts();
 		}
 
 		/* -------------------------- CAN configuration --------------------------- */
 
-		if(status == STATUS_OK)
+		if(status == PRJ_STATUS_OK)
 		{
 			// Enable CAN1/CAN2 clock
 			__RCC_CAN1_CLOCK_ENABLE();
@@ -115,7 +115,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			{
 				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
 				{
-					status = STATUS_TIMEOUT;
+					status = PRJ_STATUS_TIMEOUT;
 					break;
 				}
 			}
@@ -129,7 +129,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			{
 				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
 				{
-					status = STATUS_TIMEOUT;
+					status = PRJ_STATUS_TIMEOUT;
 					break;
 				}
 			}
@@ -203,9 +203,9 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
  * @param 	initFilterStructure - A pointer to a USH_CAN_filterTypeDef structure.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
+uint32_t CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 	CAN_TypeDef *can_ip = can;
 
 	uint32_t filterNumberBitPos = 0;
@@ -213,9 +213,9 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
 	if(can_ip == CAN2) can_ip = CAN1;
 
 	// Check parameters
-	if(initFilterStructure == 0) status = STATUS_ERROR;
+	if(initFilterStructure == 0) status = PRJ_STATUS_ERROR;
 
-	if(status == STATUS_OK)
+	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
 		assert_param(IS_CAN_ALL_INSTANCE(can));
@@ -319,9 +319,9 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_enable(CAN_TypeDef* can)
+uint32_t CAN_enable(CAN_TypeDef* can)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 	uint32_t ticksStart = 0;
 
 	// Check parameters
@@ -336,7 +336,7 @@ USH_peripheryStatus CAN_enable(CAN_TypeDef* can)
 	{
 		if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
 		{
-			status = STATUS_TIMEOUT;
+			status = PRJ_STATUS_TIMEOUT;
 			break;
 		}
 	}
@@ -363,9 +363,9 @@ __WEAK void CAN_initGlobalInterrupts(void)
  * @param 	pData - A pointer to an array containing the payload of the Tx frame.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* pHeader, uint8_t* pData)
+uint32_t CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* pHeader, uint8_t* pData)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 
 	uint32_t tsrReg = can->TSR;
 	uint32_t transmitMailbox = 0;
@@ -392,7 +392,7 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* 
 		transmitMailbox = (tsrReg & CAN_TSR_CODE) >> CAN_TSR_CODE_Pos;
 
 		// Check transmit mailbox value
-		if(transmitMailbox > 2) status = STATUS_ERROR;
+		if(transmitMailbox > 2) status = PRJ_STATUS_ERROR;
 
 		// Set up the ID
 		if(pHeader->IDE == CAN_ID_STD)

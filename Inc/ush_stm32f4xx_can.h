@@ -2,12 +2,18 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_can.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    04 April 2023
   * @brief   Header file of CAN module.
   *
   * NOTE: This file is not a full-fledged RCC driver, but contains only some of
   * 	  the functions that are needed for the current project.
+  *
+  *
+  *
+  * @Major changes v1.1
+  * 	- periphery status enumeration replaced with definitions.
+  *
   ******************************************************************************
   */
 
@@ -422,7 +428,7 @@ typedef enum
  * 							information for the specified CAN peripheral.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure);
+uint32_t CAN_init(USH_CAN_settingsTypeDef* initStructure);
 
 /**
  * @brief 	This function configures the CAN reception filter according to the specified parameters
@@ -431,14 +437,14 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure);
  * @param 	initFilterStructure - A pointer to a USH_CAN_filterTypeDef structure.
  * @return	The peripheral status.
  */
-USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure);
+uint32_t CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure);
 
 /**
  * @brief 	This function is used to enable the specified CAN module.
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_enable(CAN_TypeDef* can);
+uint32_t CAN_enable(CAN_TypeDef* can);
 
 /**
  * @brief  	This function is used to initialize CAN modules global interrupts.
@@ -456,7 +462,7 @@ __WEAK void CAN_initGlobalInterrupts(void);
  * @param 	pData - A pointer to an array containing the payload of the Tx frame.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef *pHeader, uint8_t* pData);
+uint32_t CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef *pHeader, uint8_t* pData);
 
 /**
  * @brief 	This function is used to get an CAN frame from the Rx FIFO zone into the message RAM.
