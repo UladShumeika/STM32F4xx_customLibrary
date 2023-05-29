@@ -12,7 +12,8 @@
   *
   *
   * @Major changes v1.1
-  *		- periphery status enumeration replaced with definitions.
+  *		- periphery status enumeration replaced with definitions;
+  *		- added RCC_getHCLKfreq, RCC_getPCLK1freq and RCC_getPCLK2freq functions;
   *
   ******************************************************************************
   */
@@ -305,5 +306,23 @@ uint32_t RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure);
  * @retval	Flags status.
  */
 FlagStatus RCC_getFlagStatus(USH_RCC_flags flags);
+
+/**
+  * @brief  This function is used to return the HCLK frequency.
+  * @retval HCLK frequency.
+  */
+uint32_t RCC_getHCLKfreq(void);
+
+/**
+  * @brief  This function is used to return the PCLK1 frequency.
+  * @retval PCLK1 frequency.
+  */
+uint32_t RCC_getPCLK1freq(void);
+
+/**
+  * @brief  This function is used to return the PCLK2 frequency.
+  * @retval PCLK2 frequency.
+  */
+uint32_t RCC_getPCLK2freq(void);
 
 #endif /* __USH_STM32F4XX_MISC_H */

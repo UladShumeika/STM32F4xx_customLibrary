@@ -177,6 +177,40 @@ FlagStatus RCC_getFlagStatus(USH_RCC_flags flags)
 	return status;
 }
 
+/**
+  * @brief  This function is used to return the HCLK frequency.
+  * @retval HCLK frequency.
+  */
+uint32_t RCC_getHCLKfreq(void)
+{
+	return SystemCoreClock;
+}
+
+
+/**
+  * @brief  This function is used to return the PCLK1 frequency.
+  * @retval PCLK1 frequency.
+  */
+uint32_t RCC_getPCLK1freq(void)
+{
+	uint32_t hclk = RCC_getHCLKfreq();
+	uint32_t pclk1 = hclk >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE1) >> RCC_CFGR_PPRE1_Pos];
+
+	return pclk1;
+}
+
+/**
+  * @brief  This function is used to return the PCLK2 frequency.
+  * @retval PCLK2 frequency.
+  */
+uint32_t RCC_getPCLK2freq(void)
+{
+	uint32_t hclk = RCC_getHCLKfreq();
+	uint32_t pclk2 = hclk >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE2) >> RCC_CFGR_PPRE2_Pos];
+
+	return pclk2;
+}
+
 //---------------------------------------------------------------------------
 // Static Functions
 //---------------------------------------------------------------------------
