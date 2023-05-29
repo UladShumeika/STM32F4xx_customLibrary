@@ -36,6 +36,7 @@
 // Static functions declaration
 //---------------------------------------------------------------------------
 static uint32_t i2c_checking_pclk_frequency(uint32_t pclk1, uint32_t i2c_clock_speed);
+static uint32_t i2c_calc_rise_time(uint32_t freq_range, uint32_t i2c_clock_speed);
 
 //---------------------------------------------------------------------------
 // API
@@ -84,4 +85,30 @@ static uint32_t i2c_checking_pclk_frequency(uint32_t pclk1, uint32_t i2c_clock_s
 	}
 
 	return status;
+}
+
+/*!
+ * @brief Calculate rise time for I2C peripherals.
+ *
+ * This function is used to calculate rise time.
+ *
+ * @param[in] freq_range		frequency range.
+ * @param[in] i2c_clock_speed 	I2C peripheral clock speed.
+ *
+ * @return rise_time.
+ */
+static uint32_t i2c_calc_rise_time(uint32_t freq_range, uint32_t i2c_clock_speed)
+{
+	uint32_t rise_time = 0;
+
+	if(i2c_clock_speed <= PRJ_I2C_FREQ_STANDARD)
+	{
+		rise_time = freq_range + 1U;
+	}
+	else /* for PRJ_I2C_FREQ_FAST */
+	{
+		rise_time = (((freq_range * 300U) / 1000U) + 1U);
+	}
+
+	return rise_time;
 }
