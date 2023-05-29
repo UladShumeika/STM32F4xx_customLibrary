@@ -14,6 +14,7 @@
   * @Major changes v1.1
   *		- periphery status enumeration replaced with definitions;
   *		- added RCC_getHCLKfreq, RCC_getPCLK1freq and RCC_getPCLK2freq functions;
+  *		- added I2C clock enable/disable;
   *
   ******************************************************************************
   */
@@ -273,6 +274,24 @@ typedef enum
  */
 #define __RCC_TIM14_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_TIM14EN)
 #define __RCC_TIM14_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_TIM14RST)
+
+/*
+ * I2C1 clock enable/disable
+ */
+#define __RCC_I2C1_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C1EN)
+#define __RCC_I2C1_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C1EN)
+
+/*
+ * I2C2 clock enable/disable
+ */
+#define __RCC_I2C2_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C2EN)
+#define __RCC_I2C2_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C2EN)
+
+/*
+ * I2C3 clock enable/disable
+ */
+#define __RCC_I2C3_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C3EN)
+#define __RCC_I2C3_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C3EN)
 
 //---------------------------------------------------------------------------
 // External function prototypes
