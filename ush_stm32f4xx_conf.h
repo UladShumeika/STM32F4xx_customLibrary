@@ -18,8 +18,8 @@
   ******************************************************************************
   */
 
-#ifndef __USH_STM32F4xx_CONF_H
-#define __USH_STM32F4xx_CONF_H
+#ifndef ush_stm32f4xx_conf_h
+#define ush_stm32f4xx_conf_h
 
 //---------------------------------------------------------------------------
 // Definitions
@@ -67,4 +67,4 @@
 	#define assert_param(expr) ((void)0)
 #endif /* USE_FULL_ASSERT */
 
-#endif	/* __USH_STM32F4xx_CONF_H */
+#endif	/* ush_stm32f4xx_conf_h */
