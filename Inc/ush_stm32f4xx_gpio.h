@@ -15,7 +15,8 @@
   *		- GPIO_init function has been changed to take into account the use of flag strategy.
   *
   *	@Major changes v1.2
-  *		- periphery status enumeration replaced with definitions.
+  *		- periphery status enumeration replaced with definitions;
+  *		- added alternative functions for I2C1, I2C2 and I2C3;
   *
   ******************************************************************************
   */
@@ -98,6 +99,10 @@ typedef enum
  */
 typedef enum
 {
+	GPIO_AF4_I2C1 		= 0x04UL,		/* I2C1 alternate function mapping */
+	GPIO_AF4_I2C2 		= 0x04UL,		/* I2C2 alternate function mapping */
+	GPIO_AF4_I2C3 		= 0x04UL,		/* I2C3 alternate function mapping */
+
 	GPIO_AF5_SPI1 		= 0x05UL,		/* SPI1/I2S1 alternate function mapping */
 	GPIO_AF5_SPI2 		= 0x05UL,		/* SPI2/I2S2 alternate function mapping */
 	GPIO_AF5_SPI4 		= 0x05UL,		/* SPI4/I2S4 alternate function mapping */
