@@ -61,11 +61,11 @@ uint32_t RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
 
 	// Check parameters
 	if(initStructure == 0) return PRJ_STATUS_ERROR;
-	assert_param(IS_RCC_PLL_SOURCE(initStructure->PLL_source));
-	assert_param(IS_RCC_PLLM_VALUE(initStructure->PLLM));
-	assert_param(IS_RCC_PLLN_VALUE(initStructure->PLLN));
-	assert_param(IS_RCC_PLLP_VALUE(initStructure->PLLP));
-	assert_param(IS_RCC_PLLQ_VALUE(initStructure->PLLQ));
+	macro_prj_assert_param(IS_RCC_PLL_SOURCE(initStructure->PLL_source));
+	macro_prj_assert_param(IS_RCC_PLLM_VALUE(initStructure->PLLM));
+	macro_prj_assert_param(IS_RCC_PLLN_VALUE(initStructure->PLLN));
+	macro_prj_assert_param(IS_RCC_PLLP_VALUE(initStructure->PLLP));
+	macro_prj_assert_param(IS_RCC_PLLQ_VALUE(initStructure->PLLQ));
 
 	// Configure PLL if it's disabled
 	if(RCC_getFlagStatus(RCC_FLAG_PLLRDY) == RESET)
@@ -108,10 +108,10 @@ uint32_t RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure)
 		; /* DO NOTHING */
 	}
 
-	assert_param(IS_RCC_SYSCLK_SOURCE(initStructure->SYSCLK_source));
-	assert_param(IS_RCC_HCLK_DIVIDER(initStructure->HCLK_divider));
-	assert_param(IS_RCC_APB_DIVIDER(initStructure->APB1_divider));
-	assert_param(IS_RCC_APB_DIVIDER(initStructure->APB2_divider));
+	macro_prj_assert_param(IS_RCC_SYSCLK_SOURCE(initStructure->SYSCLK_source));
+	macro_prj_assert_param(IS_RCC_HCLK_DIVIDER(initStructure->HCLK_divider));
+	macro_prj_assert_param(IS_RCC_APB_DIVIDER(initStructure->APB1_divider));
+	macro_prj_assert_param(IS_RCC_APB_DIVIDER(initStructure->APB2_divider));
 
 	if(status == PRJ_STATUS_OK)
 	{
@@ -159,7 +159,7 @@ FlagStatus RCC_getFlagStatus(USH_RCC_flags flags)
 	FlagStatus status = RESET;
 
 	// Check parameters
-	assert_param(IS_RCC_FLAGS(flags));
+	macro_prj_assert_param(IS_RCC_FLAGS(flags));
 
 	// Read RCC->CR register
 	statusReg = RCC->CR;
@@ -192,7 +192,7 @@ static uint32_t RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, FlagStatus exp
 	uint32_t status = PRJ_STATUS_OK;
 
 	// Check parameters
-	assert_param(IS_RCC_FLAGS(flag));
+	macro_prj_assert_param(IS_RCC_FLAGS(flag));
 
 	if(expectedState == RESET)
 	{

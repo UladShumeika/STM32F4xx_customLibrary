@@ -26,6 +26,20 @@
 //---------------------------------------------------------------------------
 
 /*!
+ * @name custom_drivers
+ * @{
+ */
+#define PRJ_MISC_DRIVER				/*!< Miscellaneous module */
+#define PRJ_RCC_DRIVER				/*!< RCC module */
+#define PRJ_GPIO_DRIVER				/*!< GPIO module */
+/* #define PRJ_DMA_DRIVER  */		/*!< DMA module */
+/* #define PRJ_SPI_DRIVER  */		/*!< SPI module */
+/* #define PRJ_UART_DRIVER */		/*!< UART module */
+#define PRJ_CAN_DRIVER				/*!< CAN module */
+
+/*! @}*/
+
+/*!
  * @name status_definitions
  * @{
  */
@@ -45,44 +59,40 @@
 /*! @}*/
 
 //---------------------------------------------------------------------------
-// Includes
-//---------------------------------------------------------------------------
-#include "ush_stm32f4xx_misc.h"
-#include "ush_stm32f4xx_gpio.h"
-//#include "ush_stm32f4xx_dma.h"
-//#include "ush_stm32f4xx_spi.h"
-#include "ush_stm32f4xx_uart.h"
-#include "ush_stm32f4xx_rcc.h"
-#include "ush_stm32f4xx_can.h"
-
-//---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
-#define IS_FUNCTIONAL_STATE(STATE) 			(((STATE) == DISABLE) || ((STATE) == ENABLE))
-
-#define macro_prj_common_unused(x) 			(void)(x)
+#define macro_prj_common_unused(x) 					(void)(x)
 
 //---------------------------------------------------------------------------
-// Function's parameters check.
+// Includes' modules
 //---------------------------------------------------------------------------
-#ifdef USE_FULL_ASSERT
 
-/**
-  * @brief  The assert_param macro is used for function's parameters check.
-  * @param  expr - If expr is false, it calls assert_failed function
-  *   			   which reports the name of the source file and the source
-  *   			   line number of the call that failed.
-  *   			   If expr is true, it returns no value.
-  * @retval None.
-  */
-  	#define assert_param(expr) ((expr) ? (void)0 : assert_failed((uint8_t *)__FILE__, __LINE__))
+#ifdef PRJ_MISC_DRIVER
+	#include "ush_stm32f4xx_misc.h"
+#endif
 
-//---------------------------------------------------------------------------
-// Function's parameters check.
-//---------------------------------------------------------------------------
-  	void assert_failed(uint8_t* file, uint32_t line);
-#else
-	#define assert_param(expr) ((void)0)
-#endif /* USE_FULL_ASSERT */
+#ifdef PRJ_RCC_DRIVER
+	#include "ush_stm32f4xx_rcc.h"
+#endif
+
+#ifdef PRJ_GPIO_DRIVER
+	#include "ush_stm32f4xx_gpio.h"
+#endif
+
+#ifdef PRJ_DMA_DRIVER
+	#include "ush_stm32f4xx_dma.h"
+#endif
+
+#ifdef PRJ_SPI_DRIVER
+	#include "ush_stm32f4xx_spi.h"
+#endif
+
+#ifdef PRJ_UART_DRIVER
+	#include "ush_stm32f4xx_uart.h"
+#endif
+
+#ifdef PRJ_CAN_DRIVER
+	#include "ush_stm32f4xx_can.h"
+#endif
 
 #endif	/* ush_stm32f4xx_conf_h */

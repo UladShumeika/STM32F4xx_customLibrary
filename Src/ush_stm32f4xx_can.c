@@ -46,17 +46,17 @@ uint32_t CAN_init(USH_CAN_settingsTypeDef* initStructure)
 	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
-		assert_param(IS_CAN_ALL_INSTANCE(initStructure->CANx));
-		assert_param(IS_CAN_BAUDRATE_PRESCALER(initStructure->Timings->BaudratePrescaler));
-		assert_param(IS_CAN_TS1(initStructure->Timings->TimeSegment1));
-		assert_param(IS_CAN_TS2(initStructure->Timings->TimeSegment2));
-		assert_param(IS_CAN_SJW(initStructure->Timings->ResynchJumpWidth));
-		assert_param(IS_CAN_MODE(initStructure->Mode));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoBusOff));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoWakeUp));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoRetransmission));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->ReceiveFifoLocked));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->TransmitFifoPriority));
+		macro_prj_assert_param(IS_CAN_ALL_INSTANCE(initStructure->CANx));
+		macro_prj_assert_param(IS_CAN_BAUDRATE_PRESCALER(initStructure->Timings->BaudratePrescaler));
+		macro_prj_assert_param(IS_CAN_TS1(initStructure->Timings->TimeSegment1));
+		macro_prj_assert_param(IS_CAN_TS2(initStructure->Timings->TimeSegment2));
+		macro_prj_assert_param(IS_CAN_SJW(initStructure->Timings->ResynchJumpWidth));
+		macro_prj_assert_param(IS_CAN_MODE(initStructure->Mode));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoBusOff));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoWakeUp));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoRetransmission));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->ReceiveFifoLocked));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->TransmitFifoPriority));
 
 		/* -------------------------- GPIO configuration -------------------------- */
 
@@ -218,17 +218,17 @@ uint32_t CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterSt
 	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
-		assert_param(IS_CAN_ALL_INSTANCE(can));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdHigh));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdLow));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdHigh));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdLow));
-		assert_param(IS_CAN_FILTER_FIFO(initFilterStructure->FilterFIFOAssignment));
-		assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->FilterBank));
-		assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->SlaveStartFilterBank));
-		assert_param(IS_CAN_FILTER_MODE(initFilterStructure->FilterMode));
-		assert_param(IS_CAN_FILTER_SCALE(initFilterStructure->FilterScale));
-		assert_param(IS_CAN_FILTER_ACTIVATION(initFilterStructure->FilterActivation));
+		macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdHigh));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdLow));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdHigh));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdLow));
+		macro_prj_assert_param(IS_CAN_FILTER_FIFO(initFilterStructure->FilterFIFOAssignment));
+		macro_prj_assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->FilterBank));
+		macro_prj_assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->SlaveStartFilterBank));
+		macro_prj_assert_param(IS_CAN_FILTER_MODE(initFilterStructure->FilterMode));
+		macro_prj_assert_param(IS_CAN_FILTER_SCALE(initFilterStructure->FilterScale));
+		macro_prj_assert_param(IS_CAN_FILTER_ACTIVATION(initFilterStructure->FilterActivation));
 
 		// Enable initialization mode for the filter
 		can_ip->FMR |= CAN_FMR_FINIT;
@@ -325,7 +325,7 @@ uint32_t CAN_enable(CAN_TypeDef* can)
 	uint32_t ticksStart = 0;
 
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
 
 	// Request leave initialization
 	can->MCR &= ~CAN_MCR_INRQ;
@@ -371,18 +371,18 @@ uint32_t CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* pHeader, ui
 	uint32_t transmitMailbox = 0;
 
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_IDTYPE(pHeader->IDE));
-	assert_param(IS_CAN_RTR(pHeader->RTR));
-	assert_param(IS_CAN_DLC(pHeader->DLC));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_IDTYPE(pHeader->IDE));
+	macro_prj_assert_param(IS_CAN_RTR(pHeader->RTR));
+	macro_prj_assert_param(IS_CAN_DLC(pHeader->DLC));
 
 	if(pHeader->IDE == CAN_ID_STD)
 	{
-		assert_param(IS_CAN_STDID(pHeader->StdId));
+		macro_prj_assert_param(IS_CAN_STDID(pHeader->StdId));
 	}
 	else
 	{
-		assert_param(IS_CAN_EXTID(pHeader->ExtId));
+		macro_prj_assert_param(IS_CAN_EXTID(pHeader->ExtId));
 	}
 
 	// Check that all the Tx mailboxes are not full
@@ -435,8 +435,8 @@ uint32_t CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* pHeader, ui
 void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, USH_CAN_rxHeaderTypeDef* pHeader, uint8_t* pData)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_FILTER_FIFO(rxFifo));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_FILTER_FIFO(rxFifo));
 
 	// Get the frame information
 	pHeader->IDE = can->sFIFOMailBox[rxFifo].RIR & CAN_RI0R_IDE;
@@ -482,8 +482,8 @@ void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, USH_CAN_rxHea
 void CAN_interruptEnable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_INTERRUPT(interrupt));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_INTERRUPT(interrupt));
 
 	uint32_t ierReg = can->IER;
 
@@ -500,8 +500,8 @@ void CAN_interruptEnable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 void CAN_interruptDisable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_INTERRUPT(interrupt));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_INTERRUPT(interrupt));
 
 	uint32_t ierReg = can->IER;
 
@@ -518,7 +518,7 @@ void CAN_interruptDisable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
 
 	if(flag <= CAN_FLAG_TERR2)
 	{
