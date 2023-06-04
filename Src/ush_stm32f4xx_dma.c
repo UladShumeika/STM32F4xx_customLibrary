@@ -15,7 +15,8 @@
 // Includes
 //---------------------------------------------------------------------------
 #include "ush_stm32f4xx_dma.h"
-#include "stm32f4xx.h"
+#include "ush_stm32f4xx_conf.h"
+#include "stddef.h"
 
 //---------------------------------------------------------------------------
 // Private variables
