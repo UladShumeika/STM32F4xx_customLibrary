@@ -13,7 +13,7 @@
   *	@Major changes v1.2
   *		- changed code style;
   *		- periphery status enumeration replaced with definitions;
-  *		- added i2c driver.
+  *		- moved parameter check macro to misc module;
   *
   ******************************************************************************
   */
