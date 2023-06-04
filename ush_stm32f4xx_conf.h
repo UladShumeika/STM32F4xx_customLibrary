@@ -24,9 +24,16 @@
 //---------------------------------------------------------------------------
 // Definitions
 //---------------------------------------------------------------------------
+
+/*!
+ * @name status_definitions
+ * @{
+ */
 #define PRJ_STATUS_OK						(0x00000000U)	/*!< Periphery status OK */
 #define PRJ_STATUS_ERROR					(0x00000001U)	/*!< Periphery status error */
 #define PRJ_STATUS_TIMEOUT					(0x00000002U)	/*!< Periphery status timeout */
+
+/*! @}*/
 
 //---------------------------------------------------------------------------
 // Includes
