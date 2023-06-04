@@ -2,74 +2,97 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_conf.h
   * @author  Ulad Shumeika
-  * @version v1.1
+  * @version v1.2
   * @date    03-March-2023
   * @brief   Library configuration file.
   *
   *
   *	@Major changes v1.1
-  *		- added STATUS_ERROR in USH_peripheryStatus enumeration;
+  *		- added STATUS_ERROR in USH_peripheryStatus enumeration.
+  *
+  *	@Major changes v1.2
+  *		- changed code style;
+  *		- periphery status enumeration replaced with definitions;
+  *		- moved parameter check macro to misc module;
   *
   ******************************************************************************
   */
 
+#ifndef ush_stm32f4xx_conf_h
+#define ush_stm32f4xx_conf_h
+
 //---------------------------------------------------------------------------
-// Define to prevent recursive inclusion
+// Definitions
 //---------------------------------------------------------------------------
-#ifndef __USH_STM32F4xx_CONF_H
-#define __USH_STM32F4xx_CONF_H
+
+/*!
+ * @name custom_drivers
+ * @{
+ */
+#define PRJ_MISC_DRIVER				/*!< Miscellaneous module */
+#define PRJ_RCC_DRIVER				/*!< RCC module */
+#define PRJ_GPIO_DRIVER				/*!< GPIO module */
+/* #define PRJ_DMA_DRIVER  */		/*!< DMA module */
+/* #define PRJ_SPI_DRIVER  */		/*!< SPI module */
+/* #define PRJ_UART_DRIVER */		/*!< UART module */
+#define PRJ_CAN_DRIVER				/*!< CAN module */
+
+/*! @}*/
+
+/*!
+ * @name status_definitions
+ * @{
+ */
+#define PRJ_STATUS_OK						(0x00000000U)	/*!< Periphery status OK */
+#define PRJ_STATUS_ERROR					(0x00000001U)	/*!< Periphery status error */
+#define PRJ_STATUS_TIMEOUT					(0x00000002U)	/*!< Periphery status timeout */
+
+/*! @}*/
+
+/*!
+ * @name flag_definitions
+ * @{
+ */
+#define PRJ_FLAG_SET						(0x00000001U)	/*!< Flag set */
+#define PRJ_FLAG_RESET						(0x00000000U)	/*!< Flag reset */
+
+/*! @}*/
 
 //---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
-#define IS_FUNCTIONAL_STATE(STATE) 		(((STATE) == DISABLE) || ((STATE) == ENABLE))
+#define macro_prj_common_unused(x) 					(void)(x)
 
 //---------------------------------------------------------------------------
-// Structures and enumerations
+// Includes' modules
 //---------------------------------------------------------------------------
 
-/**
- * @brief Periphery status enumeration.
- */
-typedef enum
-{
-	STATUS_TIMEOUT	= 0,	/* Periphery status timeout */
-	STATUS_ERROR,			/* Periphery status error */
-	STATUS_OK				/* Periphery status OK */
-} USH_peripheryStatus;
+#ifdef PRJ_MISC_DRIVER
+	#include "ush_stm32f4xx_misc.h"
+#endif
 
-//---------------------------------------------------------------------------
-// Includes
-//---------------------------------------------------------------------------
-#include "ush_stm32f4xx_misc.h"
-#include "ush_stm32f4xx_gpio.h"
-//#include "ush_stm32f4xx_dma.h"
-//#include "ush_stm32f4xx_spi.h"
-#include "ush_stm32f4xx_uart.h"
-#include "ush_stm32f4xx_rcc.h"
-#include "ush_stm32f4xx_can.h"
+#ifdef PRJ_RCC_DRIVER
+	#include "ush_stm32f4xx_rcc.h"
+#endif
 
-//---------------------------------------------------------------------------
-// Function's parameters check.
-//---------------------------------------------------------------------------
-#ifdef USE_FULL_ASSERT
+#ifdef PRJ_GPIO_DRIVER
+	#include "ush_stm32f4xx_gpio.h"
+#endif
 
-/**
-  * @brief  The assert_param macro is used for function's parameters check.
-  * @param  expr - If expr is false, it calls assert_failed function
-  *   			   which reports the name of the source file and the source
-  *   			   line number of the call that failed.
-  *   			   If expr is true, it returns no value.
-  * @retval None.
-  */
-  	#define assert_param(expr) ((expr) ? (void)0 : assert_failed((uint8_t *)__FILE__, __LINE__))
+#ifdef PRJ_DMA_DRIVER
+	#include "ush_stm32f4xx_dma.h"
+#endif
 
-//---------------------------------------------------------------------------
-// Function's parameters check.
-//---------------------------------------------------------------------------
-  	void assert_failed(uint8_t* file, uint32_t line);
-#else
-	#define assert_param(expr) ((void)0)
-#endif /* USE_FULL_ASSERT */
+#ifdef PRJ_SPI_DRIVER
+	#include "ush_stm32f4xx_spi.h"
+#endif
 
-#endif	/* __USH_STM32F4xx_CONF_H */
+#ifdef PRJ_UART_DRIVER
+	#include "ush_stm32f4xx_uart.h"
+#endif
+
+#ifdef PRJ_CAN_DRIVER
+	#include "ush_stm32f4xx_can.h"
+#endif
+
+#endif	/* ush_stm32f4xx_conf_h */

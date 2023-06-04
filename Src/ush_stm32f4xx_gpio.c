@@ -39,23 +39,23 @@
  * 						    for the specified GPIO peripheral.
  * @retval	The periphery status.
  */
-USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure)
+uint32_t GPIO_init(USH_GPIO_initTypeDef *initStructure)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 
 	uint32_t pinPos, pos, currentPin, temp;
 
 	// Check parameters
-	if(initStructure == 0) status = STATUS_ERROR;
+	if(initStructure == 0) status = PRJ_STATUS_ERROR;
 
-	if(status == STATUS_OK)
+	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
-		assert_param(IS_GPIO_ALL_INSTANCE(initStructure->GPIOx));
-		assert_param(IS_GPIO_PIN(initStructure->Pin));
-		assert_param(IS_GPIO_MODE(initStructure->Mode));
-		assert_param(IS_GPIO_PULL(initStructure->Pull));
-		assert_param(IS_GPIO_SPEED(initStructure->Speed));
+		macro_prj_assert_param(IS_GPIO_ALL_INSTANCE(initStructure->GPIOx));
+		macro_prj_assert_param(IS_GPIO_PIN(initStructure->Pin));
+		macro_prj_assert_param(IS_GPIO_MODE(initStructure->Mode));
+		macro_prj_assert_param(IS_GPIO_PULL(initStructure->Pull));
+		macro_prj_assert_param(IS_GPIO_SPEED(initStructure->Speed));
 
 		// Configure the port pins
 		for(pinPos = 0x00; pinPos < GPIO_NUMBER; pinPos++)
@@ -94,7 +94,7 @@ USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure)
 				if((initStructure->Mode & GPIO_MODE) == GPIO_AF)
 				{
 					// Check parameters
-					assert_param(IS_GPIO_ALTERNATE(initStructure->Alternate));
+					macro_prj_assert_param(IS_GPIO_ALTERNATE(initStructure->Alternate));
 
 					// Configure Alternate function mapped with the current IO
 					temp = initStructure->GPIOx->AFR[pinPos >> 3U];
@@ -130,8 +130,8 @@ USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure)
 void GPIO_resetBits(GPIO_TypeDef *GPIOx, USH_GPIO_pins gpioPins)
 {
 	// Check the parameters
-	assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
-	assert_param(IS_GPIO_PIN(gpioPins));
+	macro_prj_assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
+	macro_prj_assert_param(IS_GPIO_PIN(gpioPins));
 
 	GPIOx->BSRR = (uint32_t)gpioPins << GPIO_NUMBER;
 }
@@ -146,9 +146,9 @@ void GPIO_resetBits(GPIO_TypeDef *GPIOx, USH_GPIO_pins gpioPins)
 void GPIO_writeBits(GPIO_TypeDef *GPIOx, USH_GPIO_pins gpioPins, USH_GPIO_pinState state)
 {
 	// Check the parameters
-	assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
-	assert_param(IS_GPIO_PIN(gpioPins));
-	assert_param(IS_GPIO_STATE(state));
+	macro_prj_assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
+	macro_prj_assert_param(IS_GPIO_PIN(gpioPins));
+	macro_prj_assert_param(IS_GPIO_STATE(state));
 
 	if(state != GPIO_PIN_RESET)
 	{
@@ -169,8 +169,8 @@ void GPIO_writeBits(GPIO_TypeDef *GPIOx, USH_GPIO_pins gpioPins, USH_GPIO_pinSta
 void GPIO_toggleBits(GPIO_TypeDef* GPIOx, USH_GPIO_pins gpioPins)
 {
 	// Check the parameters
-	assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
-	assert_param(IS_GPIO_PIN(gpioPins));
+	macro_prj_assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
+	macro_prj_assert_param(IS_GPIO_PIN(gpioPins));
 
 	GPIOx->ODR ^= gpioPins;
 }

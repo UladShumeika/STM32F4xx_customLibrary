@@ -2,12 +2,18 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_rcc.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    21 March 2023
   * @brief   Header file of RCC module.
   *
   * NOTE: This file is not a full-fledged RCC driver, but contains only some of
   * 	  the functions that are needed for the current project.
+  *
+  *
+  *
+  * @Major changes v1.1
+  *		- periphery status enumeration replaced with definitions.
+  *
   ******************************************************************************
   */
 
@@ -275,7 +281,7 @@ typedef enum
  * @brief 	This function initializes HSE oscillator.
  * @retval	The periphery status.
  */
-USH_peripheryStatus RCC_initHSE(void);
+uint32_t RCC_initHSE(void);
 
 /**
  * @brief 	This function initializes PLL.
@@ -283,7 +289,7 @@ USH_peripheryStatus RCC_initHSE(void);
  * 							information for PLL.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
+uint32_t RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
 
 /**
  * @brief 	This function configures SYSCLK, HCLK and PCLKs.
@@ -291,7 +297,7 @@ USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
  * 							information for SYSCLK, HCLK and PCLKs.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure);
+uint32_t RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure);
 
 /**
  * @brief 	This function returns flags status.

@@ -2,17 +2,20 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_gpio.h
   * @author  Ulad Shumeika
-  * @version v1.1
+  * @version v1.2
   * @date    13-January-2023
   * @brief   Header file of GPIO module
   *
   *
   *
   * @Major changes v1.1
-  * 	- delete IS_GPIO_INSTANCE macro;
+  * 	- deleted IS_GPIO_INSTANCE macro;
   * 	- replaced warnings with TO_DO for module features;
   *		- added alternative functions for CAN1/CAN2;
-  *		- GPIO_init function has been changed to take into account the use of flag strategy;
+  *		- GPIO_init function has been changed to take into account the use of flag strategy.
+  *
+  *	@Major changes v1.2
+  *		- periphery status enumeration replaced with definitions.
   *
   ******************************************************************************
   */
@@ -200,7 +203,7 @@ typedef enum
  * 						    for the specified GPIO peripheral.
  * @retval	The periphery status.
  */
-USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure);
+uint32_t GPIO_init(USH_GPIO_initTypeDef *initStructure);
 
 /**
  * @brief	This function sets or clears the selected data port bits.

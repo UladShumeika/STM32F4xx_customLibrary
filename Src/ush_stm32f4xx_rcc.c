@@ -26,7 +26,7 @@
 //---------------------------------------------------------------------------
 // Static function prototypes
 //---------------------------------------------------------------------------
-static USH_peripheryStatus RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, FlagStatus expectedState);
+static uint32_t RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, FlagStatus expectedState);
 
 //---------------------------------------------------------------------------
 // Initialization functions
@@ -36,15 +36,15 @@ static USH_peripheryStatus RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, Fla
  * @brief 	This function initializes HSE oscillator.
  * @retval	The periphery status.
  */
-USH_peripheryStatus RCC_initHSE(void)
+uint32_t RCC_initHSE(void)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 
 	// Enable HSE oscillator
 	RCC->CR |= RCC_CR_HSEON;
 
 	// Wait till HSE is enabled
-	if(!RCC_waitFlag(RCC_FLAG_HSERDY, HSE_TIMEOUT_VALUE, SET)) status =  STATUS_TIMEOUT;
+	status = RCC_waitFlag(RCC_FLAG_HSERDY, HSE_TIMEOUT_VALUE, SET);
 
 	return status;
 }
@@ -55,17 +55,17 @@ USH_peripheryStatus RCC_initHSE(void)
  * 							information for PLL.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
+uint32_t RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 
 	// Check parameters
-	if(initStructure == 0) return STATUS_ERROR;
-	assert_param(IS_RCC_PLL_SOURCE(initStructure->PLL_source));
-	assert_param(IS_RCC_PLLM_VALUE(initStructure->PLLM));
-	assert_param(IS_RCC_PLLN_VALUE(initStructure->PLLN));
-	assert_param(IS_RCC_PLLP_VALUE(initStructure->PLLP));
-	assert_param(IS_RCC_PLLQ_VALUE(initStructure->PLLQ));
+	if(initStructure == 0) return PRJ_STATUS_ERROR;
+	macro_prj_assert_param(IS_RCC_PLL_SOURCE(initStructure->PLL_source));
+	macro_prj_assert_param(IS_RCC_PLLM_VALUE(initStructure->PLLM));
+	macro_prj_assert_param(IS_RCC_PLLN_VALUE(initStructure->PLLN));
+	macro_prj_assert_param(IS_RCC_PLLP_VALUE(initStructure->PLLP));
+	macro_prj_assert_param(IS_RCC_PLLQ_VALUE(initStructure->PLLQ));
 
 	// Configure PLL if it's disabled
 	if(RCC_getFlagStatus(RCC_FLAG_PLLRDY) == RESET)
@@ -81,7 +81,7 @@ USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
 		RCC->CR |= RCC_CR_PLLON;
 
 		// Wait till PLL is enabled
-		if(!RCC_waitFlag(RCC_FLAG_PLLRDY, PLL_TIMEOUT_VALUE, SET)) status = STATUS_TIMEOUT;
+		status = RCC_waitFlag(RCC_FLAG_PLLRDY, PLL_TIMEOUT_VALUE, SET);
 	}
 
 	return status;
@@ -93,34 +93,55 @@ USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure)
  * 							information for SYSCLK, HCLK and PCLKs.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure)
+uint32_t RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure)
 {
 	uint32_t startTicks = 0;
+	uint32_t status = PRJ_STATUS_OK;
 
 	// Check parameters
-	if(initStructure == 0) return STATUS_ERROR;
-	assert_param(IS_RCC_SYSCLK_SOURCE(initStructure->SYSCLK_source));
-	assert_param(IS_RCC_HCLK_DIVIDER(initStructure->HCLK_divider));
-	assert_param(IS_RCC_APB_DIVIDER(initStructure->APB1_divider));
-	assert_param(IS_RCC_APB_DIVIDER(initStructure->APB2_divider));
-
-	// Set HCLK, PCLKs dividers
-	RCC->CFGR |= initStructure->HCLK_divider | initStructure->APB1_divider | (initStructure->APB2_divider << 3U);
-
-	// Set SYSCLK source
-	RCC->CFGR |= initStructure->SYSCLK_source;
-
-	// Wait till PLL is enabled
-	startTicks = MISC_timeoutGetTick();
-	while((uint32_t)(RCC->CFGR & RCC_CFGR_SWS) != (initStructure->SYSCLK_source << RCC_CFGR_SWS_Pos))
+	if(initStructure == 0)
 	{
-		if((MISC_timeoutGetTick() - startTicks) > CLOCKSWITCH_TIMEOUT_VALUE)
-		{
-			return STATUS_TIMEOUT;
-		}
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		; /* DO NOTHING */
 	}
 
-	return STATUS_OK;
+	macro_prj_assert_param(IS_RCC_SYSCLK_SOURCE(initStructure->SYSCLK_source));
+	macro_prj_assert_param(IS_RCC_HCLK_DIVIDER(initStructure->HCLK_divider));
+	macro_prj_assert_param(IS_RCC_APB_DIVIDER(initStructure->APB1_divider));
+	macro_prj_assert_param(IS_RCC_APB_DIVIDER(initStructure->APB2_divider));
+
+	if(status == PRJ_STATUS_OK)
+	{
+		// Set HCLK, PCLKs dividers
+		RCC->CFGR |= initStructure->HCLK_divider | initStructure->APB1_divider | (initStructure->APB2_divider << 3U);
+
+		// Set SYSCLK source
+		RCC->CFGR |= initStructure->SYSCLK_source;
+
+		// Wait till PLL is enabled
+		startTicks = MISC_timeoutGetTick();
+		while((uint32_t)(RCC->CFGR & RCC_CFGR_SWS) != (initStructure->SYSCLK_source << RCC_CFGR_SWS_Pos))
+		{
+			if((MISC_timeoutGetTick() - startTicks) > CLOCKSWITCH_TIMEOUT_VALUE)
+			{
+				status = PRJ_STATUS_TIMEOUT;
+				break;
+			}
+			else
+			{
+				; /* DO NOTHING */
+			}
+		}
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	return status;
 }
 
 //---------------------------------------------------------------------------
@@ -138,7 +159,7 @@ FlagStatus RCC_getFlagStatus(USH_RCC_flags flags)
 	FlagStatus status = RESET;
 
 	// Check parameters
-	assert_param(IS_RCC_FLAGS(flags));
+	macro_prj_assert_param(IS_RCC_FLAGS(flags));
 
 	// Read RCC->CR register
 	statusReg = RCC->CR;
@@ -165,12 +186,13 @@ FlagStatus RCC_getFlagStatus(USH_RCC_flags flags)
  * @param 	timeout - timeout time for the specified flag.
  * @retval	Periphery status.
  */
-static USH_peripheryStatus RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, FlagStatus expectedState)
+static uint32_t RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, FlagStatus expectedState)
 {
 	uint8_t startTicks = MISC_timeoutGetTick();
+	uint32_t status = PRJ_STATUS_OK;
 
 	// Check parameters
-	assert_param(IS_RCC_FLAGS(flag));
+	macro_prj_assert_param(IS_RCC_FLAGS(flag));
 
 	if(expectedState == RESET)
 	{
@@ -179,7 +201,8 @@ static USH_peripheryStatus RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, Fla
 		{
 			if((MISC_timeoutGetTick() - startTicks) > timeout)
 			{
-				return STATUS_TIMEOUT;
+				status = PRJ_STATUS_TIMEOUT;
+				break;
 			}
 		}
 	} else
@@ -189,10 +212,11 @@ static USH_peripheryStatus RCC_waitFlag(USH_RCC_flags flag, uint8_t timeout, Fla
 		{
 			if((MISC_timeoutGetTick() - startTicks) > timeout)
 			{
-				return STATUS_TIMEOUT;
+				status = PRJ_STATUS_TIMEOUT;
+				break;
 			}
 		}
 	}
 
-	return STATUS_OK;
+	return status;
 }

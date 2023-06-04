@@ -77,10 +77,10 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	uint32_t pclk = 0;
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(initStructure->USARTx));
-	assert_param(IS_USART_PINSPACK(initStructure->PinsPack));
-	assert_param(IS_USART_BAUDRATE(initStructure->BaudRate));
-	assert_param(IS_USART_MODE(initStructure->Mode));
+	macro_prj_assert_param(IS_UART_INSTANCE(initStructure->USARTx));
+	macro_prj_assert_param(IS_USART_PINSPACK(initStructure->PinsPack));
+	macro_prj_assert_param(IS_USART_BAUDRATE(initStructure->BaudRate));
+	macro_prj_assert_param(IS_USART_MODE(initStructure->Mode));
 
 	/* ----------------------- GPIO configuration -------------------------- */
 
@@ -200,7 +200,7 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	/* ----------------------- USART configuration ------------------------- */
 
 	// Check parameters
-	assert_param(IS_UART_BAUDRATE(initStructure->BaudRate));
+	macro_prj_assert_param(IS_UART_BAUDRATE(initStructure->BaudRate));
 
 	// Oversampling by 16, 8 data bits, parity control disabled, multiprocessor communication disabled
 	if(initStructure->Mode == USART_MODE_RX_TX)
@@ -254,20 +254,20 @@ void USART_init(USH_USART_initTypeDef *initStructure)
  * @param 	size - The data transfer size.
  * @return	The periphery status.
  */
-USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
+uint32_t USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
 {
 	uint32_t startTicks = MISC_timeoutGetTick();
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_MESSAGE_SIZE(size));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_MESSAGE_SIZE(size));
 
 	if(!(usart->SR & USART_SR_TC))
 	{
 		// Check timeout
 		if((MISC_timeoutGetTick() - startTicks) > TIMEOUT)
 		{
-			return STATUS_TIMEOUT;
+			return PRJ_STATUS_TIMEOUT;
 		}
 	}
 
@@ -298,7 +298,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
 	// Enable IDLE interrupt
 	usart->CR1 |= USART_CR1_IDLEIE;
 
-	return STATUS_OK;
+	return PRJ_STATUS_OK;
 }
 
 /**
@@ -308,20 +308,20 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
  * @param 	size - The data transfer size.
  * @retval	The periphery status.
  */
-USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
+uint32_t USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
 {
 	uint32_t startTicks = MISC_timeoutGetTick();
 
 	// check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_MESSAGE_SIZE(size));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_MESSAGE_SIZE(size));
 
 	if(!(usart->SR & USART_SR_TC))
 	{
 		// Check timeout
 		if((MISC_timeoutGetTick() - startTicks) > TIMEOUT)
 		{
-			return STATUS_TIMEOUT;
+			return PRJ_STATUS_TIMEOUT;
 		}
 	}
 
@@ -348,7 +348,7 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
 	// Enable U(S)ART TX DMA
 	usart->CR3 |= USART_CR3_DMAT;
 
-	return STATUS_OK;
+	return PRJ_STATUS_OK;
 }
 
 /**
@@ -362,8 +362,8 @@ void USART_clearFlags(USART_TypeDef* usart, USH_USART_flags flags)
 	uint16_t temp = 0;
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_CLEAR_FLAGS(flags));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_CLEAR_FLAGS(flags));
 
 	if((flags == USART_FLAG_TXE) || (flags < USART_FLAG_RXNE))
 	{
@@ -468,8 +468,8 @@ static DMA_Stream_TypeDef* USART_getDmaStream(USART_TypeDef* usart, USH_USART_mo
 	DMA_Stream_TypeDef* DMA_Stream;
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_MODE(mode));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_MODE(mode));
 
 	if(mode == USART_MODE_RX_TX) mode = USART_MODE_TX;
 

@@ -41,11 +41,11 @@ void SPI_init(USH_SPI_initDefaultTypeDef *initStructure)
 	uint16_t temp;
 
 	// Check parameters
-	assert_param(IS_SPI_ALL_INSTANCE(initStructure->SPIx));
-	assert_param(IS_SPI_PINSPACK(initStructure->PinsPack));
-	assert_param(IS_SPI_BAUDRATE_PRESCALER(initStructure->BaudRatePrescaler));
-	assert_param(IS_SPI_MODE(initStructure->Mode));
-	assert_param(IS_SPI_FRAME_FORMAT(initStructure->FrameFormat));
+	macro_prj_assert_param(IS_SPI_ALL_INSTANCE(initStructure->SPIx));
+	macro_prj_assert_param(IS_SPI_PINSPACK(initStructure->PinsPack));
+	macro_prj_assert_param(IS_SPI_BAUDRATE_PRESCALER(initStructure->BaudRatePrescaler));
+	macro_prj_assert_param(IS_SPI_MODE(initStructure->Mode));
+	macro_prj_assert_param(IS_SPI_FRAME_FORMAT(initStructure->FrameFormat));
 
 	/* ----------------------- GPIO configuration -------------------------- */
 
@@ -149,7 +149,7 @@ void SPI_writeData(SPI_TypeDef *SPIx, uint8_t reg, uint8_t data)
 	uint16_t temp;
 
 	// Check parameters
-	assert_param(IS_SPI_ALL_INSTANCE(SPIx));
+	macro_prj_assert_param(IS_SPI_ALL_INSTANCE(SPIx));
 
 	// Check if the SPI is already enabled
 	if((SPIx->CR1 & SPI_CR1_SPE) != SPI_CR1_SPE)
@@ -180,8 +180,8 @@ void SPI_writeData(SPI_TypeDef *SPIx, uint8_t reg, uint8_t data)
 void SPI_csPin(GPIO_TypeDef *GPIOx, uint16_t csPin, USH_SPI_csState state)
 {
 	// Check parameters
-	assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
-	assert_param(IS_SPI_PIN_STATE(state));
+	macro_prj_assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
+	macro_prj_assert_param(IS_SPI_PIN_STATE(state));
 
 	if(state == HIGH)
 	{
