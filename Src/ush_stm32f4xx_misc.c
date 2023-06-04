@@ -349,8 +349,7 @@ void MISC_FLASH_setLatency(USH_FLASH_latency flashLatency)
  * @param[in] line 		macro_prj_assert_param error line source number
  * @return None.
  */
-void prj_misc_assert_failed(uint8_t* file, uint32_t line);
-
+void prj_misc_assert_failed(uint8_t* file, uint32_t line)
 {
 	printf("Wrong parameters value: file %s on line %ld\r\n", file, line);
 }

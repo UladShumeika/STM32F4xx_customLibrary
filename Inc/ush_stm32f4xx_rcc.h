@@ -128,7 +128,7 @@ typedef enum
 	RCC_FLAG_HSERDY			= RCC_CR_HSERDY,		/* HSE clock ready flag */
 	RCC_FLAG_PLLRDY			= RCC_CR_PLLRDY,		/* PLL clock ready flag */
 
-#if defined(STM32F429)
+#if defined(STM32F429xx)
 	RCC_FLAG_PLLSAIRDY		= RCC_CR_PLLSAIRDY,		/* PLLSAI clock ready flag */
 #endif
 
