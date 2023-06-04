@@ -353,22 +353,22 @@ typedef enum
 //---------------------------------------------------------------------------
 #define IS_CAN_BAUDRATE_PRESCALER(PRESCALER) 	(((PRESCALER) >= 1U) && ((PRESCALER) <= 1024U))
 
-#define IS_CAN_TS1(TQ) 							(((TQ) == CAN_TS1_1TQ)  || ((TQ) == CAN_TS1_2TQ)  || \
-                         	 	 	 	 	 	 ((TQ) == CAN_TS1_3TQ)  || ((TQ) == CAN_TS1_4TQ)  || \
-												 ((TQ) == CAN_TS1_5TQ)  || ((TQ) == CAN_TS1_6TQ)  || \
-												 ((TQ) == CAN_TS1_7TQ)  || ((TQ) == CAN_TS1_8TQ)  || \
-												 ((TQ) == CAN_TS1_9TQ)  || ((TQ) == CAN_TS1_10TQ) || \
-												 ((TQ) == CAN_TS1_11TQ) || ((TQ) == CAN_TS1_12TQ) || \
-												 ((TQ) == CAN_TS1_13TQ) || ((TQ) == CAN_TS1_14TQ) || \
-												 ((TQ) == CAN_TS1_15TQ) || ((TQ) == CAN_TS1_16TQ))
+#define IS_CAN_TS1(TQ) 							(((TQ) == CAN_TS1_TQ1)  || ((TQ) == CAN_TS1_TQ2)  || \
+                         	 	 	 	 	 	 ((TQ) == CAN_TS1_TQ3)  || ((TQ) == CAN_TS1_TQ4)  || \
+												 ((TQ) == CAN_TS1_TQ5)  || ((TQ) == CAN_TS1_TQ6)  || \
+												 ((TQ) == CAN_TS1_TQ7)  || ((TQ) == CAN_TS1_TQ8)  || \
+												 ((TQ) == CAN_TS1_TQ9)  || ((TQ) == CAN_TS1_TQ10) || \
+												 ((TQ) == CAN_TS1_TQ11) || ((TQ) == CAN_TS1_TQ12) || \
+												 ((TQ) == CAN_TS1_TQ13) || ((TQ) == CAN_TS1_TQ14) || \
+												 ((TQ) == CAN_TS1_TQ15) || ((TQ) == CAN_TS1_TQ16))
 
-#define IS_CAN_TS2(TQ) 							(((TQ) == CAN_TS1_1TQ)  || ((TQ) == CAN_TS1_2TQ)  || \
-                         	 	 	 	 	 	 ((TQ) == CAN_TS1_3TQ)  || ((TQ) == CAN_TS1_4TQ)  || \
-												 ((TQ) == CAN_TS1_5TQ)  || ((TQ) == CAN_TS1_6TQ)  || \
-												 ((TQ) == CAN_TS1_7TQ)  || ((TQ) == CAN_TS1_8TQ)
+#define IS_CAN_TS2(TQ) 							(((TQ) == CAN_TS2_TQ1)  || ((TQ) == CAN_TS2_TQ2)  || \
+                         	 	 	 	 	 	 ((TQ) == CAN_TS2_TQ3)  || ((TQ) == CAN_TS2_TQ4)  || \
+												 ((TQ) == CAN_TS2_TQ5)  || ((TQ) == CAN_TS2_TQ6)  || \
+												 ((TQ) == CAN_TS2_TQ7)  || ((TQ) == CAN_TS2_TQ8))
 
-#define IS_CAN_SJW(TQ) 							(((TQ) == CAN_SJW_1TQ) || ((TQ) == CAN_SJW_2TQ) || \
-                         	 	 	 	 	 	 ((TQ) == CAN_SJW_3TQ) || ((TQ) == CAN_SJW_4TQ))
+#define IS_CAN_SJW(TQ) 							(((TQ) == CAN_SJW_TQ1) || ((TQ) == CAN_SJW_TQ2) || \
+                         	 	 	 	 	 	 ((TQ) == CAN_SJW_TQ3) || ((TQ) == CAN_SJW_TQ4))
 
 #define IS_CAN_MODE(MODE) 						(((MODE) == CAN_MODE_NORMAL)   || \
                            	   	   	   	   	   	 ((MODE) == CAN_MODE_LOOPBACK) || \
@@ -388,13 +388,13 @@ typedef enum
 
 #define IS_CAN_FILTER_ID_HALFWORD(HALFWORD) 	((HALFWORD) <= 0xFFFFU)
 
-#define IS_CAN_FILTER_FIFO(FIFO) 				(((FIFO) == CAN_FILTER_FIFO0) || \
-                                  	  	  	  	 ((FIFO) == CAN_FILTER_FIFO1))
+#define IS_CAN_FILTER_FIFO(FIFO) 				(((FIFO) == CAN_FILTER_FIFO_0) || \
+                                  	  	  	  	 ((FIFO) == CAN_FILTER_FIFO_1))
 
 #define IS_CAN_FILTER_BANK_DUAL(BANK) 			((BANK) <= 27U)
 
-#define IS_CAN_FILTER_MODE(MODE) 				(((MODE) == CAN_FILTERMODE_IDMASK) || \
-                                  	  	  	  	 ((MODE) == CAN_FILTERMODE_IDLIST))
+#define IS_CAN_FILTER_MODE(MODE) 				(((MODE) == CAN_FILTER_MODE_IDMASK) || \
+                                  	  	  	  	 ((MODE) == CAN_FILTER_MODE_IDLIST))
 
 #define IS_CAN_FILTER_SCALE(SCALE) 				(((SCALE) == CAN_FILTERSCALE_16BIT) || \
                                     			 ((SCALE) == CAN_FILTERSCALE_32BIT))

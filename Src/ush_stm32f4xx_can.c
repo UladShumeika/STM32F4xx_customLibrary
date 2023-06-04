@@ -48,10 +48,10 @@ uint32_t CAN_init(USH_CAN_settingsTypeDef* initStructure)
 	{
 		// Check parameters
 		macro_prj_assert_param(IS_CAN_ALL_INSTANCE(initStructure->CANx));
-		macro_prj_assert_param(IS_CAN_BAUDRATE_PRESCALER(initStructure->Timings->BaudratePrescaler));
-		macro_prj_assert_param(IS_CAN_TS1(initStructure->Timings->TimeSegment1));
-		macro_prj_assert_param(IS_CAN_TS2(initStructure->Timings->TimeSegment2));
-		macro_prj_assert_param(IS_CAN_SJW(initStructure->Timings->ResynchJumpWidth));
+		macro_prj_assert_param(IS_CAN_BAUDRATE_PRESCALER(initStructure->Timings.BaudratePrescaler));
+		macro_prj_assert_param(IS_CAN_TS1(initStructure->Timings.TimeSegment1));
+		macro_prj_assert_param(IS_CAN_TS2(initStructure->Timings.TimeSegment2));
+		macro_prj_assert_param(IS_CAN_SJW(initStructure->Timings.ResynchJumpWidth));
 		macro_prj_assert_param(IS_CAN_MODE(initStructure->Mode));
 		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoBusOff));
 		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoWakeUp));
