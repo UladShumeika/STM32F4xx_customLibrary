@@ -337,31 +337,6 @@ static uint32_t dma_get_flags(DMA_Stream_TypeDef *p_dma_stream)
 //---------------------------------------------------------------------------
 
 /**
- * @brief 	This function enables and disables the selected DMA stream.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @param 	state - The state of the selected stream. This parameter can be a value of @ref FunctionalState.
- * @retval	None.
- */
-void DMA_state(DMA_Stream_TypeDef *DMAy_Streamx, FunctionalState state)
-{
-	// Check parameters
-//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(DMAy_Streamx));
-//	macro_prj_assert_param(IS_FUNCTIONAL_STATE(state));
-
-	if(state == ENABLE)
-	{
-		DMAy_Streamx->CR |= DMA_SxCR_EN;
-	} else
-	{
-		DMAy_Streamx->CR &= ~DMA_SxCR_EN;
-	}
-}
-
-
-
-
-
-/**
  * @brief 	This function returns number of data items to transfer.
  * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
  * @retval	Number of data items to transfer.

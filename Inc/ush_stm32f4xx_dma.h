@@ -273,15 +273,6 @@ uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
 
 
 
-
-/**
- * @brief 	This function enables and disables the selected DMA stream.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @param 	state - The state of the selected stream. This parameter can be a value of @ref FunctionalState.
- * @retval	None.
- */
-void DMA_state(DMA_Stream_TypeDef *p_dma_stream, FunctionalState state);
-
 /**
  * @brief 	This function returns number of data items to transfer.
  * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
