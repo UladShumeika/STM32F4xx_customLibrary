@@ -58,10 +58,22 @@
 
 /*! @}*/
 
+/*!
+ * @name functional_state_definitions
+ * @{
+ */
+#define PRJ_STATE_ENABLE					(0x00000001U)	/*!< Enable state */
+#define PRJ_STATE_DISABLE					(0x00000000U)	/*!< Disable state */
+
+/*! @}*/
+
 //---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
-#define macro_prj_common_unused(x) 					(void)(x)
+#define macro_prj_common_unused(x) 					((void)(x))
+
+#define macro_prj_check_functional_state(state)		((state == PRJ_STATE_ENABLE) || \
+													 (state == PRJ_STATE_DISABLE))
 
 //---------------------------------------------------------------------------
 // Includes' modules

@@ -41,8 +41,8 @@
 //---------------------------------------------------------------------------
 // Private variables
 //---------------------------------------------------------------------------
-USH_DMA_initTypeDef initDMA_txStructure = {0};
-USH_DMA_initTypeDef initDMA_rxStructure = {0};
+//USH_DMA_initTypeDef initDMA_txStructure = {0};
+//USH_DMA_initTypeDef initDMA_rxStructure = {0};
 
 //---------------------------------------------------------------------------
 // Static function prototypes
@@ -162,17 +162,17 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 			MISC_NVIC_setPriority(DMA2_Stream7_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
 			MISC_NVIC_enableIRQ(DMA2_Stream7_IRQn);
 
-			initDMA_txStructure.DMAy_Streamx  			= DMA2_Stream7;
-			initDMA_txStructure.Channel 				= DMA_CHANNEL_4;
-			initDMA_txStructure.Direction 				= DMA_MEMORY_TO_PERIPH;
-			initDMA_txStructure.PeriphInc 				= DMA_PINC_DISABLE;
-			initDMA_txStructure.MemInc 			  		= DMA_MINC_ENABLE;
-			initDMA_txStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
-			initDMA_txStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
-			initDMA_txStructure.Mode 				 	= DMA_NORMAL_MODE;
-			initDMA_txStructure.Priority 			 	= DMA_PRIORITY_LOW;
-			initDMA_txStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
-			DMA_init(&initDMA_txStructure);
+//			initDMA_txStructure.DMAy_Streamx  			= DMA2_Stream7;
+//			initDMA_txStructure.Channel 				= DMA_CHANNEL_4;
+//			initDMA_txStructure.Direction 				= DMA_MEMORY_TO_PERIPH;
+//			initDMA_txStructure.PeriphInc 				= DMA_PINC_DISABLE;
+//			initDMA_txStructure.MemInc 			  		= DMA_MINC_ENABLE;
+//			initDMA_txStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
+//			initDMA_txStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
+//			initDMA_txStructure.Mode 				 	= DMA_NORMAL_MODE;
+//			initDMA_txStructure.Priority 			 	= DMA_PRIORITY_LOW;
+//			initDMA_txStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
+//			DMA_init(&initDMA_txStructure);
 		}
 
 		// Check RX or TX/RX mode
@@ -182,17 +182,17 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 			MISC_NVIC_setPriority(DMA2_Stream2_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
 			MISC_NVIC_enableIRQ(DMA2_Stream2_IRQn);
 
-			initDMA_rxStructure.DMAy_Streamx			= DMA2_Stream2;
-			initDMA_rxStructure.Channel 				= DMA_CHANNEL_4;
-			initDMA_rxStructure.Direction 				= DMA_PERIPH_TO_MEMORY;
-			initDMA_rxStructure.PeriphInc 				= DMA_PINC_DISABLE;
-			initDMA_rxStructure.MemInc 			  		= DMA_MINC_ENABLE;
-			initDMA_rxStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
-			initDMA_rxStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
-			initDMA_rxStructure.Mode 				 	= DMA_CIRCULAR_MODE;
-			initDMA_rxStructure.Priority 			 	= DMA_PRIORITY_LOW;
-			initDMA_rxStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
-			DMA_init(&initDMA_rxStructure);
+//			initDMA_rxStructure.DMAy_Streamx			= DMA2_Stream2;
+//			initDMA_rxStructure.Channel 				= DMA_CHANNEL_4;
+//			initDMA_rxStructure.Direction 				= DMA_PERIPH_TO_MEMORY;
+//			initDMA_rxStructure.PeriphInc 				= DMA_PINC_DISABLE;
+//			initDMA_rxStructure.MemInc 			  		= DMA_MINC_ENABLE;
+//			initDMA_rxStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
+//			initDMA_rxStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
+//			initDMA_rxStructure.Mode 				 	= DMA_CIRCULAR_MODE;
+//			initDMA_rxStructure.Priority 			 	= DMA_PRIORITY_LOW;
+//			initDMA_rxStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
+//			DMA_init(&initDMA_rxStructure);
 		}
 	}
 		//TODO There are only DMA settings for USART1
@@ -280,7 +280,7 @@ uint32_t USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t si
 	DMA_Stream->M0AR = (uint32_t)data;			// Set memory address
 
 	// Clear interrupt flags
-	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
+//	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
 
 	// Enable DMA interrupts
 	DMA_Stream->CR |= DMA_SxCR_TCIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE;
@@ -288,7 +288,7 @@ uint32_t USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t si
 	USART_clearFlags(usart, USART_FLAG_ORE);
 
 	// Enable DMA stream
-	DMA_state(DMA_Stream, ENABLE);
+//	DMA_state(DMA_Stream, ENABLE);
 
 	// Enable U(S)ART RX DMA
 	usart->CR3 |= USART_CR3_DMAR;
@@ -334,13 +334,13 @@ uint32_t USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
 	DMA_Stream->M0AR = (uint32_t)data;			// Set memory address
 
 	// Clear interrupt flags
-	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
+//	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
 
 	// Enable interrupts
 	DMA_Stream->CR |= DMA_SxCR_TCIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE;
 
 	// Enable DMA stream
-	DMA_state(DMA_Stream, ENABLE);
+//	DMA_state(DMA_Stream, ENABLE);
 
 	// Clear transmission complete flag
 	USART_clearFlags(usart, USART_FLAG_TC);
