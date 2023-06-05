@@ -100,6 +100,7 @@ static uint32_t i2c_flag_get(I2C_TypeDef* p_i2c, uint32_t flag);
 static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
 static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
 
+static void i2c_dma_complete(I2C_TypeDef* p_i2c, uint32_t data_size);
 //---------------------------------------------------------------------------
 // API
 //---------------------------------------------------------------------------
@@ -457,4 +458,42 @@ static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_
 	}
 
 	return status;
+}
+
+/*!
+ * @brief DMA I2C process complete callback.
+ *
+ * This function is used to handle the completion of receiving or transmitting data via I2C using DMA.
+ *
+ * @param[in] p_i2c			A pointer to p_i2c peripheral.
+ * @param[in] data_size		Amount of data to be received or transmitted.
+ *
+ * @return None.
+ */
+static void i2c_dma_complete(I2C_TypeDef* p_i2c, uint32_t data_size)
+{
+	/* Disable EVT and ERR interrupts */
+	p_i2c->CR1 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
+
+	if(data_size == 1U)
+	{
+		/* Disable Acknowledge */
+		p_i2c->CR1 &= ~I2C_CR1_ACK;
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	/* Generate stop */
+	p_i2c->CR1 |= I2C_CR1_STOP;
+
+	/* Disable last DMA */
+	p_i2c->CR2 &= ~I2C_CR2_LAST;
+
+	/* Disable DMA request */
+	p_i2c->CR2 &= ~I2C_CR2_DMAEN;
+
+	/* Call I2C complete callback */
+	prj_i2c_complete_callback(p_i2c);
 }
