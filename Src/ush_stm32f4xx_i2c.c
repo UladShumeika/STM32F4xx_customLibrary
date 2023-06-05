@@ -96,6 +96,7 @@ static uint32_t i2c_calc_rise_time(uint32_t freq_range, uint32_t i2c_clock_speed
 static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t duty_cycle);
 
 static void i2c_clear_addr_flag(I2C_TypeDef* p_i2c);
+static uint32_t i2c_flag_get(I2C_TypeDef* p_i2c, uint32_t flag);
 //---------------------------------------------------------------------------
 // API
 //---------------------------------------------------------------------------
@@ -324,4 +325,45 @@ static void i2c_clear_addr_flag(I2C_TypeDef* p_i2c)
 	temp = p_i2c->SR1;
 	temp = p_i2c->SR2;
 	macro_prj_common_unused(temp);
+}
+
+/*!
+ * @brief Get I2C flag.
+ *
+ * This function is used to get I2C flag.
+ *
+ * @param[in] p_i2c		A pointer to p_i2c peripheral.
+ * @param[in] flag		I2C flag. This parameter can be a value of @ref i2c_flags.
+ *
+ * @return @ref PRJ_FLAG_SET if I2C flag set.
+ * @return @ref PRJ_FLAG_RESET if I2C flag reset.
+ */
+static uint32_t i2c_flag_get(I2C_TypeDef* p_i2c, uint32_t flag)
+{
+	uint32_t flag_status = PRJ_FLAG_RESET;
+
+	if((flag >> 16U) == 0x01U)
+	{
+		if((p_i2c->SR1) & ((flag) & (PRJ_I2C_FLAG_MASK)))
+		{
+			flag_status = PRJ_FLAG_SET;
+		}
+		else
+		{
+			flag_status = PRJ_FLAG_RESET;
+		}
+	}
+	else
+	{
+		if((p_i2c->SR2) & ((flag) & (PRJ_I2C_FLAG_MASK)))
+		{
+			flag_status = PRJ_FLAG_SET;
+		}
+		else
+		{
+			flag_status = PRJ_FLAG_RESET;
+		}
+	}
+
+	return flag_status;
 }
