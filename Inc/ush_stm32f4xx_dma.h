@@ -264,13 +264,4 @@ uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
  */
 void prj_dma_irq_handler(prj_dma_handler_t *p_dma);
 
-//---------------------------------------------------------------------------
-// DMA interrupt user callbacks
-//---------------------------------------------------------------------------
-__WEAK void DMA_transferCompleteCallback(DMA_Stream_TypeDef *DMAy_Streamx);
-__WEAK void DMA_halfTransferCompleteCallback(DMA_Stream_TypeDef *DMAy_Streamx);
-__WEAK void DMA_transferErrorCallback(DMA_Stream_TypeDef *DMAy_Streamx);
-__WEAK void DMA_directModeErrorCallback(DMA_Stream_TypeDef *DMAy_Streamx);
-__WEAK void DMA_fifoErrorCallback(DMA_Stream_TypeDef *DMAy_Streamx);
-
 #endif /* ush_stm32f4xx_dma_h */
