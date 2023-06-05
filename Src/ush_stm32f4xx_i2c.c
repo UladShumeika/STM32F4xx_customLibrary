@@ -95,6 +95,7 @@ static uint32_t i2c_checking_pclk_frequency(uint32_t pclk1, uint32_t i2c_clock_s
 static uint32_t i2c_calc_rise_time(uint32_t freq_range, uint32_t i2c_clock_speed);
 static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t duty_cycle);
 
+static void i2c_clear_addr_flag(I2C_TypeDef* p_i2c);
 //---------------------------------------------------------------------------
 // API
 //---------------------------------------------------------------------------
@@ -305,4 +306,22 @@ static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t 
 	}
 
 	return i2c_ccr_calc;
+}
+
+/*!
+ * @brief Clear ADDR flag.
+ *
+ * This function is used to clear ADDR flag.
+ *
+ * @param p_i2c		A pointer to I2Cx peripheral to be used where x is from 1 to 3.
+ *
+ * @return None.
+ */
+static void i2c_clear_addr_flag(I2C_TypeDef* p_i2c)
+{
+	uint32_t temp = 0U;
+
+	temp = p_i2c->SR1;
+	temp = p_i2c->SR2;
+	macro_prj_common_unused(temp);
 }
