@@ -98,25 +98,25 @@
 #define macro_prj_dma_check_interrupt_flags(flags)   					((flags) >= PRJ_DMA_FLAG_DMEIF) && \
 																		 (flags) <= PRJ_DMA_FLAG_ALL))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //---------------------------------------------------------------------------
-// Private variables
+// Variables
 //---------------------------------------------------------------------------
-static const uint8_t flagBitshiftOffset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22U};
+static const uint8_t m_flag_bit_shift_offset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22U};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //---------------------------------------------------------------------------
 // Initialization functions
@@ -235,10 +235,10 @@ void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, uint32_t dma_flags)
 
 	if(streamNumber < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
 	{
-		DMAy->LIFCR = dma_flags << flagBitshiftOffset[streamNumber];
+		DMAy->LIFCR = dma_flags << m_flag_bit_shift_offset[streamNumber];
 	} else
 	{
-		DMAy->HIFCR = dma_flags << flagBitshiftOffset[streamNumber];
+		DMAy->HIFCR = dma_flags << m_flag_bit_shift_offset[streamNumber];
 	}
 }
 
@@ -262,10 +262,10 @@ uint32_t DMA_getFlags(DMA_Stream_TypeDef *p_dma_stream)
 
 	if(streamNumber < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
 	{
-		flags = DMAy->LISR >> flagBitshiftOffset[streamNumber];
+		flags = DMAy->LISR >> m_flag_bit_shift_offset[streamNumber];
 	} else
 	{
-		flags = DMAy->HISR >> flagBitshiftOffset[streamNumber];
+		flags = DMAy->HISR >> m_flag_bit_shift_offset[streamNumber];
 	}
 
 	return flags;
