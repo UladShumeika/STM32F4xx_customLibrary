@@ -18,6 +18,7 @@
 //---------------------------------------------------------------------------
 #include "ush_stm32f4xx_i2c.h"
 #include "ush_stm32f4xx_conf.h"
+#include "stddef.h"
 
 //---------------------------------------------------------------------------
 // Definitions
@@ -67,6 +68,91 @@ static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t 
 //---------------------------------------------------------------------------
 // API
 //---------------------------------------------------------------------------
+
+/*!
+ * @brief Initialize I2C peripherals.
+ *
+ * This function is used to initialize I2C peripherals.
+ *
+ * @param[in] p_i2c_init_structure		A pointer to I2C initialization structure.
+ *
+ * @return @ref PRJ_STATUS_OK if I2C initialization was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
+ */
+uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init_structure)
+{
+	uint32_t status = PRJ_STATUS_OK;
+	uint32_t pclk1 = 0;
+	uint32_t freq_range = 0;
+	uint32_t rise_time = 0;
+	uint32_t ccr_calc = 0;
+
+	/* Check the pointer */
+	if(p_i2c_init_structure == NULL)
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Disable the selected I2C peripheral */
+		p_i2c_init_structure->p_i2c->CR1 &= ~I2C_CR1_PE;
+
+		/* Reset I2C peripheral */
+		p_i2c_init_structure->p_i2c->CR1 |= I2C_CR1_SWRST;
+		p_i2c_init_structure->p_i2c->CR1 &= ~I2C_CR1_SWRST;
+
+		/* Check the minimum allowed PCLK1 frequency */
+		pclk1 = RCC_getPCLK1freq();
+		status = i2c_checking_pclk_frequency(pclk1, p_i2c_init_structure->clock_speed);
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Calculate frequency range */
+		freq_range = pclk1 / PRJ_I2C_1_MHZ;
+
+		/* Configure p_i2c: Frequency range */
+		p_i2c_init_structure->p_i2c->CR2 = freq_range;
+
+		/* Configure p_i2c: Rise Time */
+		rise_time = i2c_calc_rise_time(freq_range, p_i2c_init_structure->clock_speed);
+		p_i2c_init_structure->p_i2c->TRISE |= rise_time;
+
+		/* Configure p_i2c: Speed */
+		ccr_calc = i2c_ccr_calc(pclk1, p_i2c_init_structure->clock_speed, p_i2c_init_structure->duty_cycle);
+		p_i2c_init_structure->p_i2c->CCR |= ccr_calc;
+
+		/* Configure p_i2c: Generalcall and NoStretch mode */
+		p_i2c_init_structure->p_i2c->CR1 |= (p_i2c_init_structure->general_call_mode | \
+										    p_i2c_init_structure->nostretch_mode);
+
+		/* Configure p_i2c: Own Address1 and addressing mode */
+		p_i2c_init_structure->p_i2c->OAR1 |= (p_i2c_init_structure->addressing_mode | \
+											 p_i2c_init_structure->own_address_1);
+
+		/* Configure p_i2c: Dual mode and Own Address2 */
+		p_i2c_init_structure->p_i2c->OAR2 |= (p_i2c_init_structure->dual_address_mode | \
+											 p_i2c_init_structure->own_address_2);
+
+		/* Enable the selected I2C peripheral */
+		p_i2c_init_structure->p_i2c->CR1 |= I2C_CR1_PE;
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	return status;
+}
 
 //---------------------------------------------------------------------------
 // STATIC

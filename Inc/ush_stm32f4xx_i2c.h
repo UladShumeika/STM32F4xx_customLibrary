@@ -113,4 +113,16 @@ typedef struct
 // API
 //---------------------------------------------------------------------------
 
-#endif /* __USH_STM32F4XX_I2C_H */
+/*!
+ * @brief Initialize I2C peripherals.
+ *
+ * This function is used to initialize I2C peripherals.
+ *
+ * @param[in] p_i2c_init_structure		A pointer to I2C initialization structure.
+ *
+ * @return @ref PRJ_STATUS_OK if I2C initialization was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
+ */
+uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init_structure);
+
+#endif /* ush_stm32f4xx_i2c_h */
