@@ -33,7 +33,7 @@ static const uint8_t flagBitshiftOffset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22
  * 							information for the specified DMA peripheral.
  * @retval	None.
  */
-void DMA_init(USH_DMA_initTypeDef *initStructure)
+void DMA_init(prj_dma_handler_t *p_dma)
 {
 	uint32_t tmpReg = 0;
 
@@ -52,47 +52,47 @@ void DMA_init(USH_DMA_initTypeDef *initStructure)
 //	macro_prj_assert_param(IS_DMA_FIFO_MODE(initStructure->FIFOMode));
 //	macro_prj_assert_param(IS_DMA_FIFO_THRESHOLD(initStructure->FIFOThreshold));
 
-	DMA_state(initStructure->DMAy_Streamx, DISABLE);
+	DMA_state(p_dma->p_dma_stream, DISABLE);
 
 	// Get the CR register value
-	tmpReg = initStructure->DMAy_Streamx->CR;
+	tmpReg = p_dma->p_dma_stream->CR;
 
 	// Clear all bits except PFCTRL, TCIE, HTIE, TEIE, DMEIE, EN
 	tmpReg &= 0x3FU;
 
 	// Prepare the DMA Stream configuration
-	tmpReg |= initStructure->Channel   | initStructure->MemDataAlignment 	| initStructure->MemInc	   |
-			  initStructure->Direction | initStructure->PeriphDataAlignment	| initStructure->PeriphInc |
-			  initStructure->Mode 	   | initStructure->Priority;
+	tmpReg |= p_dma->dma_init.channel 	| p_dma->dma_init.mem_data_alignment 	| p_dma->dma_init.mem_inc |
+			  p_dma->dma_init.direction | p_dma->dma_init.periph_data_alignment	| p_dma->dma_init.periph_inc |
+			  p_dma->dma_init.mode		| p_dma->dma_init.priority;
 
 	// The memory burst and peripheral burst are not used when the FIFO is disabled
-	if(initStructure->FIFOMode == DMA_FIFO_MODE_ENABLE)
+	if(p_dma->dma_init.fifo_mode == PRJ_DMA_FIFO_MODE_ENABLE)
 	{
-		tmpReg |= initStructure->MemBurst | initStructure->PeriphBurst;
+		tmpReg |= p_dma->dma_init.mem_burst | p_dma->dma_init.periph_burst;
 	}
 
 	// Write to DMA Stream CR register
-	initStructure->DMAy_Streamx->CR = tmpReg;
+	p_dma->p_dma_stream->CR = tmpReg;
 
 	// Get the FCR register value
-	tmpReg = initStructure->DMAy_Streamx->FCR;
+	tmpReg = p_dma->p_dma_stream->FCR;
 
 	// Clear direct mode and FIFO threshold bits
 	tmpReg &= ~(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
 
 	// Prepare the DMA stream FIFO configuration
-	tmpReg |= initStructure->FIFOMode;
+	tmpReg |= p_dma->dma_init.fifo_mode;
 
-	if(initStructure->FIFOMode == DMA_FIFO_MODE_ENABLE)
+	if(p_dma->dma_init.fifo_mode == PRJ_DMA_FIFO_MODE_ENABLE)
 	{
-		tmpReg |= initStructure->FIFOThreshold;
+		tmpReg |= p_dma->dma_init.fifo_threshold;
 	}
 
 	// Write to DMA stream FCR
-	initStructure->DMAy_Streamx->FCR = tmpReg;
+	p_dma->p_dma_stream->FCR = tmpReg;
 
 	// Clear stream interrupt flags
-	DMA_clearFlags(initStructure->DMAy_Streamx, DMA_FLAG_ALL);
+	DMA_clearFlags(p_dma->p_dma_stream, PRJ_DMA_FLAG_ALL);
 }
 
 //---------------------------------------------------------------------------
@@ -126,7 +126,7 @@ void DMA_state(DMA_Stream_TypeDef *DMAy_Streamx, FunctionalState state)
  * @param 	flags - DMA flags. This parameter can be a value of @ref USH_DMA_flags.
  * @retval	None.
  */
-void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, USH_DMA_flags flags)
+void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, uint32_t dma_flags)
 {
 	// Check parameters
 //	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(DMAy_Streamx));
@@ -140,10 +140,10 @@ void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, USH_DMA_flags flags)
 
 	if(streamNumber < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
 	{
-		DMAy->LIFCR = flags << flagBitshiftOffset[streamNumber];
+		DMAy->LIFCR = dma_flags << flagBitshiftOffset[streamNumber];
 	} else
 	{
-		DMAy->HIFCR = flags << flagBitshiftOffset[streamNumber];
+		DMAy->HIFCR = dma_flags << flagBitshiftOffset[streamNumber];
 	}
 }
 
@@ -152,7 +152,7 @@ void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, USH_DMA_flags flags)
  * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
  * @retval	DMA flags.
  */
-uint32_t DMA_getFlags(USH_DMA_initTypeDef *initStructure)
+uint32_t DMA_getFlags(DMA_Stream_TypeDef *p_dma_stream)
 {
 	// Check parameters
 //	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(p_dma_stream));
@@ -161,9 +161,9 @@ uint32_t DMA_getFlags(USH_DMA_initTypeDef *initStructure)
 
 	DMA_TypeDef* DMAy;
 
-	uint32_t streamNumber = ((uint32_t)initStructure->DMAy_Streamx & 0xFFU) / 0x18U;	// 0xFF is a mask. 0x18 is a step between stream registers.
-																						// For a better understanding of magic numbers. See the reference manual.
-	DMAy = (initStructure->DMAy_Streamx < DMA2_Stream0) ? DMA1 : DMA2;
+	uint32_t streamNumber = ((uint32_t)p_dma_stream & 0xFFU) / 0x18U;	// 0xFF is a mask. 0x18 is a step between stream registers.
+																		// For a better understanding of magic numbers. See the reference manual.
+	DMAy = (p_dma_stream < DMA2_Stream0) ? DMA1 : DMA2;
 
 	if(streamNumber < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
 	{
@@ -191,42 +191,42 @@ uint16_t DMA_getNumberOfData(DMA_Stream_TypeDef *DMAy_Streamx)
  * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
  * @retval	None.
  */
-void DMA_IRQHandler(USH_DMA_initTypeDef *initStructure)
+void DMA_IRQHandler(prj_dma_handler_t *p_dma)
 {
 	// Get interrupt flags
-	uint32_t flags = DMA_getFlags(initStructure);
+	uint32_t flags = DMA_getFlags(p_dma->p_dma_stream);
 
 	// Clear interrupt flags
-	DMA_clearFlags(initStructure->DMAy_Streamx, DMA_FLAG_ALL);
+	DMA_clearFlags(p_dma->p_dma_stream, PRJ_DMA_FLAG_ALL);
 
 	// Check transfer complete flag
-	if((flags & DMA_FLAG_TCIF) && (initStructure->DMAy_Streamx->CR & DMA_SxCR_TCIE))
+	if((flags & PRJ_DMA_FLAG_TCIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_TCIE))
 	{
-		DMA_transferCompleteCallback(initStructure->DMAy_Streamx);
+		DMA_transferCompleteCallback(p_dma->p_dma_stream);
 	}
 
 	// Check half transfer complete flag
-	if((flags & DMA_FLAG_HTIF) && (initStructure->DMAy_Streamx->CR & DMA_SxCR_HTIE))
+	if((flags & PRJ_DMA_FLAG_HTIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_HTIE))
 	{
-		DMA_halfTransferCompleteCallback(initStructure->DMAy_Streamx);
+		DMA_halfTransferCompleteCallback(p_dma->p_dma_stream);
 	}
 
 	// Check transfer error flag
-	if((flags & DMA_FLAG_TEIF) && (initStructure->DMAy_Streamx->CR & DMA_SxCR_TEIE))
+	if((flags & PRJ_DMA_FLAG_TEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_TEIE))
 	{
-		DMA_transferErrorCallback(initStructure->DMAy_Streamx);
+		DMA_transferErrorCallback(p_dma->p_dma_stream);
 	}
 
 	// Check direct mode error flag
-	if((flags & DMA_FLAG_DMEIF) && (initStructure->DMAy_Streamx->CR & DMA_SxCR_DMEIE))
+	if((flags & PRJ_DMA_FLAG_DMEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_DMEIE))
 	{
-		DMA_directModeErrorCallback(initStructure->DMAy_Streamx);
+		DMA_directModeErrorCallback(p_dma->p_dma_stream);
 	}
 
 	// Check FIFO error flag
-	if((flags & DMA_FLAG_FEIF) && (initStructure->DMAy_Streamx->FCR & DMA_SxFCR_FEIE))
+	if((flags & PRJ_DMA_FLAG_FEIF) && (p_dma->p_dma_stream->FCR & DMA_SxFCR_FEIE))
 	{
-		DMA_fifoErrorCallback(initStructure->DMAy_Streamx);
+		DMA_fifoErrorCallback(p_dma->p_dma_stream);
 	}
 }
 
