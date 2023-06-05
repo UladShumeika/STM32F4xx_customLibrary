@@ -98,6 +98,8 @@ static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t 
 static void i2c_clear_addr_flag(I2C_TypeDef* p_i2c);
 static uint32_t i2c_flag_get(I2C_TypeDef* p_i2c, uint32_t flag);
 static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
+static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
+
 //---------------------------------------------------------------------------
 // API
 //---------------------------------------------------------------------------
@@ -403,6 +405,56 @@ static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint3
 		}
 
 	} while((status == PRJ_STATUS_OK) && (flag_status == PRJ_FLAG_SET));
+
+	return status;
+}
+
+/*!
+ * @brief Wait on set I2C flag.
+ *
+ * This function is used to wait on set the specified I2C flag.
+ *
+ * @param[in] p_i2c		A pointer to p_i2c peripheral.
+ * @param[in] flag		I2C flag. This parameter can be a value of @ref i2c_flags.
+ * @param[in] timeout 	Timeout for I2C flags.
+ *
+ * @return @ref PRJ_STATUS_OK if the specified flag is set.
+ * @return @ref PRJ_STATUS_TIMEOUT if the specified flag is not set and the timeout has passed.
+ * @return @ref PRJ_STATUS_ERROR if the acknowledge failure is set while waiting for the specified flag.
+ */
+static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout)
+{
+	uint32_t status 		= PRJ_STATUS_OK;
+	uint32_t start_ticks	= MISC_timeoutGetTick();;
+	uint32_t past_ticks 	= 0U;
+	uint32_t flag_status 	= PRJ_FLAG_RESET;
+	uint32_t flag_af		= PRJ_FLAG_RESET;
+
+	do
+	{
+		flag_status = i2c_flag_get(p_i2c, flag);
+		flag_af	= i2c_flag_get(p_i2c, PRJ_I2C_FLAG_AF);
+
+		past_ticks = MISC_timeoutGetTick() - start_ticks;
+		if(past_ticks > timeout)
+		{
+			status = PRJ_STATUS_TIMEOUT;
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
+
+	} while((status == PRJ_STATUS_OK) && ((flag_status == PRJ_FLAG_RESET) || (flag_af) == PRJ_FLAG_RESET));
+
+	if(flag_af != PRJ_FLAG_RESET)
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
 
 	return status;
 }
