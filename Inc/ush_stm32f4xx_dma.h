@@ -13,6 +13,7 @@
   * @Major changes v1.1
   *		- changed code style;
   *		- replaced enumerations with definitions;
+  *		- redesigned module;
   *
   ******************************************************************************
   */
