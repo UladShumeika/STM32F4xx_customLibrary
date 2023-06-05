@@ -17,7 +17,6 @@
 // Includes
 //---------------------------------------------------------------------------
 #include "ush_stm32f4xx_i2c.h"
-#include "ush_stm32f4xx_conf.h"
 #include "stddef.h"
 
 //---------------------------------------------------------------------------
@@ -25,7 +24,7 @@
 //---------------------------------------------------------------------------
 
 /*!
- * @name I2C_checking_pclk_frequency
+ * @name i2c_checking_pclk_frequency
  * @{
  */
 #define PRJ_I2C_MIN_PCLK_FREQ_STANDARD					(2000000U)	/*!< 2 MHz */
@@ -36,11 +35,8 @@
 
 /*! @} */
 
-//---------------------------------------------------------------------------
-// Macros
-//---------------------------------------------------------------------------
 /*!
- * @name I2C_calculation_clock_control_register
+ * @name i2c_calculation_clock_control_register
  * @{
  */
 #define PRJ_I2C_DUTYCYCLE_2_COEF						(3U)	/*!< The coefficient for duty cycle 2 */
