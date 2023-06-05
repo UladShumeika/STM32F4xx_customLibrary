@@ -273,12 +273,6 @@ uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
 
 
 
-/**
- * @brief 	This function returns number of data items to transfer.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @retval	Number of data items to transfer.
- */
-uint16_t DMA_getNumberOfData(DMA_Stream_TypeDef *DMAy_Streamx);
 
 /**
  * @brief 	This function handles DMA interrupt request.

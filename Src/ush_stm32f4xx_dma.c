@@ -337,16 +337,6 @@ static uint32_t dma_get_flags(DMA_Stream_TypeDef *p_dma_stream)
 //---------------------------------------------------------------------------
 
 /**
- * @brief 	This function returns number of data items to transfer.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @retval	Number of data items to transfer.
- */
-uint16_t DMA_getNumberOfData(DMA_Stream_TypeDef *DMAy_Streamx)
-{
-	return (DMAy_Streamx->NDTR);
-}
-
-/**
  * @brief 	This function handles DMA interrupt request.
  * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
  * @retval	None.
