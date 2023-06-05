@@ -230,11 +230,10 @@ typedef struct
 
 	prj_dma_init_t dma_init;								/*!< DMA initialization structure. */
 
-	void (*p_complete_callback) (I2C_TypeDef*, uint32_t);	/*!< A pointer to complete callback function. */
+	void *controls_peripherals;								/*!< A pointer to the peripheral structure
+																 that uses this DMA stream */
 
-	void (*p_error_callback) (I2C_TypeDef*);				/*!< A pointer to error callback function. */
-
-	void (*p_abort_callback) (I2C_TypeDef*);				/*!< A pointer to abort callback function. */
+	void (*p_complete_callback) (void*);					/*!< A pointer to complete callback function. */
 
 } prj_dma_handler_t;
 
