@@ -95,14 +95,18 @@
 																		 ((threshold) == PRJ_DMA_FIFO_THRESHOLD_3QUARTER) || \
 																		 ((threshold) == PRJ_DMA_FIFO_THRESHOLD_FULL))
 
-#define macro_prj_dma_check_interrupt_flags(flags)   					((flags) >= PRJ_DMA_FLAG_DMEIF) && \
-																		 (flags) <= PRJ_DMA_FLAG_ALL))
+#define macro_prj_dma_check_interrupt_flags(flags)   					(((flags) >= PRJ_DMA_FLAG_FEIF) && \
+																		 ((flags) <= PRJ_DMA_FLAG_ALL))
 
 //---------------------------------------------------------------------------
 // Variables
 //---------------------------------------------------------------------------
 static const uint8_t m_flag_bit_shift_offset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22U};
 
+//---------------------------------------------------------------------------
+// Static functions declaration
+//---------------------------------------------------------------------------
+static uint32_t dma_clear_flags(DMA_Stream_TypeDef *p_dma_stream, uint32_t dma_flags);
 
 
 
@@ -119,76 +123,79 @@ static const uint8_t m_flag_bit_shift_offset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16
 
 
 //---------------------------------------------------------------------------
-// Initialization functions
+// STATIC
 //---------------------------------------------------------------------------
 
-/**
- * @brief 	This function initializes the DMAx peripheral according to the specified parameters in the USH_DMA_initTypeDef.
- * @param 	initStructure - A pointer to a USH_DMA_initTypeDef structure that contains the configuration
- * 							information for the specified DMA peripheral.
- * @retval	None.
+/*!
+ * @brief Clear DMA interrupt flags
+ *
+ * This function is used to clear DMA interrupt flags.
+ *
+ * @param[in] p_dma_stream		A pointer to Stream peripheral.
+ * @param[in] dma_flags			DMA interrupt flags.
+ *
+ * @return @ref PRJ_STATUS_OK if DMA flags reset was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
  */
-void DMA_init(prj_dma_handler_t *p_dma)
+static uint32_t dma_clear_flags(DMA_Stream_TypeDef *p_dma_stream, uint32_t dma_flags)
 {
-	uint32_t tmpReg = 0;
+	uint32_t status = PRJ_STATUS_OK;
+	DMA_TypeDef* p_dma;
+	uint32_t stream_number = 0U;
 
-	// check parameters
-//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(p_dma->p_dma_init->p_dma_stream));
-//	macro_prj_assert_param(IS_DMA_CHANNEL(p_dma->p_dma_init->channel));
-//	macro_prj_assert_param(IS_DMA_DIRECTION(initStructure->Direction));
-//	macro_prj_assert_param(IS_DMA_PERIPH_INC(initStructure->PeriphInc));
-//	macro_prj_assert_param(IS_DMA_MEM_INC(initStructure->MemInc));
-//	macro_prj_assert_param(IS_DMA_PERIPH_SIZE(initStructure->PeriphDataAlignment));
-//	macro_prj_assert_param(IS_DMA_MEM_SIZE(initStructure->MemDataAlignment));
-//	macro_prj_assert_param(IS_DMA_MODE(initStructure->Mode));
-//	macro_prj_assert_param(IS_DMA_PRIORITY(initStructure->Priority));
-//	macro_prj_assert_param(IS_DMA_MBURST(initStructure->MemBurst));
-//	macro_prj_assert_param(IS_DMA_PBURST(initStructure->PeriphBurst));
-//	macro_prj_assert_param(IS_DMA_FIFO_MODE(initStructure->FIFOMode));
-//	macro_prj_assert_param(IS_DMA_FIFO_THRESHOLD(initStructure->FIFOThreshold));
-
-	DMA_state(p_dma->p_dma_stream, DISABLE);
-
-	// Get the CR register value
-	tmpReg = p_dma->p_dma_stream->CR;
-
-	// Clear all bits except PFCTRL, TCIE, HTIE, TEIE, DMEIE, EN
-	tmpReg &= 0x3FU;
-
-	// Prepare the DMA Stream configuration
-	tmpReg |= p_dma->dma_init.channel 	| p_dma->dma_init.mem_data_alignment 	| p_dma->dma_init.mem_inc |
-			  p_dma->dma_init.direction | p_dma->dma_init.periph_data_alignment	| p_dma->dma_init.periph_inc |
-			  p_dma->dma_init.mode		| p_dma->dma_init.priority;
-
-	// The memory burst and peripheral burst are not used when the FIFO is disabled
-	if(p_dma->dma_init.fifo_mode == PRJ_DMA_FIFO_MODE_ENABLE)
+	/* Check the pointer */
+	if(p_dma_stream == NULL)
 	{
-		tmpReg |= p_dma->dma_init.mem_burst | p_dma->dma_init.periph_burst;
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		/* DO NOTHING */
 	}
 
-	// Write to DMA Stream CR register
-	p_dma->p_dma_stream->CR = tmpReg;
-
-	// Get the FCR register value
-	tmpReg = p_dma->p_dma_stream->FCR;
-
-	// Clear direct mode and FIFO threshold bits
-	tmpReg &= ~(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
-
-	// Prepare the DMA stream FIFO configuration
-	tmpReg |= p_dma->dma_init.fifo_mode;
-
-	if(p_dma->dma_init.fifo_mode == PRJ_DMA_FIFO_MODE_ENABLE)
+	if(status == PRJ_STATUS_OK)
 	{
-		tmpReg |= p_dma->dma_init.fifo_threshold;
+		/* Check parameters */
+		macro_prj_assert_param(macro_prj_dma_check_instance(p_dma_stream));
+		macro_prj_assert_param(macro_prj_dma_check_interrupt_flags(dma_flags));
+
+		stream_number = ((uint32_t)p_dma_stream & 0xFFU) / 0x18U;	/* 0xFF is a mask. 0x18 is a step between stream registers.
+																	   For a better understanding of magic numbers.
+																	   See the reference manual. */
+		p_dma = (p_dma_stream < DMA2_Stream0) ? DMA1 : DMA2;
+
+		if(stream_number < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
+		{
+			p_dma->LIFCR = dma_flags << m_flag_bit_shift_offset[stream_number];
+		}
+		else
+		{
+			p_dma->HIFCR = dma_flags << m_flag_bit_shift_offset[stream_number];
+		}
+	}
+	else
+	{
+		/* DO NOTHING */
 	}
 
-	// Write to DMA stream FCR
-	p_dma->p_dma_stream->FCR = tmpReg;
-
-	// Clear stream interrupt flags
-	DMA_clearFlags(p_dma->p_dma_stream, PRJ_DMA_FLAG_ALL);
+	return status;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //---------------------------------------------------------------------------
 // Library Functions
@@ -215,32 +222,7 @@ void DMA_state(DMA_Stream_TypeDef *DMAy_Streamx, FunctionalState state)
 	}
 }
 
-/**
- * @brief 	This function clears DMA flags.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @param 	flags - DMA flags. This parameter can be a value of @ref USH_DMA_flags.
- * @retval	None.
- */
-void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, uint32_t dma_flags)
-{
-	// Check parameters
-//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(DMAy_Streamx));
-//	macro_prj_assert_param(IS_DMA_INTERRUPT_FLAGS(dma_flags));
 
-	DMA_TypeDef* DMAy;
-
-	uint32_t streamNumber = ((uint32_t)DMAy_Streamx & 0xFFU) / 0x18U;	// 0xFF is a mask. 0x18 is a step between stream registers.
-																		// For a better understanding of magic numbers. See the reference manual.
-	DMAy = (DMAy_Streamx < DMA2_Stream0) ? DMA1 : DMA2;
-
-	if(streamNumber < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
-	{
-		DMAy->LIFCR = dma_flags << m_flag_bit_shift_offset[streamNumber];
-	} else
-	{
-		DMAy->HIFCR = dma_flags << m_flag_bit_shift_offset[streamNumber];
-	}
-}
 
 /**
  * @brief 	This function gets DMA flags.

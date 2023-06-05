@@ -282,14 +282,6 @@ void DMA_init(prj_dma_handler_t *p_dma);
 void DMA_state(DMA_Stream_TypeDef *p_dma_stream, FunctionalState state);
 
 /**
- * @brief 	This function clears DMA flags.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @param 	flags - DMA flags. This parameter can be a value of @ref USH_DMA_flags.
- * @retval	None.
- */
-void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, uint32_t dma_flags);
-
-/**
  * @brief 	This function gets DMA flags.
  * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
  * @retval	DMA flags.
