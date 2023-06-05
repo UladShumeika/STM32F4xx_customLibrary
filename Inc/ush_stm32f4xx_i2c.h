@@ -82,31 +82,31 @@
  */
 typedef struct
 {
-	I2C_TypeDef* I2Cx;			 /*!< A pointer to I2Cx peripheral to be used where x is from 1 to 3. */
+	I2C_TypeDef* p_i2c;			  /*!< A pointer to I2Cx peripheral to be used where x is from 1 to 3. */
 
-	uint32_t clock_speed;        /*!< The clock frequency.
-	                                  This parameter must be set to a value lower than 400kHz */
+	uint32_t clock_speed;         /*!< The clock frequency.
+	                                   This parameter must be set to a value lower than 400kHz */
 
-	uint32_t duty_cycle;         /*!< The I2C fast mode duty cycle.
-									  This parameter can be a value of @ref I2C_duty_cycle_in_fast_mode */
+	uint32_t duty_cycle;          /*!< The I2C fast mode duty cycle.
+									   This parameter can be a value of @ref I2C_duty_cycle_in_fast_mode */
 
-	uint32_t own_address_1;      /*!< The first device own address.
-		                              This parameter can be a 7-bit or 10-bit address */
+	uint32_t own_address_1;       /*!< The first device own address.
+		                               This parameter can be a 7-bit or 10-bit address */
 
-	uint32_t addressing_mode;    /*!< The mode selection (7-bit or 10-bit).
-									  This parameter can be a value of @ref I2C_addressing_mode */
+	uint32_t addressing_mode;     /*!< The mode selection (7-bit or 10-bit).
+									   This parameter can be a value of @ref I2C_addressing_mode */
 
-	uint32_t dual_address_mode;  /*!< The dual addressing mode.
-		                              This parameter can be a value of @ref I2C_dual_addressing_mode */
+	uint32_t dual_address_mode;   /*!< The dual addressing mode.
+		                               This parameter can be a value of @ref I2C_dual_addressing_mode */
 
-	uint32_t own_address_2;      /*!< The second device own address if dual addressing mode is selected.
-	 	 	 	 	 	 	 	 	  This parameter can be a 7-bit address. */
+	uint32_t own_address_2;       /*!< The second device own address if dual addressing mode is selected.
+	 	 	 	 	 	 	 	 	   This parameter can be a 7-bit address. */
 
-	uint32_t general_call_mode;  /*!< The general call mode.
-									  This parameter can be a value of @ref I2C_general_call_addressing_mode */
+	uint32_t general_call_mode;   /*!< The general call mode.
+									   This parameter can be a value of @ref I2C_general_call_addressing_mode */
 
-	uint32_t nostretch_mode;     /*!< The nostretch mode.
-									  This parameter can be a value of @ref I2C_nostretch_mode */
+	uint32_t nostretch_mode;      /*!< The nostretch mode.
+									   This parameter can be a value of @ref I2C_nostretch_mode */
 } prj_i2c_init_t;
 
 //---------------------------------------------------------------------------
