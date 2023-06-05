@@ -107,6 +107,7 @@ static const uint8_t m_flag_bit_shift_offset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16
 // Static functions declaration
 //---------------------------------------------------------------------------
 static uint32_t dma_clear_flags(DMA_Stream_TypeDef *p_dma_stream, uint32_t dma_flags);
+static uint32_t dma_get_flags(DMA_Stream_TypeDef *p_dma_stream);
 
 //---------------------------------------------------------------------------
 // API
@@ -265,7 +266,57 @@ static uint32_t dma_clear_flags(DMA_Stream_TypeDef *p_dma_stream, uint32_t dma_f
 	return status;
 }
 
+/*!
+ * @brief Get DMA interrupt flags
+ *
+ * This function is used to get DMA interrupt flags.
+ *
+ * @param[in] p_dma_stream		A pointer to Stream peripheral.
+ *
+ * @return DMA interrupt flags.
+ */
+static uint32_t dma_get_flags(DMA_Stream_TypeDef *p_dma_stream)
+{
+	uint32_t status = PRJ_STATUS_OK;
+	DMA_TypeDef* p_dma;
+	uint32_t stream_number = 0U;
+	uint32_t dma_flags = 0U;
 
+	/* Check the pointer */
+	if(p_dma_stream == NULL)
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Check parameters */
+		macro_prj_assert_param(macro_prj_dma_check_instance(p_dma_stream));
+
+		stream_number = ((uint32_t)p_dma_stream & 0xFFU) / 0x18U;	/* 0xFF is a mask. 0x18 is a step between stream registers.
+																	   For a better understanding of magic numbers.
+																	   See the reference manual. */
+		p_dma = (p_dma_stream < DMA2_Stream0) ? DMA1 : DMA2;
+
+		if(stream_number < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
+		{
+			dma_flags = p_dma->LISR >> m_flag_bit_shift_offset[stream_number];
+		} else
+		{
+			dma_flags = p_dma->HISR >> m_flag_bit_shift_offset[stream_number];
+		}
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	return dma_flags;
+}
 
 
 
@@ -308,34 +359,7 @@ void DMA_state(DMA_Stream_TypeDef *DMAy_Streamx, FunctionalState state)
 
 
 
-/**
- * @brief 	This function gets DMA flags.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @retval	DMA flags.
- */
-uint32_t DMA_getFlags(DMA_Stream_TypeDef *p_dma_stream)
-{
-	// Check parameters
-//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(p_dma_stream));
 
-	uint32_t flags = 0;
-
-	DMA_TypeDef* DMAy;
-
-	uint32_t streamNumber = ((uint32_t)p_dma_stream & 0xFFU) / 0x18U;	// 0xFF is a mask. 0x18 is a step between stream registers.
-																		// For a better understanding of magic numbers. See the reference manual.
-	DMAy = (p_dma_stream < DMA2_Stream0) ? DMA1 : DMA2;
-
-	if(streamNumber < 4U)	// Stream 0-3 is LIFCR and stream 4-6 is HIFCR
-	{
-		flags = DMAy->LISR >> m_flag_bit_shift_offset[streamNumber];
-	} else
-	{
-		flags = DMAy->HISR >> m_flag_bit_shift_offset[streamNumber];
-	}
-
-	return flags;
-}
 
 /**
  * @brief 	This function returns number of data items to transfer.

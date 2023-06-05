@@ -283,13 +283,6 @@ uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
 void DMA_state(DMA_Stream_TypeDef *p_dma_stream, FunctionalState state);
 
 /**
- * @brief 	This function gets DMA flags.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @retval	DMA flags.
- */
-uint32_t DMA_getFlags(DMA_Stream_TypeDef *p_dma_stream);
-
-/**
  * @brief 	This function returns number of data items to transfer.
  * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
  * @retval	Number of data items to transfer.
