@@ -207,6 +207,77 @@ uint32_t prj_dma_init(prj_dma_handler_t *p_dma)
 	return status;
 }
 
+/*!
+ * @brief Handle DMA interrupt request.
+ *
+ * This function is used to handle DMA interrupt request.
+ *
+ * @param[in] p_dma		A pointer to DMA handler structure.
+ *
+ * @return None.
+ */
+void prj_dma_irq_handler(prj_dma_handler_t *p_dma)
+{
+	/* Get interrupt flags */
+	uint32_t dma_flags = dma_get_flags(p_dma->p_dma_stream);
+
+	/* Check transfer complete flag */
+	if(((dma_flags & PRJ_DMA_FLAG_TCIF) == PRJ_DMA_FLAG_TCIF) &&
+	   ((p_dma->p_dma_stream->CR & DMA_SxCR_TCIE) == DMA_SxCR_TCIE))
+	{
+		/* Clear the transfer complete flag */
+		dma_clear_flags(p_dma->p_dma_stream, PRJ_DMA_FLAG_TCIF);
+
+		/* Disable the transfer complete interrupt if the DMA mode is not CIRCULAR */
+		if((p_dma->p_dma_stream->CR & DMA_SxCR_CIRC) == 0U)
+		{
+			/* Disable the transfer complete interrupt */
+			p_dma->p_dma_stream->CR &= ~DMA_SxCR_TCIE;
+		}
+		else
+		{
+			/* DO NOTHING */
+		}
+
+		if((p_dma->controls_peripherals != NULL) && (p_dma->p_complete_callback != NULL))
+		{
+			p_dma->p_complete_callback(p_dma->controls_peripherals);
+		}
+		else
+		{
+			/* DO NOTHING */
+		}
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	/* Check half transfer complete flag */
+	if((dma_flags & PRJ_DMA_FLAG_HTIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_HTIE))
+	{
+		// TODO add handler for HTC
+	}
+
+	/* Check transfer error flag */
+	if((dma_flags & PRJ_DMA_FLAG_TEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_TEIE))
+	{
+		// TODO add handler for TEI
+	}
+
+	/* Check direct mode error flag */
+	if((dma_flags & PRJ_DMA_FLAG_DMEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_DMEIE))
+	{
+		// TODO add handler for DMEI
+	}
+
+	/* Check FIFO error flag */
+	if((dma_flags & PRJ_DMA_FLAG_FEIF) && (p_dma->p_dma_stream->FCR & DMA_SxFCR_FEIE))
+	{
+		// TODO add handler for FEI
+	}
+}
+
 //---------------------------------------------------------------------------
 // STATIC
 //---------------------------------------------------------------------------
@@ -332,53 +403,24 @@ static uint32_t dma_get_flags(DMA_Stream_TypeDef *p_dma_stream)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 //---------------------------------------------------------------------------
 // Library Functions
 //---------------------------------------------------------------------------
 
-/**
- * @brief 	This function handles DMA interrupt request.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @retval	None.
- */
-void DMA_IRQHandler(prj_dma_handler_t *p_dma)
-{
-	// Get interrupt flags
-	uint32_t flags = DMA_getFlags(p_dma->p_dma_stream);
 
-	// Clear interrupt flags
-	DMA_clearFlags(p_dma->p_dma_stream, PRJ_DMA_FLAG_ALL);
-
-	// Check transfer complete flag
-	if((flags & PRJ_DMA_FLAG_TCIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_TCIE))
-	{
-		DMA_transferCompleteCallback(p_dma->p_dma_stream);
-	}
-
-	// Check half transfer complete flag
-	if((flags & PRJ_DMA_FLAG_HTIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_HTIE))
-	{
-		DMA_halfTransferCompleteCallback(p_dma->p_dma_stream);
-	}
-
-	// Check transfer error flag
-	if((flags & PRJ_DMA_FLAG_TEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_TEIE))
-	{
-		DMA_transferErrorCallback(p_dma->p_dma_stream);
-	}
-
-	// Check direct mode error flag
-	if((flags & PRJ_DMA_FLAG_DMEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_DMEIE))
-	{
-		DMA_directModeErrorCallback(p_dma->p_dma_stream);
-	}
-
-	// Check FIFO error flag
-	if((flags & PRJ_DMA_FLAG_FEIF) && (p_dma->p_dma_stream->FCR & DMA_SxFCR_FEIE))
-	{
-		DMA_fifoErrorCallback(p_dma->p_dma_stream);
-	}
-}
 
 //---------------------------------------------------------------------------
 // DMA interrupt user callbacks

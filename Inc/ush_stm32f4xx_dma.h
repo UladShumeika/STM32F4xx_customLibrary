@@ -253,32 +253,16 @@ typedef struct
  */
 uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * @brief 	This function handles DMA interrupt request.
- * @param 	DMAy_Streamx - A pointer to Stream peripheral to be used where y is 1 or 2 and x is from 0 to 7.
- * @retval	None.
+/*!
+ * @brief Handle DMA interrupt request.
+ *
+ * This function is used to handle DMA interrupt request.
+ *
+ * @param[in] p_dma		A pointer to DMA handler structure.
+ *
+ * @return None.
  */
-void DMA_IRQHandler(prj_dma_handler_t *p_dma);
+void prj_dma_irq_handler(prj_dma_handler_t *p_dma);
 
 //---------------------------------------------------------------------------
 // DMA interrupt user callbacks
