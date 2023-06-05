@@ -101,6 +101,8 @@ static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint3
 static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
 
 static void i2c_dma_complete(I2C_TypeDef* p_i2c, uint32_t data_size);
+static void i2c_dma_error(I2C_TypeDef* p_i2c);
+
 //---------------------------------------------------------------------------
 // API
 //---------------------------------------------------------------------------
@@ -496,4 +498,22 @@ static void i2c_dma_complete(I2C_TypeDef* p_i2c, uint32_t data_size)
 
 	/* Call I2C complete callback */
 	prj_i2c_complete_callback(p_i2c);
+}
+
+/*!
+ * @brief DMA I2C process error callback.
+ *
+ * This function is used to handle the errors of receiving or transmitting data via I2C using DMA.
+ *
+ * @param[in] p_i2c			A pointer to p_i2c peripheral.
+ *
+ * @return None.
+ */
+static void i2c_dma_error(I2C_TypeDef* p_i2c)
+{
+	/* Disable Acknowledge */
+	p_i2c->CR1 &= ~I2C_CR1_ACK;
+
+	/* Call I2C error callback */
+	prj_i2c_error_callback(p_i2c);
 }
