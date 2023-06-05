@@ -238,88 +238,28 @@ typedef struct
 
 } prj_dma_handler_t;
 
-//---------------------------------------------------------------------------
-// Macros
-//---------------------------------------------------------------------------
 
-#define IS_DMA_STREAM_ALL_INSTANCE(INSTANCE)  		(((INSTANCE) == DMA1_Stream0)	|| \
-										 	 	 	 ((INSTANCE) == DMA1_Stream1)   || \
-													 ((INSTANCE) == DMA1_Stream2)	|| \
-													 ((INSTANCE) == DMA1_Stream3)	|| \
-													 ((INSTANCE) == DMA1_Stream4)	|| \
-													 ((INSTANCE) == DMA1_Stream5)	|| \
-													 ((INSTANCE) == DMA1_Stream6)	|| \
-													 ((INSTANCE) == DMA1_Stream7)	|| \
-													 ((INSTANCE) == DMA2_Stream0)	|| \
-										 	 	 	 ((INSTANCE) == DMA2_Stream1)	|| \
-													 ((INSTANCE) == DMA2_Stream2)	|| \
-													 ((INSTANCE) == DMA2_Stream3)	|| \
-													 ((INSTANCE) == DMA2_Stream4)	|| \
-													 ((INSTANCE) == DMA2_Stream5)	|| \
-													 ((INSTANCE) == DMA2_Stream6)	|| \
-													 ((INSTANCE) == DMA2_Stream7))
 
-#define IS_DMA_CHANNEL(CHANNEL)						(((CHANNEL) == DMA_CHANNEL_0)	|| \
-													 ((CHANNEL) == DMA_CHANNEL_1)	|| \
-													 ((CHANNEL) == DMA_CHANNEL_2)	|| \
-													 ((CHANNEL) == DMA_CHANNEL_3)	|| \
-													 ((CHANNEL) == DMA_CHANNEL_4)	|| \
-													 ((CHANNEL) == DMA_CHANNEL_5)	|| \
-													 ((CHANNEL) == DMA_CHANNEL_6)	|| \
-													 ((CHANNEL) == DMA_CHANNEL_7))
 
-#define IS_DMA_DIRECTION(DIRECTION)					(((DIRECTION) == DMA_PERIPH_TO_MEMORY) || \
-													 ((DIRECTION) == DMA_MEMORY_TO_PERIPH) || \
-													 ((DIRECTION) == DMA_MEMORY_TO_MEMORY))
 
-#define IS_DMA_PERIPH_INC(COMMAND)					(((COMMAND) == DMA_PINC_ENABLE) || \
-													 ((COMMAND) == DMA_PINC_DISABLE))
 
-#define IS_DMA_MEM_INC(COMMAND)						(((COMMAND) == DMA_MINC_ENABLE) || \
-													 ((COMMAND) == DMA_MINC_DISABLE))
 
-#define IS_DMA_PERIPH_SIZE(PERIPH_SIZE)				(((PERIPH_SIZE) == DMA_PERIPH_SIZE_BYTE) 	 || \
-													 ((PERIPH_SIZE) == DMA_PERIPH_SIZE_HALFWORD) || \
-													 ((PERIPH_SIZE) == DMA_PERIPH_SIZE_WORD))
 
-#define IS_DMA_MEM_SIZE(MEM_SIZE)					(((MEM_SIZE) == DMA_MEMORY_SIZE_BYTE) 	  || \
-													 ((MEM_SIZE) == DMA_MEMORY_SIZE_HALFWORD) || \
-													 ((MEM_SIZE) == DMA_MEMORY_SIZE_WORD))
 
-#define IS_DMA_MODE(MODE)							(((MODE) == DMA_NORMAL_MODE)		|| \
-													 ((MODE) == DMA_CIRCULAR_MODE)		|| \
-													 ((MODE) == DMA_DOUBLE_BUFFERING)	|| \
-													 ((MODE) == DMA_PERIPH_CTRL_MODE))
 
-#define IS_DMA_PRIORITY(PRIORITY)					(((PRIORITY) == DMA_PRIORITY_LOW) 	  || \
-													 ((PRIORITY) == DMA_PRIORITY_MEDIUM)  || \
-													 ((PRIORITY) == DMA_PRIORITY_HIGH)	  || \
-													 ((PRIORITY) == DMA_PRIORITY_VERY_HIGH))
 
-#define IS_DMA_MBURST(MBURST)						(((MBURST) == DMA_MBURST_SINGLE)  || \
-													 ((MBURST) == DMA_MBURST_INCR4)   || \
-													 ((MBURST) == DMA_MBURST_INCR8)   || \
-													 ((MBURST) == DMA_MBURST_INCR16))
 
-#define IS_DMA_PBURST(PBURST)						(((PBURST) == DMA_PBURST_SINGLE)  || \
-													 ((PBURST) == DMA_PBURST_INCR4)   || \
-													 ((PBURST) == DMA_PBURST_INCR8)   || \
-													 ((PBURST) == DMA_PBURST_INCR16))
 
-#define IS_DMA_FIFO_MODE(MODE)						(((MODE) == DMA_FIFO_MODE_ENABLE) || \
-													 ((MODE) == DMA_FIFO_MODE_DISABLE))
 
-#define IS_DMA_FIFO_THRESHOLD(THRESHOLD)			(((THRESHOLD) == DMA_FIFO_THRESHOLD_1QUARTER) || \
-													 ((THRESHOLD) == DMA_FIFO_THRESHOLD_HALF)     || \
-													 ((THRESHOLD) == DMA_FIFO_THRESHOLD_3QUARTER) || \
-													 ((THRESHOLD) == DMA_FIFO_THRESHOLD_FULL))
 
-#define IS_DMA_INTERRUPT_FLAGS(FLAG)				(((FLAG) == DMA_FLAG_FEIF)  || \
-													 ((FLAG) == DMA_FLAG_DMEIF) || \
-													 ((FLAG) == DMA_FLAG_TEIF)  || \
-													 ((FLAG) == DMA_FLAG_HTIF)  || \
-													 ((FLAG) == DMA_FLAG_TCIF)  || \
-													 ((FLAG) == DMA_FLAG_ALL))
+
+
+
+
+
+
+
+
 
 //---------------------------------------------------------------------------
 // External function prototypes

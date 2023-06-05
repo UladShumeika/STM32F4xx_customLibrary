@@ -19,6 +19,100 @@
 #include "stddef.h"
 
 //---------------------------------------------------------------------------
+// Macros
+//---------------------------------------------------------------------------
+
+#define macro_prj_dma_check_instance(instance)    						(((instance) == DMA1_Stream0) || \
+																		 ((instance) == DMA1_Stream1) || \
+																		 ((instance) == DMA1_Stream2) || \
+																		 ((instance) == DMA1_Stream3) || \
+																		 ((instance) == DMA1_Stream4) || \
+																		 ((instance) == DMA1_Stream5) || \
+																		 ((instance) == DMA1_Stream6) || \
+																		 ((instance) == DMA1_Stream7) || \
+																		 ((instance) == DMA2_Stream0) || \
+																		 ((instance) == DMA2_Stream1) || \
+																		 ((instance) == DMA2_Stream2) || \
+																		 ((instance) == DMA2_Stream3) || \
+																		 ((instance) == DMA2_Stream4) || \
+																		 ((instance) == DMA2_Stream5) || \
+																		 ((instance) == DMA2_Stream6) || \
+																		 ((instance) == DMA2_Stream7))
+
+#define macro_prj_dma_check_channel(channel)							(((channel) == PRJ_DMA_CHANNEL_0) || \
+																		 ((channel) == PRJ_DMA_CHANNEL_1) || \
+																		 ((channel) == PRJ_DMA_CHANNEL_2) || \
+																		 ((channel) == PRJ_DMA_CHANNEL_3) || \
+																		 ((channel) == PRJ_DMA_CHANNEL_4) || \
+																		 ((channel) == PRJ_DMA_CHANNEL_5) || \
+																		 ((channel) == PRJ_DMA_CHANNEL_6) || \
+																		 ((channel) == PRJ_DMA_CHANNEL_7))
+
+#define macro_prj_dma_check_direction(direction)					    (((direction) == PRJ_DMA_PERIPH_TO_MEMORY) || \
+																		 ((direction) == PRJ_DMA_MEMORY_TO_PERIPH) || \
+																		 ((direction) == PRJ_DMA_MEMORY_TO_MEMORY))
+
+#define macro_prj_dma_check_periph_inc(command)							(((command) == PRJ_DMA_PINC_ENABLE) || \
+													 	 	 	 	 	 ((command) == PRJ_DMA_PINC_DISABLE))
+
+#define macro_prj_dma_check_mem_inc(command)						    (((command) == PRJ_DMA_MINC_ENABLE) || \
+													 	 	 	 	 	 ((command) == PRJ_DMA_MINC_DISABLE))
+
+#define macro_prj_dma_check_periph_size(periph_size)					(((periph_size) == PRJ_DMA_PERIPH_SIZE_BYTE) 	 || \
+													 	 	 	 	 	 ((periph_size) == PRJ_DMA_PERIPH_SIZE_HALFWORD) || \
+																		 ((periph_size) == PRJ_DMA_PERIPH_SIZE_WORD))
+
+#define macro_prj_dma_check_mem_size(mem_size)							(((mem_size) == PRJ_DMA_MEMORY_SIZE_BYTE) 	  || \
+													 	 	 	 	 	 ((mem_size) == PRJ_DMA_MEMORY_SIZE_HALFWORD) || \
+																		 ((mem_size) == PRJ_DMA_MEMORY_SIZE_WORD))
+
+#define macro_prj_dma_check_mode(mode)									(((mode) == PRJ_DMA_NORMAL_MODE)	  || \
+													 	 	 	 	 	 ((mode) == PRJ_DMA_CIRCULAR_MODE)	  || \
+																		 ((mode) == PRJ_DMA_DOUBLE_BUFFERING) || \
+																		 ((mode) == PRJ_DMA_PERIPH_CTRL_MODE))
+
+#define macro_prj_dma_check_priority(priority)							(((priority) == PRJ_DMA_PRIORITY_LOW) 	 || \
+																		 ((priority) == PRJ_DMA_PRIORITY_MEDIUM) || \
+																		 ((priority) == PRJ_DMA_PRIORITY_HIGH)	 || \
+																		 ((priority) == PRJ_DMA_PRIORITY_VERY_HIGH))
+
+#define macro_prj_dma_check_mburst(mburst)								(((mburst) == PRJ_DMA_MBURST_SINGLE) || \
+													 	 	 	 	 	 ((mburst) == PRJ_DMA_MBURST_INCR4)  || \
+																		 ((mburst) == PRJ_DMA_MBURST_INCR8)  || \
+																		 ((mburst) == PRJ_DMA_MBURST_INCR16))
+
+#define macro_prj_dma_check_pburst(pburst)								(((pburst) == PRJ_DMA_PBURST_SINGLE) || \
+													 	 	 	 	 	 ((pburst) == PRJ_DMA_PBURST_INCR4)  || \
+																		 ((pburst) == PRJ_DMA_PBURST_INCR8)  || \
+																		 ((pburst) == PRJ_DMA_PBURST_INCR16))
+
+#define macro_prj_dma_check_fifo_mode(fifo_mode)						(((fifo_mode) == PRJ_DMA_FIFO_MODE_ENABLE) || \
+													 	 	 	 	 	 ((fifo_mode) == PRJ_DMA_FIFO_MODE_DISABLE))
+
+#define macro_prj_dma_check_fifo_threshold(threshold)				 	(((threshold) == PRJ_DMA_FIFO_THRESHOLD_1QUARTER) || \
+																		 ((threshold) == PRJ_DMA_FIFO_THRESHOLD_HALF)     || \
+																		 ((threshold) == PRJ_DMA_FIFO_THRESHOLD_3QUARTER) || \
+																		 ((threshold) == PRJ_DMA_FIFO_THRESHOLD_FULL))
+
+#define macro_prj_dma_check_interrupt_flags(flags)   					((flags) >= PRJ_DMA_FLAG_DMEIF) && \
+																		 (flags) <= PRJ_DMA_FLAG_ALL))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------------------------------------------------------------------
 // Private variables
 //---------------------------------------------------------------------------
 static const uint8_t flagBitshiftOffset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22U};
