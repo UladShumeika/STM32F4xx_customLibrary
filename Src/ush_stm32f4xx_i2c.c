@@ -23,6 +23,16 @@
 //---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
+/*!
+ * @name I2C_calculation_clock_control_register
+ * @{
+ */
+#define PRJ_I2C_DUTYCYCLE_2_COEF						(3U)	/*!< The coefficient for duty cycle 2 */
+#define PRJ_I2C_DUTYCYCLE_16_9_COEF						(25U)	/*!< The coefficient for duty cycle 16/9 */
+#define PRJ_I2C_MIN_CCR_VALUE_FOR_SM					(4U)	/*!< The minimum CCR value for standard mode */
+#define PRJ_I2C_MIN_CCR_VALUE_FOR_FM					(1U)	/*!< The minimum CCR value for fast mode */
+
+/*! @} */
 
 //---------------------------------------------------------------------------
 // Types
@@ -37,6 +47,7 @@
 //---------------------------------------------------------------------------
 static uint32_t i2c_checking_pclk_frequency(uint32_t pclk1, uint32_t i2c_clock_speed);
 static uint32_t i2c_calc_rise_time(uint32_t freq_range, uint32_t i2c_clock_speed);
+static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t duty_cycle);
 
 //---------------------------------------------------------------------------
 // API
@@ -111,4 +122,56 @@ static uint32_t i2c_calc_rise_time(uint32_t freq_range, uint32_t i2c_clock_speed
 	}
 
 	return rise_time;
+}
+
+/*!
+ * @brief Calculate the CCR (clock control register) value.
+ *
+ * This function is used to calculate the CCR value taking into account the selected i2c speed.
+ *
+ * @param[in] pclk1				PCLK1 clock frequency.
+ * @param[in] i2c_clock_speed	I2C peripheral clock speed.
+ * @param[in] duty_cycle		I2C fast mode duty cycle.
+ *
+ * @return The ccr value.
+ */
+static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t duty_cycle)
+{
+	uint32_t i2c_ccr_calc = 0;
+
+	if(i2c_clock_speed <= PRJ_I2C_FREQ_STANDARD)
+	{
+		i2c_ccr_calc = ((pclk1 - 1U) / (((i2c_clock_speed) * 2U) + 1U) & I2C_CCR_CCR);
+
+		if(i2c_ccr_calc < PRJ_I2C_MIN_CCR_VALUE_FOR_SM)
+		{
+			i2c_ccr_calc = PRJ_I2C_MIN_CCR_VALUE_FOR_SM;
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
+	}
+	else /* for PRJ_I2C_FREQ_FAST */
+	{
+		if(duty_cycle == PRJ_I2C_DUTYCYCLE_2)
+		{
+			i2c_ccr_calc = (((pclk1 - 1U) / (i2c_clock_speed * PRJ_I2C_DUTYCYCLE_2_COEF)) + 1U) & I2C_CCR_CCR;
+		}
+		else
+		{
+			i2c_ccr_calc = ((((pclk1 - 1U) / (i2c_clock_speed * PRJ_I2C_DUTYCYCLE_16_9_COEF)) + 1U) & I2C_CCR_CCR) | PRJ_I2C_DUTYCYCLE_16_9;
+		}
+
+		if((i2c_ccr_calc & I2C_CCR_CCR) < PRJ_I2C_MIN_CCR_VALUE_FOR_FM)
+		{
+			i2c_ccr_calc = PRJ_I2C_MIN_CCR_VALUE_FOR_FM;
+		}
+		else
+		{
+			i2c_ccr_calc = i2c_ccr_calc | I2C_CCR_FS;
+		}
+	}
+
+	return i2c_ccr_calc;
 }
