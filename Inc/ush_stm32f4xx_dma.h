@@ -67,7 +67,7 @@
  * @name dma_memory_incremented_mode
  * @{
  */
-#define PRJ_DMA_MINC_ENABLE					(DMA_SxCR_MINC),	/*!< Memory increment mode enable */
+#define PRJ_DMA_MINC_ENABLE					(DMA_SxCR_MINC)		/*!< Memory increment mode enable */
 #define	PRJ_DMA_MINC_DISABLE				(0x00000000U)		/*!< Memory increment mode disable */
 
 /*! @}*/
@@ -86,7 +86,7 @@
  * @name dma_memory_data_size
  * @{
  */
-#define PRJ_DMA_MEMORY_SIZE_BYTE			(0x00000000U),		/*!< Memory data alignment: Byte */
+#define PRJ_DMA_MEMORY_SIZE_BYTE			(0x00000000U)		/*!< Memory data alignment: Byte */
 #define PRJ_DMA_MEMORY_SIZE_HALFWORD		(DMA_SxCR_MSIZE_0)	/*!< Memory data alignment: Half word */
 #define PRJ_DMA_MEMORY_SIZE_WORD			(DMA_SxCR_MSIZE_1)	/*!< Memory data alignment: Word	*/
 
@@ -238,40 +238,41 @@ typedef struct
 
 } prj_dma_handler_t;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //---------------------------------------------------------------------------
-// External function prototypes
+// API
 //---------------------------------------------------------------------------
 
-/**
- * @brief 	This function initializes the DMAx peripheral according to the specified parameters in the USH_DMA_initTypeDef.
- * @param 	initStructure - A pointer to a USH_DMA_initTypeDef structure that contains the configuration
- * 							information for the specified DMA peripheral.
- * @retval	None.
+/*!
+ * @brief Initialize DMA peripherals.
+ *
+ * This function is used to initialize DMA peripherals.
+ *
+ * @param[in] p_dma		A pointer to DMA handler structure.
+ *
+ * @return @ref PRJ_STATUS_OK if DMA initialization was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
  */
-void DMA_init(prj_dma_handler_t *p_dma);
+uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * @brief 	This function enables and disables the selected DMA stream.

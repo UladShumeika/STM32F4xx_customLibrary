@@ -108,19 +108,103 @@ static const uint8_t m_flag_bit_shift_offset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16
 //---------------------------------------------------------------------------
 static uint32_t dma_clear_flags(DMA_Stream_TypeDef *p_dma_stream, uint32_t dma_flags);
 
+//---------------------------------------------------------------------------
+// API
+//---------------------------------------------------------------------------
 
+/*!
+ * @brief Initialize DMA peripherals.
+ *
+ * This function is used to initialize DMA peripherals.
+ *
+ * @param[in] p_dma		A pointer to DMA handler structure.
+ *
+ * @return @ref PRJ_STATUS_OK if DMA initialization was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
+ */
+uint32_t prj_dma_init(prj_dma_handler_t *p_dma)
+{
+	uint32_t status = PRJ_STATUS_OK;
+	uint32_t tmp_reg = 0U;
 
+	/* Check the pointer */
+	if(p_dma == NULL)
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
 
+	/* Check parameters */
+	macro_prj_assert_param(macro_prj_dma_check_instance(p_dma->p_dma_stream));
+	macro_prj_assert_param(macro_prj_dma_check_channel(p_dma->dma_init.channel));
+	macro_prj_assert_param(macro_prj_dma_check_direction(p_dma->dma_init.direction));
+	macro_prj_assert_param(macro_prj_dma_check_periph_inc(p_dma->dma_init.periph_inc));
+	macro_prj_assert_param(macro_prj_dma_check_mem_inc(p_dma->dma_init.mem_inc));
+	macro_prj_assert_param(macro_prj_dma_check_periph_size(p_dma->dma_init.periph_data_alignment));
+	macro_prj_assert_param(macro_prj_dma_check_mem_size(p_dma->dma_init.mem_data_alignment));
+	macro_prj_assert_param(macro_prj_dma_check_mode(p_dma->dma_init.mode));
+	macro_prj_assert_param(macro_prj_dma_check_priority(p_dma->dma_init.priority));
+	macro_prj_assert_param(macro_prj_dma_check_mburst(p_dma->dma_init.mem_burst));
+	macro_prj_assert_param(macro_prj_dma_check_pburst(p_dma->dma_init.periph_burst));
+	macro_prj_assert_param(macro_prj_dma_check_fifo_mode(p_dma->dma_init.fifo_mode));
+	macro_prj_assert_param(macro_prj_dma_check_fifo_threshold(p_dma->dma_init.fifo_threshold));
 
+	/* Disable DMA peripherals */
+	p_dma->p_dma_stream->CR &= ~DMA_SxCR_EN;
 
+  	/* Get the CR register value */
+	tmp_reg = p_dma->p_dma_stream->CR;
 
+  	/* Clear all bits except PFCTRL, TCIE, HTIE, TEIE, DMEIE, EN */
+	tmp_reg &= 0x3FU;
 
+  	/* Prepare the DMA Stream configuration */
+	tmp_reg |= p_dma->dma_init.channel 	 | p_dma->dma_init.mem_data_alignment 	 | p_dma->dma_init.mem_inc |
+  			   p_dma->dma_init.direction | p_dma->dma_init.periph_data_alignment | p_dma->dma_init.periph_inc |
+  			   p_dma->dma_init.mode		 | p_dma->dma_init.priority;
 
+  	/* The memory burst and peripheral burst are not used when the FIFO is disabled */
+  	if(p_dma->dma_init.fifo_mode == PRJ_DMA_FIFO_MODE_ENABLE)
+  	{
+  		tmp_reg |= p_dma->dma_init.mem_burst | p_dma->dma_init.periph_burst;
+  	}
+  	else
+  	{
+  		/* DO NOTHING */
+  	}
 
+  	/* Write to DMA Stream CR register */
+  	p_dma->p_dma_stream->CR = tmp_reg;
 
+	/* Get the FCR register value */
+  	tmp_reg = p_dma->p_dma_stream->FCR;
 
+  	/* Clear direct mode and FIFO threshold bits */
+  	tmp_reg &= ~(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
 
+  	/* Prepare the DMA stream FIFO configuration */
+  	tmp_reg |= p_dma->dma_init.fifo_mode;
 
+  	if(p_dma->dma_init.fifo_mode == PRJ_DMA_FIFO_MODE_ENABLE)
+  	{
+  		tmp_reg |= p_dma->dma_init.fifo_threshold;
+  	}
+  	else
+  	{
+  		/* DO NOTHING */
+  	}
+
+  	/* Write to DMA stream FCR */
+  	p_dma->p_dma_stream->FCR = tmp_reg;
+
+  	/* Clear stream interrupt flags */
+  	dma_clear_flags(p_dma->p_dma_stream, PRJ_DMA_FLAG_ALL);
+
+	return status;
+}
 
 //---------------------------------------------------------------------------
 // STATIC
