@@ -46,6 +46,40 @@
 
 /*! @} */
 
+/*!
+ * @name i2c_timeouts
+ * @{
+ */
+#define PRJ_I2C_TIMEOUT_FLAG							(35U)	/*!< 35 ms */
+#define PRJ_I2C_TIMEOUT_BUSY_FLAG						(25U)	/*!< 25 ms */
+#define PRJ_I2C_TIMEOUT_STOP_FLAG						(5U)	/*!< 5 ms */
+
+/*! @} */
+
+/*!
+ * @name i2c_flags
+ * @{
+ */
+#define PRJ_I2C_FLAG_OVR                    			(0x00010800U)	/*!< OVR flag */
+#define PRJ_I2C_FLAG_AF                     			(0x00010400U)	/*!< AF flag */
+#define PRJ_I2C_FLAG_ARLO                   			(0x00010200U)	/*!< ARLO flag */
+#define PRJ_I2C_FLAG_BERR                   			(0x00010100U)	/*!< BERR flag */
+#define PRJ_I2C_FLAG_TXE                    			(0x00010080U)	/*!< TXE flag */
+#define PRJ_I2C_FLAG_RXNE                   			(0x00010040U)   /*!< TXE flag */
+#define PRJ_I2C_FLAG_STOPF                  			(0x00010010U)	/*!< STOPF flag */
+#define PRJ_I2C_FLAG_ADD10                  			(0x00010008U)	/*!< ADD10 flag */
+#define PRJ_I2C_FLAG_BTF                    			(0x00010004U)	/*!< BTF flag */
+#define PRJ_I2C_FLAG_ADDR                   			(0x00010002U)	/*!< ADDR flag */
+#define PRJ_I2C_FLAG_SB                     			(0x00010001U)	/*!< SB flag */
+#define PRJ_I2C_FLAG_DUALF                  			(0x00100080U)	/*!< DUALF flag */
+#define PRJ_I2C_FLAG_GENCALL                			(0x00100010U)	/*!< GENCALL flag */
+#define PRJ_I2C_FLAG_TRA                    			(0x00100004U)	/*!< TRA flag */
+#define PRJ_I2C_FLAG_BUSY                   			(0x00100002U)	/*!< BUSY flag */
+#define PRJ_I2C_FLAG_MSL                    			(0x00100001U)	/*!< MSL flag */
+#define PRJ_I2C_FLAG_MASK								(0x0000FFFFU)	/*!< Mask for flags */
+
+/*! @} */
+
 //---------------------------------------------------------------------------
 // Types
 //---------------------------------------------------------------------------
