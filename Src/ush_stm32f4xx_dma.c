@@ -38,19 +38,19 @@ void DMA_init(USH_DMA_initTypeDef *initStructure)
 	uint32_t tmpReg = 0;
 
 	// check parameters
-	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(initStructure->DMAy_Streamx));
-	macro_prj_assert_param(IS_DMA_CHANNEL(initStructure->Channel));
-	macro_prj_assert_param(IS_DMA_DIRECTION(initStructure->Direction));
-	macro_prj_assert_param(IS_DMA_PERIPH_INC(initStructure->PeriphInc));
-	macro_prj_assert_param(IS_DMA_MEM_INC(initStructure->MemInc));
-	macro_prj_assert_param(IS_DMA_PERIPH_SIZE(initStructure->PeriphDataAlignment));
-	macro_prj_assert_param(IS_DMA_MEM_SIZE(initStructure->MemDataAlignment));
-	macro_prj_assert_param(IS_DMA_MODE(initStructure->Mode));
-	macro_prj_assert_param(IS_DMA_PRIORITY(initStructure->Priority));
-	macro_prj_assert_param(IS_DMA_MBURST(initStructure->MemBurst));
-	macro_prj_assert_param(IS_DMA_PBURST(initStructure->PeriphBurst));
-	macro_prj_assert_param(IS_DMA_FIFO_MODE(initStructure->FIFOMode));
-	macro_prj_assert_param(IS_DMA_FIFO_THRESHOLD(initStructure->FIFOThreshold));
+//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(p_dma->p_dma_init->p_dma_stream));
+//	macro_prj_assert_param(IS_DMA_CHANNEL(p_dma->p_dma_init->channel));
+//	macro_prj_assert_param(IS_DMA_DIRECTION(initStructure->Direction));
+//	macro_prj_assert_param(IS_DMA_PERIPH_INC(initStructure->PeriphInc));
+//	macro_prj_assert_param(IS_DMA_MEM_INC(initStructure->MemInc));
+//	macro_prj_assert_param(IS_DMA_PERIPH_SIZE(initStructure->PeriphDataAlignment));
+//	macro_prj_assert_param(IS_DMA_MEM_SIZE(initStructure->MemDataAlignment));
+//	macro_prj_assert_param(IS_DMA_MODE(initStructure->Mode));
+//	macro_prj_assert_param(IS_DMA_PRIORITY(initStructure->Priority));
+//	macro_prj_assert_param(IS_DMA_MBURST(initStructure->MemBurst));
+//	macro_prj_assert_param(IS_DMA_PBURST(initStructure->PeriphBurst));
+//	macro_prj_assert_param(IS_DMA_FIFO_MODE(initStructure->FIFOMode));
+//	macro_prj_assert_param(IS_DMA_FIFO_THRESHOLD(initStructure->FIFOThreshold));
 
 	DMA_state(initStructure->DMAy_Streamx, DISABLE);
 
@@ -108,8 +108,8 @@ void DMA_init(USH_DMA_initTypeDef *initStructure)
 void DMA_state(DMA_Stream_TypeDef *DMAy_Streamx, FunctionalState state)
 {
 	// Check parameters
-	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(DMAy_Streamx));
-	macro_prj_assert_param(IS_FUNCTIONAL_STATE(state));
+//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(DMAy_Streamx));
+//	macro_prj_assert_param(IS_FUNCTIONAL_STATE(state));
 
 	if(state == ENABLE)
 	{
@@ -129,8 +129,8 @@ void DMA_state(DMA_Stream_TypeDef *DMAy_Streamx, FunctionalState state)
 void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, USH_DMA_flags flags)
 {
 	// Check parameters
-	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(DMAy_Streamx));
-	macro_prj_assert_param(IS_DMA_INTERRUPT_FLAGS(flags));
+//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(DMAy_Streamx));
+//	macro_prj_assert_param(IS_DMA_INTERRUPT_FLAGS(dma_flags));
 
 	DMA_TypeDef* DMAy;
 
@@ -155,7 +155,7 @@ void DMA_clearFlags(DMA_Stream_TypeDef *DMAy_Streamx, USH_DMA_flags flags)
 uint32_t DMA_getFlags(USH_DMA_initTypeDef *initStructure)
 {
 	// Check parameters
-	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(initStructure->DMAy_Streamx));
+//	macro_prj_assert_param(IS_DMA_STREAM_ALL_INSTANCE(p_dma_stream));
 
 	uint32_t flags = 0;
 
