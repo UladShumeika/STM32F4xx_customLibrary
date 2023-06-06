@@ -279,19 +279,19 @@ typedef enum
  * I2C1 clock enable/disable
  */
 #define __RCC_I2C1_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C1EN)
-#define __RCC_I2C1_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C1EN)
+#define __RCC_I2C1_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C1RST)
 
 /*
  * I2C2 clock enable/disable
  */
 #define __RCC_I2C2_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C2EN)
-#define __RCC_I2C2_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C2EN)
+#define __RCC_I2C2_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C2RST)
 
 /*
  * I2C3 clock enable/disable
  */
 #define __RCC_I2C3_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C3EN)
-#define __RCC_I2C3_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C3EN)
+#define __RCC_I2C3_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C3RST)
 
 //---------------------------------------------------------------------------
 // External function prototypes
