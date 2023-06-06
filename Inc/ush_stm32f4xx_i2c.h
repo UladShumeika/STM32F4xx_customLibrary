@@ -143,12 +143,12 @@ typedef struct
  *
  * This function is used to initialize I2C peripherals.
  *
- * @param[in] p_i2c_init_structure		A pointer to I2C initialization structure.
+ * @param[in] p_i2c_init	A pointer to I2C initialization structure.
  *
  * @return @ref PRJ_STATUS_OK if I2C initialization was successful.
  * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
  */
-uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init_structure);
+uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init);
 
 /*!
  * @brief Write an amount of data with DMA to a specific memory address.
