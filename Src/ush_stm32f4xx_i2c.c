@@ -93,6 +93,7 @@ static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint3
 static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
 
 static uint32_t i2c_request_memory_write(I2C_TypeDef* p_i2c, uint8_t dev_address, uint16_t mem_address);
+static uint32_t i2c_request_memory_read(I2C_TypeDef* p_i2c, uint8_t dev_address, uint16_t mem_address);
 
 static void i2c_dma_complete(void* p_controls_peripherals);
 static void i2c_dma_error(void* p_controls_peripherals);
@@ -679,6 +680,134 @@ static uint32_t i2c_request_memory_write(I2C_TypeDef* p_i2c, uint8_t dev_address
 	{
 		/* Generate stop */
 		p_i2c->CR1 |= I2C_CR1_STOP;
+	}
+
+	return status;
+}
+
+/*!
+ * @brief send a read request to the specified address.
+ *
+ * This function is used to send a read request to the specified address of the target memory device.
+ *
+ * @param[in] @param p_i2c		A pointer to an i2c transmit structure that contains all
+ * 								the necessary information to transfer data.
+ * @param[in] dev_address		A target device address.
+ * @param[in] mem_address		An internal memory address of the target memory device.
+ *
+ * @return @ref PRJ_STATUS_OK if the request was sent successfully.
+ * @return @ref PRJ_STATUS_ERROR if there are any problems with the input parameters.
+ * @return @ref PRJ_STATUS_TIMEOUT if a timeout is detected on any flag.
+ */
+static uint32_t i2c_request_memory_read(I2C_TypeDef* p_i2c, uint8_t dev_address, uint16_t mem_address)
+{
+	uint32_t status = PRJ_STATUS_OK;
+
+	/* Check the pointer */
+	if(p_i2c == NULL)
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Enable Acknowledge */
+		p_i2c->CR1 |= I2C_CR1_ACK;
+
+		/* Generate start */
+		p_i2c->CR1 |= I2C_CR1_START;
+
+		/* Wait until SB flag is set */
+		status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_SB, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Send slave address with write request */
+		p_i2c->DR = (dev_address << 1U) & (uint8_t)(~I2C_OAR1_ADD0);
+
+		/* Wait until ADDR flag is set */
+		status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_ADDR, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Clear ADDR flag */
+		i2c_clear_addr_flag(p_i2c);
+
+		/* Wait until TXE flag is set */
+		status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_TXE, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Send MSB of memory address */
+		p_i2c->DR = (uint8_t)(mem_address & 0xFF00U);
+
+		/* Wait until TXE flag is set */
+		status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_TXE, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		/* Generate stop */
+		p_i2c->CR1 |= I2C_CR1_STOP;
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Send LSB of memory address */
+		p_i2c->DR = (uint8_t)(mem_address & 0x00FFU);
+
+		/* Wait until TXE flag is set */
+		status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_TXE, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		/* Generate stop */
+		p_i2c->CR1 |= I2C_CR1_STOP;
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Generate restart */
+		p_i2c->CR1 |= I2C_CR1_START;
+
+		/* Wait until SB flag is set */
+		status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_SB, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		/* Generate stop */
+		p_i2c->CR1 |= I2C_CR1_STOP;
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Send slave address with read request */
+		p_i2c->DR = (dev_address << 1U) & (uint8_t)(I2C_OAR1_ADD0);
+
+		/* Wait until ADDR flag is set */
+		status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_ADDR, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		/* DO NOTHING */
 	}
 
 	return status;
