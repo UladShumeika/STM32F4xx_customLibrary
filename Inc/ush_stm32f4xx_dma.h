@@ -236,6 +236,8 @@ typedef struct
 
 	void (*p_complete_callback) (void*);					/*!< A pointer to complete callback function */
 
+	void (*p_error_callback) (void*);						/*!< A pointer to error callback function */
+
 } prj_dma_handler_t;
 
 //---------------------------------------------------------------------------
