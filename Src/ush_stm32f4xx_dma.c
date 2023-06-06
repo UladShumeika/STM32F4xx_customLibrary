@@ -239,9 +239,9 @@ void prj_dma_irq_handler(prj_dma_handler_t *p_dma)
 			/* DO NOTHING */
 		}
 
-		if((p_dma->controls_peripherals != NULL) && (p_dma->p_complete_callback != NULL))
+		if((p_dma->p_controls_peripherals != NULL) && (p_dma->p_complete_callback != NULL))
 		{
-			p_dma->p_complete_callback(p_dma->controls_peripherals);
+			p_dma->p_complete_callback(p_dma->p_controls_peripherals);
 		}
 		else
 		{

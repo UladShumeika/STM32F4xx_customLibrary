@@ -221,9 +221,9 @@ typedef struct
 
 } prj_dma_init_t;
 
-/**
-  * @brief DMA handler structure definition
-  */
+/*!
+ * @brief DMA handler structure definition
+ */
 typedef struct
 {
 	DMA_Stream_TypeDef *p_dma_stream;						/*!< A pointer to the stream peripheral.
@@ -231,10 +231,10 @@ typedef struct
 
 	prj_dma_init_t dma_init;								/*!< DMA initialization structure. */
 
-	void *controls_peripherals;								/*!< A pointer to the peripheral structure
-																 that uses this DMA stream */
+	void *p_controls_peripherals;							/*!< A pointer to the peripheral structure
+															     that uses this DMA stream */
 
-	void (*p_complete_callback) (void*);					/*!< A pointer to complete callback function. */
+	void (*p_complete_callback) (void*);					/*!< A pointer to complete callback function */
 
 } prj_dma_handler_t;
 
