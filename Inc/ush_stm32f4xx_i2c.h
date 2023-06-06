@@ -148,4 +148,28 @@ typedef struct
  */
 uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init_structure);
 
+/*!
+ * @brief I2C TX/RX completed callbacks.
+ *
+ * @note This function should not be modified, when the callback is needed,
+ * 		 the prj_i2c_complete_callback could be implemented in the user file.
+ *
+ * @param p_i2c		A pointer to I2Cx peripheral to be used where x is from 1 to 3.
+ *
+ * @return None.
+ */
+__WEAK void prj_i2c_complete_callback(I2C_TypeDef* p_i2c);
+
+/*!
+ * @brief I2C TX/RX error callbacks.
+ *
+ * @note This function should not be modified, when the callback is needed,
+ * 		 the prj_i2c_error_callback could be implemented in the user file.
+ *
+ * @param p_i2c		A pointer to I2Cx peripheral to be used where x is from 1 to 3.
+ *
+ * @return None.
+ */
+__WEAK void prj_i2c_error_callback(I2C_TypeDef* p_i2c);
+
 #endif /* ush_stm32f4xx_i2c_h */
