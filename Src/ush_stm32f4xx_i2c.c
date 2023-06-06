@@ -92,7 +92,7 @@ static uint32_t i2c_flag_get(I2C_TypeDef* p_i2c, uint32_t flag);
 static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
 static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
 
-static void i2c_dma_complete(I2C_TypeDef* p_i2c, uint32_t data_size);
+static void i2c_dma_complete(void* p_controls_peripherals);
 static void i2c_dma_error(I2C_TypeDef* p_i2c);
 
 //---------------------------------------------------------------------------
@@ -489,20 +489,22 @@ static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_
  *
  * This function is used to handle the completion of receiving or transmitting data via I2C using DMA.
  *
- * @param[in] p_i2c			A pointer to p_i2c peripheral.
- * @param[in] data_size		Amount of data to be received or transmitted.
+ * @param[in] p_controls_peripherals	A pointer to an I2C structure instance.
  *
  * @return None.
  */
-static void i2c_dma_complete(I2C_TypeDef* p_i2c, uint32_t data_size)
+static void i2c_dma_complete(void* p_controls_peripherals)
 {
-	/* Disable EVT and ERR interrupts */
-	p_i2c->CR1 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
+	/* Convert pointer to pointer to I2C instance structure */
+	prj_i2c_transmission_t *i2c_tx_rx = (prj_i2c_transmission_t*)p_controls_peripherals;
 
-	if(data_size == 1U)
+	/* Disable EVT and ERR interrupts */
+	i2c_tx_rx->p_i2c->CR1 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
+
+	if(i2c_tx_rx->data_size == 1U)
 	{
 		/* Disable Acknowledge */
-		p_i2c->CR1 &= ~I2C_CR1_ACK;
+		i2c_tx_rx->p_i2c->CR1 &= ~I2C_CR1_ACK;
 	}
 	else
 	{
@@ -510,16 +512,16 @@ static void i2c_dma_complete(I2C_TypeDef* p_i2c, uint32_t data_size)
 	}
 
 	/* Generate stop */
-	p_i2c->CR1 |= I2C_CR1_STOP;
+	i2c_tx_rx->p_i2c->CR1 |= I2C_CR1_STOP;
 
 	/* Disable last DMA */
-	p_i2c->CR2 &= ~I2C_CR2_LAST;
+	i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_LAST;
 
 	/* Disable DMA request */
-	p_i2c->CR2 &= ~I2C_CR2_DMAEN;
+	i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_DMAEN;
 
 	/* Call I2C complete callback */
-	prj_i2c_complete_callback(p_i2c);
+	prj_i2c_complete_callback(i2c_tx_rx->p_i2c);
 }
 
 /*!
