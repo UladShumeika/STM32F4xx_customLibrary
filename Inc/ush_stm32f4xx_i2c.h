@@ -149,6 +149,21 @@ typedef struct
 uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init_structure);
 
 /*!
+ * @brief Write an amount of data with DMA to a specific memory address.
+ *
+ * This function is used to write an amount of data with DMA to a specific memory address.
+ *
+ * @param p_i2c_transmit	A pointer to an i2c transmit structure that contains all
+ * 							the necessary information to transfer data.
+ *
+ * @return @ref PRJ_STATUS_OK if the data is written successfully.
+ * @return @ref PRJ_STATUS_ERROR if a pointer is not passed either to the structure itself
+ * 		   or to the DMA peripheral or the size of the transmitted data is 0.
+ * @return @ref PRJ_STATUS_TIMEOUT if a timeout is detected on any flag.
+ */
+uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_transmit);
+
+/*!
  * @brief I2C TX/RX completed callbacks.
  *
  * @note This function should not be modified, when the callback is needed,

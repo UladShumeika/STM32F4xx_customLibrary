@@ -185,6 +185,130 @@ uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init_structure)
 }
 
 /*!
+ * @brief Write an amount of data with DMA to a specific memory address.
+ *
+ * This function is used to write an amount of data with DMA to a specific memory address.
+ *
+ * @param p_i2c_tx	A pointer to an i2c transmit structure that contains all
+ * 							the necessary information to transfer data.
+ *
+ * @return @ref PRJ_STATUS_OK if the data is written successfully.
+ * @return @ref PRJ_STATUS_ERROR if a pointer is not passed either to the structure itself
+ * 		   or to the DMA peripheral or the size of the transmitted data is 0.
+ * @return @ref PRJ_STATUS_TIMEOUT if a timeout is detected on any flag.
+ */
+uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx)
+{
+	uint32_t status = PRJ_STATUS_OK;
+	prj_dma_config_t dma_config = {0};
+
+	/* Check the pointer */
+	if(p_i2c_tx == NULL)
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	if((p_i2c_tx->data_size != 0U) || p_i2c_tx->p_dma != NULL)
+	{
+		/* Wait until BUSY flag is reset */
+		status = i2c_wait_on_reset_flags(p_i2c_tx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_BUSY_FLAG);
+
+		if(status == PRJ_STATUS_OK)
+		{
+			/* Disable Pos */
+			p_i2c_tx->p_i2c->CR1 &= ~I2C_CR1_POS;
+
+			/* Config DMA peripheral */
+			dma_config.p_dma_stream 			= p_i2c_tx->p_dma->p_dma_stream;
+			dma_config.data_size				= p_i2c_tx->data_size;
+			dma_config.destination_address 		= (uint32_t)p_i2c_tx->p_data;
+			dma_config.sourse_address			= (uint32_t)&p_i2c_tx->p_i2c->DR;
+			dma_config.direction				= PRJ_DMA_PERIPH_TO_MEMORY;
+			status = prj_dma_config(&dma_config);
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
+
+		if(status == PRJ_STATUS_OK)
+		{
+			/* Set DMA callbacks */
+			p_i2c_tx->p_dma->p_complete_callback 	= i2c_dma_complete;
+			p_i2c_tx->p_dma->p_error_callback 		= i2c_dma_error;
+
+			/* Generate start */
+			p_i2c_tx->p_i2c->CR1 |= I2C_CR1_START;
+
+			/* Wait until SB flag is set */
+			status = i2c_wait_on_set_flags(p_i2c_tx->p_i2c, PRJ_I2C_FLAG_SB, PRJ_I2C_TIMEOUT_FLAG);
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
+
+		if(status == PRJ_STATUS_OK)
+		{
+			/* Send slave address */
+			p_i2c_tx->p_i2c->DR = ((uint8_t)(p_i2c_tx->dev_address << 1U)) & (uint8_t)(~I2C_OAR1_ADD0);
+
+			/* Wait until ADDR flag is set */
+			status = i2c_wait_on_set_flags(p_i2c_tx->p_i2c, PRJ_I2C_FLAG_ADDR, PRJ_I2C_TIMEOUT_FLAG);
+		}
+		else
+		{
+			/* Generate stop */
+			p_i2c_tx->p_i2c->CR1 |= I2C_CR1_STOP;
+		}
+
+		if(status == PRJ_STATUS_OK)
+		{
+			/* Clear ADDR flag */
+			i2c_clear_addr_flag(p_i2c_tx->p_i2c);
+
+			/* Wait until TXE flag is set */
+			status = i2c_wait_on_set_flags(p_i2c_tx->p_i2c, PRJ_I2C_FLAG_TXE, PRJ_I2C_TIMEOUT_FLAG);
+		}
+		else
+		{
+			/* Generate stop */
+			p_i2c_tx->p_i2c->CR1 |= I2C_CR1_STOP;
+		}
+
+		if(status == PRJ_STATUS_OK)
+		{
+			/* Send Memory Address */
+			p_i2c_tx->p_i2c->DR = (uint8_t)(p_i2c_tx->mem_address & 0x00FFU);
+
+			/* Clear ADDR flag */
+			i2c_clear_addr_flag(p_i2c_tx->p_i2c);
+
+			/* Enable ERR interrupt */
+			p_i2c_tx->p_i2c->CR2 |= I2C_CR2_ITERREN;
+
+			/* Enable DMA request */
+			p_i2c_tx->p_i2c->CR2 |= I2C_CR2_DMAEN;
+		}
+		else
+		{
+			/* Generate stop */
+			p_i2c_tx->p_i2c->CR1 |= I2C_CR1_STOP;
+		}
+	}
+	else
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+
+	return status;
+}
+
+/*!
  * @brief I2C TX/RX completed callbacks.
  *
  * @note This function should not be modified, when the callback is needed,
