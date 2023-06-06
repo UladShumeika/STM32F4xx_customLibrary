@@ -108,6 +108,7 @@ typedef struct
 
 /*!
  * @brief I2C transmission structure definition.
+ * @note  This structure is used for as sending as reception data.
  */
 typedef struct
 {
@@ -127,34 +128,9 @@ typedef struct
 
 	uint32_t data_size;		 	 		/*!< Amount of data to be sent. */
 
-	DMA_Stream_TypeDef* p_dma_stream;	/*!< A pointer to dma stream which will be used for data transfer. */
+	prj_dma_handler_t* p_dma;			/*!< A pointer to dma instance which will be used for data transfer. */
 
 } prj_i2c_transmission_t;
-
-/*!
- * @brief I2C reception structure definition.
- */
-typedef struct
-{
-	I2C_TypeDef* p_i2c;			 		/*!< A pointer to I2Cx peripheral to be used where x is from 1 to 3. */
-
-	uint32_t dev_address;		  		/*!< A target device address. */
-
-	uint32_t mem_address;		  		/*!< An internal memory address. */
-
-	uint8_t* p_data;			  		/*!< A pointer to data buffer. */
-
-	uint8_t reserved1; 					/*!< For structure size alignment. */
-
-	uint8_t reserved2; 					/*!< For structure size alignment. */
-
-	uint8_t reserved3; 					/*!< For structure size alignment. */
-
-	uint32_t data_size;		 	 	 	/*!< Amount of data to be received. */
-
-	DMA_Stream_TypeDef* p_dma_stream;	/*!< A pointer to dma stream which will be used for data reception. */
-
-} prj_i2c_reception_t;
 
 //---------------------------------------------------------------------------
 // API
