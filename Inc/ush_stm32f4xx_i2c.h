@@ -163,7 +163,7 @@ uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init);
  * 		   or to the DMA peripheral or the size of the transmitted data is 0.
  * @return @ref PRJ_STATUS_TIMEOUT if a timeout is detected on any flag.
  */
-uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_transmit);
+uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx);
 
 /*!
  * @brief I2C TX/RX completed callbacks.
