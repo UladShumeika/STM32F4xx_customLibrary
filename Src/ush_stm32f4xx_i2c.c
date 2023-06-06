@@ -93,7 +93,7 @@ static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint3
 static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_t timeout);
 
 static void i2c_dma_complete(void* p_controls_peripherals);
-static void i2c_dma_error(I2C_TypeDef* p_i2c);
+static void i2c_dma_error(void* p_controls_peripherals);
 
 //---------------------------------------------------------------------------
 // API
@@ -529,15 +529,18 @@ static void i2c_dma_complete(void* p_controls_peripherals)
  *
  * This function is used to handle the errors of receiving or transmitting data via I2C using DMA.
  *
- * @param[in] p_i2c			A pointer to p_i2c peripheral.
+ * @param[in] p_controls_peripherals	A pointer to an I2C structure instance.
  *
  * @return None.
  */
-static void i2c_dma_error(I2C_TypeDef* p_i2c)
+static void i2c_dma_error(void* p_controls_peripherals)
 {
+	/* Convert pointer to pointer to I2C instance structure */
+	prj_i2c_transmission_t *i2c_tx_rx = (prj_i2c_transmission_t*)p_controls_peripherals;
+
 	/* Disable Acknowledge */
-	p_i2c->CR1 &= ~I2C_CR1_ACK;
+	i2c_tx_rx->p_i2c->CR1 &= ~I2C_CR1_ACK;
 
 	/* Call I2C error callback */
-	prj_i2c_error_callback(p_i2c);
+	prj_i2c_error_callback(i2c_tx_rx->p_i2c);
 }
