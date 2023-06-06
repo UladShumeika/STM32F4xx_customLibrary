@@ -276,6 +276,19 @@ typedef struct
 uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
 
 /*!
+ * @brief Configure DMA peripherals
+ *
+ * This function is used to configure DMA registers from another peripheral like I2C, SPI, UART and etc.
+ *
+ * @param[in] p_dma_config		A pointer to a configuration structure that contains all the necessary data
+ * 								to set up sending or receiving via DMA.
+ *
+ * @return @ref PRJ_STATUS_OK if DMA configuration was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
+ */
+uint32_t prj_dma_config(prj_dma_config_t *p_dma_config);
+
+/*!
  * @brief Handle DMA interrupt request.
  *
  * This function is used to handle DMA interrupt request.

@@ -208,6 +208,72 @@ uint32_t prj_dma_init(prj_dma_handler_t *p_dma)
 }
 
 /*!
+ * @brief Configure DMA peripherals
+ *
+ * This function is used to configure DMA registers from another peripheral like I2C, SPI, UART and etc.
+ *
+ * @param[in] p_dma_config		A pointer to a configuration structure that contains all the necessary data
+ * 								to set up sending or receiving via DMA.
+ *
+ * @return @ref PRJ_STATUS_OK if DMA configuration was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
+ */
+uint32_t prj_dma_config(prj_dma_config_t *p_dma_config)
+{
+	uint32_t status = PRJ_STATUS_OK;
+
+	/* Check pointers and input parameters */
+	if((p_dma_config == NULL) || (p_dma_config->p_dma_stream == NULL) ||
+	   (p_dma_config->destination_address == 0U) || (p_dma_config->sourse_address == 0U))
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Fill DMA registers */
+		p_dma_config->p_dma_stream->NDTR 	= p_dma_config->data_size;				/* Set data size */
+
+		if(p_dma_config->direction == PRJ_DMA_MEMORY_TO_PERIPH)
+		{
+			p_dma_config->p_dma_stream->PAR 	= p_dma_config->destination_address;	/* Set peripheral address */
+			p_dma_config->p_dma_stream->M0AR 	= p_dma_config->sourse_address;			/* Set memory address */
+		}
+		else
+		{
+			p_dma_config->p_dma_stream->PAR 	= p_dma_config->sourse_address;			/* Set peripheral address */
+			p_dma_config->p_dma_stream->M0AR 	= p_dma_config->destination_address;	/* Set memory address */
+		}
+
+		/* Clear all DMA flags */
+		status = dma_clear_flags(p_dma_config->p_dma_stream, PRJ_DMA_FLAG_ALL);
+
+		if(status == PRJ_STATUS_OK)
+		{
+			/* Enable DMA interrupts */
+			p_dma_config->p_dma_stream->CR |= DMA_SxCR_TCIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE;
+
+			/* Enable DMA stream */
+			p_dma_config->p_dma_stream->CR |= DMA_SxCR_EN;
+		}
+		else
+		{
+			/* DO NOTHING */
+		}
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	return status;
+}
+
+/*!
  * @brief Handle DMA interrupt request.
  *
  * This function is used to handle DMA interrupt request.
