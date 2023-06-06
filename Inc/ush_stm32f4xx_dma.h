@@ -174,9 +174,28 @@
 // Typedefs and enumerations
 //---------------------------------------------------------------------------
 
-/**
-  * @brief DMA initialization structure definition
-  */
+/*!
+ * @brief DMA configuration structure definition.
+ * @note  This structure is used to configure DMA from another peripheral
+ * 		  (set data size, destination address, source address).
+ */
+typedef struct
+{
+	DMA_Stream_TypeDef* p_dma_stream;	/*!< A pointer to dma stream which will be used for data transfer */
+
+	uint32_t data_size;		 	 		/*!< Amount of data to be sent */
+
+	uint32_t destination_address;		/*!< The destination memory Buffer address */
+
+	uint32_t sourse_address;			/*!< The source memory Buffer address */
+
+	uint32_t direction;					/*!< Transfer direction.
+											 This parameter can be a value of @ref dma_data_transfer_direction */
+} prj_dma_config_t;
+
+/*!
+ * @brief DMA initialization structure definition
+ */
 typedef struct
 {
 	uint32_t channel;							/*!< A channel to be used for the specified stream.
