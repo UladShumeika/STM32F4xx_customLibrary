@@ -277,6 +277,112 @@ uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx)
 }
 
 /*!
+ * @brief Read an amount of data with DMA to a specific memory address.
+ *
+ * This function is used to read an amount of data with DMA to a specific memory address.
+ *
+ * @param p_i2c_rx	A pointer to an i2c reception structure that contains all
+ * 							the necessary information to receive data.
+ *
+ * @return @ref PRJ_STATUS_OK if the data is read successfully.
+ * @return @ref PRJ_STATUS_ERROR if a pointer is not passed either to the structure itself
+ * 		   or to the DMA peripheral or the size of the received data is 0.
+ * @return @ref PRJ_STATUS_TIMEOUT if a timeout is detected on any flag.
+ */
+uint32_t prj_i2c_read_dma(prj_i2c_transmission_t* p_i2c_rx)
+{
+	uint32_t status = PRJ_STATUS_OK;
+	prj_dma_config_t dma_config = {0};
+
+	/* Check pointers and the data size */
+	if((p_i2c_rx == NULL) || (p_i2c_rx->p_dma->p_dma_stream == NULL) || (p_i2c_rx->data_size == 0U))
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Wait until BUSY flag is reset */
+		status = i2c_wait_on_reset_flags(p_i2c_rx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_BUSY_FLAG);
+
+		/* Enable I2C peripherals if they are disabled */
+		if((p_i2c_rx->p_i2c->CR1 & I2C_CR1_PE) == 0U)
+		{
+			p_i2c_rx->p_i2c->CR1 |= I2C_CR1_PE;
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
+
+		/* Disable Pos */
+		p_i2c_rx->p_i2c->CR1 &= ~I2C_CR1_POS;
+
+		/* Set DMA callbacks */
+		p_i2c_rx->p_dma->p_complete_callback 	= i2c_dma_complete;
+		p_i2c_rx->p_dma->p_error_callback 		= i2c_dma_error;
+
+		/* Config DMA peripheral */
+		dma_config.p_dma_stream 			= p_i2c_rx->p_dma->p_dma_stream;
+		dma_config.data_size				= p_i2c_rx->data_size;
+		dma_config.destination_address 		= (uint32_t)p_i2c_rx->p_data;
+		dma_config.sourse_address			= (uint32_t)&p_i2c_rx->p_i2c->DR;
+		dma_config.direction				= PRJ_DMA_PERIPH_TO_MEMORY;
+		status = prj_dma_config(&dma_config);
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Send request memory read */
+		status = i2c_request_memory_read(p_i2c_rx->p_i2c, p_i2c_rx->dev_address, p_i2c_rx->mem_address);
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		if(p_i2c_rx->data_size == 1U)
+		{
+			/* Disable Acknowledge */
+			p_i2c_rx->p_i2c->CR1 &= ~I2C_CR1_ACK;
+		}
+		else
+		{
+			p_i2c_rx->p_i2c->CR2 |= I2C_CR2_LAST;
+		}
+
+		/* Clear ADDR flag */
+		i2c_clear_addr_flag(p_i2c_rx->p_i2c);
+
+		/* Enable ERR interrupt */
+		p_i2c_rx->p_i2c->CR2 |= I2C_CR2_ITERREN;
+
+		/* Enable DMA request */
+		p_i2c_rx->p_i2c->CR2 |= I2C_CR2_DMAEN;
+	}
+	else
+	{
+		/* Disable Acknowledge */
+		p_i2c_rx->p_i2c->CR1 &= ~I2C_CR1_ACK;
+
+		/* Disable I2C peripherals */
+		p_i2c_rx->p_i2c->CR1 &= ~I2C_CR1_PE;
+	}
+
+	return status;
+}
+
+/*!
  * @brief I2C TX/RX completed callbacks.
  *
  * @note This function should not be modified, when the callback is needed,
