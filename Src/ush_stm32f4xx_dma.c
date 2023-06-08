@@ -322,24 +322,36 @@ void prj_dma_irq_handler(prj_dma_handler_t *p_dma)
 	/* Check half transfer complete flag */
 	if((dma_flags & PRJ_DMA_FLAG_HTIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_HTIE))
 	{
+		/* Clear the half transfer complete flag */
+		dma_clear_flags(p_dma->p_dma_stream, PRJ_DMA_FLAG_HTIF);
+
 		// TODO add handler for HTC
 	}
 
 	/* Check transfer error flag */
 	if((dma_flags & PRJ_DMA_FLAG_TEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_TEIE))
 	{
+		/* Clear the transfer error flag */
+		dma_clear_flags(p_dma->p_dma_stream, PRJ_DMA_FLAG_TEIF);
+
 		// TODO add handler for TEI
 	}
 
 	/* Check direct mode error flag */
 	if((dma_flags & PRJ_DMA_FLAG_DMEIF) && (p_dma->p_dma_stream->CR & DMA_SxCR_DMEIE))
 	{
+		/* Clear the direct mode error flag */
+		dma_clear_flags(p_dma->p_dma_stream, PRJ_DMA_FLAG_DMEIF);
+
 		// TODO add handler for DMEI
 	}
 
 	/* Check FIFO error flag */
 	if((dma_flags & PRJ_DMA_FLAG_FEIF) && (p_dma->p_dma_stream->FCR & DMA_SxFCR_FEIE))
 	{
+		/* Clear the FIFO error flag */
+		dma_clear_flags(p_dma->p_dma_stream, PRJ_DMA_FLAG_FEIF);
+
 		// TODO add handler for FEI
 	}
 }
