@@ -125,17 +125,17 @@ typedef struct
 
 	uint8_t dev_address;		  		/*!< A target device address. */
 
-	uint16_t mem_address;		  		/*!< An internal memory address. */
-
 	uint8_t reserved1; 					/*!< For structure size alignment. */
 
-	uint8_t* p_data;			  		/*!< A pointer to data buffer. */
+	uint16_t mem_address;		  		/*!< An internal memory address. */
+
+	uint16_t mem_address_size;		  	/*!< A size of an internal memory address. */
 
 	uint8_t reserved2; 					/*!< For structure size alignment. */
 
 	uint8_t reserved3; 					/*!< For structure size alignment. */
 
-	uint8_t reserved4; 					/*!< For structure size alignment. */
+	uint8_t* p_data;			  		/*!< A pointer to data buffer. */
 
 	uint32_t data_size;		 	 		/*!< Amount of data to be sent. */
 
