@@ -229,8 +229,8 @@ uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx)
 			/* Config DMA peripheral */
 			dma_config.p_dma_stream 			= p_i2c_tx->p_dma->p_dma_stream;
 			dma_config.data_size				= p_i2c_tx->data_size;
-			dma_config.destination_address 		= (uint32_t)p_i2c_tx->p_data;
-			dma_config.sourse_address			= (uint32_t)&p_i2c_tx->p_i2c->DR;
+			dma_config.destination_address 		= (uint32_t)&p_i2c_tx->p_i2c->DR;
+			dma_config.sourse_address			= (uint32_t)p_i2c_tx->p_data;
 			dma_config.direction				= PRJ_DMA_MEMORY_TO_PERIPH;
 			status = prj_dma_config(&dma_config);
 		}
