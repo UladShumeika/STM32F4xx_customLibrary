@@ -678,7 +678,7 @@ static uint32_t i2c_wait_on_set_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint32_
 			; /* DO NOTHING */
 		}
 
-	} while((status == PRJ_STATUS_OK) && ((flag_status == PRJ_FLAG_RESET) || (flag_af) == PRJ_FLAG_RESET));
+	} while((status == PRJ_STATUS_OK) && ((flag_status == PRJ_FLAG_RESET) && (flag_af) == PRJ_FLAG_RESET));
 
 	if(flag_af != PRJ_FLAG_RESET)
 	{
