@@ -143,6 +143,27 @@ typedef struct
 
 } prj_i2c_transmission_t;
 
+/*!
+ * @brief i2c data request structure definition.
+ */
+typedef struct
+{
+	I2C_TypeDef* p_i2c;			 		/*!< A pointer to I2Cx peripheral to be used where x is from 1 to 3. */
+
+	uint8_t dev_address;		  		/*!< A target device address. */
+
+	uint8_t reserved1; 					/*!< For structure size alignment. */
+
+	uint16_t mem_address;		  		/*!< An internal memory address. */
+
+	uint16_t mem_address_size;		  	/*!< A size of an internal memory address. */
+
+	uint8_t reserved2; 					/*!< For structure size alignment. */
+
+	uint8_t reserved3; 					/*!< For structure size alignment. */
+
+} prj_i2c_data_request_t;
+
 //---------------------------------------------------------------------------
 // API
 //---------------------------------------------------------------------------
