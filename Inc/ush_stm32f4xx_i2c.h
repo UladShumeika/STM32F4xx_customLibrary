@@ -26,7 +26,7 @@
 //---------------------------------------------------------------------------
 
 /*!
- * @name I2C_duty_cycle_in_fast_mode
+ * @name i2c_duty_cycle_in_fast_mode
  * @{
  */
 #define PRJ_I2C_DUTYCYCLE_2                 (0x00000000U)	/*!< I2C duty cycle 2 in fast mode */
@@ -35,7 +35,7 @@
 /*! @}*/
 
 /*!
- * @name I2C_addressing_mode
+ * @name i2c_addressing_mode
  * @{
  */
 #define PRJ_I2C_ADDRESSING_MODE_7BIT        (0x00004000U)						/*!< I2C addressing mode 7-bit */
@@ -44,7 +44,7 @@
 /*! @} */
 
 /*!
- * @name I2C_dual_addressing_mode
+ * @name i2c_dual_addressing_mode
  * @{
  */
 #define PRJ_I2C_DUAL_ADDRESS_DISABLE        (0x00000000U)		/*!< I2C dual address disable */
@@ -53,7 +53,7 @@
 /*! @} */
 
 /*!
- * @name I2C_general_call_addressing_mode
+ * @name i2c_general_call_addressing_mode
  * @{
  */
 #define PRJ_I2C_GENERAL_CALL_DISABLE        (0x00000000U)	/*!< I2C general call disable */
@@ -62,11 +62,20 @@
 /*! @} */
 
 /*!
- * @name I2C_nostretch_mode
+ * @name i2c_nostretch_mode
  * @{
  */
 #define PRJ_I2C_NOSTRETCH_DISABLE          (0x00000000U)		/*!< I2C nostretch mode disable */
 #define PRJ_I2C_NOSTRETCH_ENABLE           (I2C_CR1_NOSTRETCH)	/*!< I2C nostretch mode enable */
+
+/*! @} */
+
+/*!
+ * @name i2c_memory_address_size
+ * @{
+ */
+#define PRJ_I2C_MEM_ADDRESS_SIZE_8BIT					(0x00000010U)	/*!< Memory address 8 bit */
+#define PRJ_I2C_MEM_ADDRESS_SIZE_16BIT					(0x00000001U)	/*!< Memory address 16 bit */
 
 /*! @} */
 
@@ -75,7 +84,7 @@
 //---------------------------------------------------------------------------
 
 /*!
- * @brief I2C configuration structure definition.
+ * @brief i2c configuration structure definition.
  */
 typedef struct
 {
@@ -107,7 +116,7 @@ typedef struct
 } prj_i2c_init_t;
 
 /*!
- * @brief I2C transmission structure definition.
+ * @brief i2c transmission structure definition.
  * @note  This structure is used for as sending as reception data.
  */
 typedef struct
