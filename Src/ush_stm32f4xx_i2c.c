@@ -1020,15 +1020,15 @@ static void i2c_dma_complete(void* p_controls_peripherals)
 	prj_i2c_transmission_t *i2c_tx_rx = (prj_i2c_transmission_t*)p_controls_peripherals;
 
 	/* Read SR2 register */
-	uint16_t sr2_reg = i2c_tx_rx->p_i2c->SR2;
+	uint32_t sr2_reg = i2c_tx_rx->p_i2c->SR2;
 
 	/* Disable EVT and ERR interrupts */
-	i2c_tx_rx->p_i2c->CR1 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
+	i2c_tx_rx->p_i2c->CR2 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
 
 	/* Clear complete callback */
 	i2c_tx_rx->p_dma->p_complete_callback = NULL;
 
-	if((sr2_reg & PRJ_I2C_MODE_RECEIVER) == PRJ_I2C_MODE_RECEIVER)
+	if((sr2_reg & PRJ_I2C_MODE_TRANSMITTER) != PRJ_I2C_MODE_TRANSMITTER)
 	{
 		if(i2c_tx_rx->data_size == 1U)
 		{
@@ -1058,10 +1058,7 @@ static void i2c_dma_complete(void* p_controls_peripherals)
 		i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_DMAEN;
 
 		/* Enable EVT and ERR interrupts */
-		i2c_tx_rx->p_i2c->CR1 |= (I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
-
-		/* Call I2C TX complete callback */
-		prj_i2c_tx_complete_callback(i2c_tx_rx->p_i2c);
+		i2c_tx_rx->p_i2c->CR2 |= (I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
 	}
 }
 
