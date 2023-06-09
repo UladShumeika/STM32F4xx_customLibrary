@@ -211,16 +211,28 @@ uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx);
 uint32_t prj_i2c_read_dma(prj_i2c_transmission_t* p_i2c_rx);
 
 /*!
- * @brief I2C TX/RX completed callbacks.
+ * @brief i2c tx completed callbacks.
  *
  * @note This function should not be modified, when the callback is needed,
- * 		 the prj_i2c_complete_callback could be implemented in the user file.
+ * 		 the prj_i2c_tx_complete_callback could be implemented in the user file.
  *
- * @param p_i2c		A pointer to I2Cx peripheral to be used where x is from 1 to 3.
+ * @param p_i2c		A pointer to i2c peripheral.
  *
  * @return None.
  */
-__WEAK void prj_i2c_complete_callback(I2C_TypeDef* p_i2c);
+__WEAK void prj_i2c_tx_complete_callback(I2C_TypeDef* p_i2c);
+
+/*!
+ * @brief i2c rx completed callbacks.
+ *
+ * @note This function should not be modified, when the callback is needed,
+ * 		 the prj_i2c_rx_complete_callback could be implemented in the user file.
+ *
+ * @param p_i2c		A pointer to i2c peripheral.
+ *
+ * @return None.
+ */
+__WEAK void prj_i2c_rx_complete_callback(I2C_TypeDef* p_i2c);
 
 /*!
  * @brief i2c tx/rx error callbacks.
