@@ -80,6 +80,15 @@
 
 /*! @} */
 
+/*!
+ * @name i2c_mode
+ * @{
+ */
+#define PRJ_I2C_MODE_TRANSMITTER						((uint16_t)I2C_SR2_TRA) 	/*!< Transmitter mode */
+#define PRJ_I2C_MODE_RECEIVER							(0x0000U)					/*!< Receiver mode */
+
+/*! @} */
+
 //---------------------------------------------------------------------------
 // Static functions declaration
 //---------------------------------------------------------------------------
@@ -970,30 +979,50 @@ static void i2c_dma_complete(void* p_controls_peripherals)
 	/* Convert pointer to pointer to I2C instance structure */
 	prj_i2c_transmission_t *i2c_tx_rx = (prj_i2c_transmission_t*)p_controls_peripherals;
 
+	/* Read SR2 register */
+	uint16_t sr2_reg = i2c_tx_rx->p_i2c->SR2;
+
 	/* Disable EVT and ERR interrupts */
 	i2c_tx_rx->p_i2c->CR1 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
 
-	if(i2c_tx_rx->data_size == 1U)
+	/* Clear complete callback */
+	i2c_tx_rx->p_dma->p_complete_callback = NULL;
+
+	if((sr2_reg & PRJ_I2C_MODE_RECEIVER) == PRJ_I2C_MODE_RECEIVER)
 	{
-		/* Disable Acknowledge */
-		i2c_tx_rx->p_i2c->CR1 &= ~I2C_CR1_ACK;
+		if(i2c_tx_rx->data_size == 1U)
+		{
+			/* Disable Acknowledge */
+			i2c_tx_rx->p_i2c->CR1 &= ~I2C_CR1_ACK;
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
+
+		/* Generate stop */
+		i2c_tx_rx->p_i2c->CR1 |= I2C_CR1_STOP;
+
+		/* Disable last DMA */
+		i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_LAST;
+
+		/* Disable DMA request */
+		i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_DMAEN;
+
+		/* Call I2C RX complete callback */
+		prj_i2c_rx_complete_callback(i2c_tx_rx->p_i2c);
 	}
-	else
+	else  /* For transmitter mode */
 	{
-		; /* DO NOTHING */
+		/* Disable DMA request */
+		i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_DMAEN;
+
+		/* Enable EVT and ERR interrupts */
+		i2c_tx_rx->p_i2c->CR1 |= (I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
+
+		/* Call I2C TX complete callback */
+		prj_i2c_tx_complete_callback(i2c_tx_rx->p_i2c);
 	}
-
-	/* Generate stop */
-	i2c_tx_rx->p_i2c->CR1 |= I2C_CR1_STOP;
-
-	/* Disable last DMA */
-	i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_LAST;
-
-	/* Disable DMA request */
-	i2c_tx_rx->p_i2c->CR2 &= ~I2C_CR2_DMAEN;
-
-	/* Call I2C complete callback */
-//	prj_i2c_complete_callback(i2c_tx_rx->p_i2c);
 }
 
 /*!
