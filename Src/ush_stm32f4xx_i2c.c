@@ -103,11 +103,11 @@ static void i2c_dma_error(void* p_controls_peripherals);
 //---------------------------------------------------------------------------
 
 /*!
- * @brief Initialize I2C peripherals.
+ * @brief Initialize i2c peripherals.
  *
- * This function is used to initialize I2C peripherals.
+ * This function is used to initialize i2c peripherals.
  *
- * @param[in] p_i2c_init	A pointer to I2C initialization structure.
+ * @param[in] p_i2c_init	A pointer to i2c initialization structure.
  *
  * @return @ref PRJ_STATUS_OK if I2C initialization was successful.
  * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
@@ -185,9 +185,9 @@ uint32_t prj_i2c_init(prj_i2c_init_t* p_i2c_init)
 }
 
 /*!
- * @brief Write an amount of data with DMA to a specific memory address.
+ * @brief Write an amount of data with dma to a specific memory address.
  *
- * This function is used to write an amount of data with DMA to a specific memory address.
+ * This function is used to write an amount of data with dma to a specific memory address.
  *
  * @param p_i2c_tx		A pointer to an i2c transmit structure that contains all
  * 						the necessary information to transfer data.
@@ -282,9 +282,9 @@ uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx)
 }
 
 /*!
- * @brief Read an amount of data with DMA to a specific memory address.
+ * @brief Read an amount of data with dma to a specific memory address.
  *
- * This function is used to read an amount of data with DMA to a specific memory address.
+ * This function is used to read an amount of data with dma to a specific memory address.
  *
  * @param p_i2c_rx	A pointer to an i2c reception structure that contains all
  * 							the necessary information to receive data.
@@ -408,12 +408,12 @@ __WEAK void prj_i2c_complete_callback(I2C_TypeDef* p_i2c)
 }
 
 /*!
- * @brief I2C TX/RX error callbacks.
+ * @brief i2c tx/rx error callbacks.
  *
  * @note This function should not be modified, when the callback is needed,
  * 		 the prj_i2c_error_callback could be implemented in the user file.
  *
- * @param p_i2c		A pointer to I2Cx peripheral to be used where x is from 1 to 3.
+ * @param p_i2c		A pointer to i2c peripheral to be used.
  *
  * @return None.
  */
@@ -427,12 +427,12 @@ __WEAK void prj_i2c_error_callback(I2C_TypeDef* p_i2c)
 //---------------------------------------------------------------------------
 
 /*!
- * @brief Check pclk frequency for I2C peripherals.
+ * @brief Check pclk frequency for i2c peripherals.
  *
- * This function is used to check pclk frequency for I2C peripherals.
+ * This function is used to check pclk frequency for i2c peripherals.
  *
- * @param[in] pclk1			  	PCLK1 clock frequency.
- * @param[in] i2c_clock_speed	I2C peripheral clock speed.
+ * @param[in] pclk1			  	pclk1 clock frequency.
+ * @param[in] i2c_clock_speed	i2c peripheral clock speed.
  *
  * @return @ref PRJ_STATUS_OK if PCLK1 clock frequency is within the allowable value.
  * @return @ref PRJ_STATUS_ERROR if PCLK1 clock frequency isn't within the allowable value.
@@ -468,12 +468,12 @@ static uint32_t i2c_checking_pclk_frequency(uint32_t pclk1, uint32_t i2c_clock_s
 }
 
 /*!
- * @brief Calculate rise time for I2C peripherals.
+ * @brief Calculate rise time for i2c peripherals.
  *
  * This function is used to calculate rise time.
  *
  * @param[in] freq_range		frequency range.
- * @param[in] i2c_clock_speed 	I2C peripheral clock speed.
+ * @param[in] i2c_clock_speed 	i2c peripheral clock speed.
  *
  * @return rise_time.
  */
@@ -494,13 +494,13 @@ static uint32_t i2c_calc_rise_time(uint32_t freq_range, uint32_t i2c_clock_speed
 }
 
 /*!
- * @brief Calculate the CCR (clock control register) value.
+ * @brief Calculate the ccr (clock control register) value.
  *
  * This function is used to calculate the CCR value taking into account the selected i2c speed.
  *
- * @param[in] pclk1				PCLK1 clock frequency.
- * @param[in] i2c_clock_speed	I2C peripheral clock speed.
- * @param[in] duty_cycle		I2C fast mode duty cycle.
+ * @param[in] pclk1				pclk1 clock frequency.
+ * @param[in] i2c_clock_speed	i2c peripheral clock speed.
+ * @param[in] duty_cycle		i2c fast mode duty cycle.
  *
  * @return The ccr value.
  */
@@ -546,11 +546,11 @@ static uint32_t i2c_ccr_calc(uint32_t pclk1, uint32_t i2c_clock_speed, uint32_t 
 }
 
 /*!
- * @brief Clear ADDR flag.
+ * @brief Clear addr flag.
  *
- * This function is used to clear ADDR flag.
+ * This function is used to clear addr flag.
  *
- * @param p_i2c		A pointer to I2Cx peripheral to be used where x is from 1 to 3.
+ * @param p_i2c		A pointer to i2c peripheral.
  *
  * @return None.
  */
@@ -564,12 +564,12 @@ static void i2c_clear_addr_flag(I2C_TypeDef* p_i2c)
 }
 
 /*!
- * @brief Get I2C flag.
+ * @brief Get i2c flag.
  *
- * This function is used to get I2C flag.
+ * This function is used to get i2c flag.
  *
- * @param[in] p_i2c		A pointer to p_i2c peripheral.
- * @param[in] flag		I2C flag. This parameter can be a value of @ref i2c_flags.
+ * @param[in] p_i2c		A pointer to i2c peripheral.
+ * @param[in] flag		i2c flag. This parameter can be a value of @ref i2c_flags.
  *
  * @return @ref PRJ_FLAG_SET if I2C flag set.
  * @return @ref PRJ_FLAG_RESET if I2C flag reset.
@@ -605,13 +605,13 @@ static uint32_t i2c_flag_get(I2C_TypeDef* p_i2c, uint32_t flag)
 }
 
 /*!
- * @brief Wait on reset I2C flag.
+ * @brief Wait on reset i2c flag.
  *
- * This function is used to wait on reset the specified I2C flag.
+ * This function is used to wait on reset the specified i2c flag.
  *
- * @param[in] p_i2c		A pointer to p_i2c peripheral.
- * @param[in] flag		I2C flag. This parameter can be a value of @ref i2c_flags.
- * @param[in] timeout 	Timeout for I2C flags.
+ * @param[in] p_i2c		A pointer to i2c peripheral.
+ * @param[in] flag		i2c flag. This parameter can be a value of @ref i2c_flags.
+ * @param[in] timeout 	Timeout for i2c flags.
  *
  * @return @ref PRJ_STATUS_OK if the specified flag is reset.
  * @return @ref PRJ_STATUS_TIMEOUT if the specified flag is not reset and the timeout has passed.
@@ -643,13 +643,13 @@ static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint3
 }
 
 /*!
- * @brief Wait on set I2C flag.
+ * @brief Wait on set i2c flag.
  *
- * This function is used to wait on set the specified I2C flag.
+ * This function is used to wait on set the specified i2c flag.
  *
- * @param[in] p_i2c		A pointer to p_i2c peripheral.
+ * @param[in] p_i2c		A pointer to i2c peripheral.
  * @param[in] flag		I2C flag. This parameter can be a value of @ref i2c_flags.
- * @param[in] timeout 	Timeout for I2C flags.
+ * @param[in] timeout 	Timeout for i2c flags.
  *
  * @return @ref PRJ_STATUS_OK if the specified flag is set.
  * @return @ref PRJ_STATUS_TIMEOUT if the specified flag is not set and the timeout has passed.
@@ -942,11 +942,11 @@ static uint32_t i2c_request_memory_read(prj_i2c_data_request_t* request_read)
 }
 
 /*!
- * @brief DMA I2C process complete callback.
+ * @brief dma i2c process complete callback.
  *
- * This function is used to handle the completion of receiving or transmitting data via I2C using DMA.
+ * This function is used to handle the completion of receiving or transmitting data via i2c using dma.
  *
- * @param[in] p_controls_peripherals	A pointer to an I2C structure instance.
+ * @param[in] p_controls_peripherals	A pointer to an i2c structure instance.
  *
  * @return None.
  */
@@ -982,9 +982,9 @@ static void i2c_dma_complete(void* p_controls_peripherals)
 }
 
 /*!
- * @brief DMA I2C process error callback.
+ * @brief dma i2c process error callback.
  *
- * This function is used to handle the errors of receiving or transmitting data via I2C using DMA.
+ * This function is used to handle the errors of receiving or transmitting data via i2c using dma.
  *
  * @param[in] p_controls_peripherals	A pointer to an I2C structure instance.
  *
