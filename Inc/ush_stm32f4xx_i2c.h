@@ -246,4 +246,15 @@ __WEAK void prj_i2c_rx_complete_callback(I2C_TypeDef* p_i2c);
  */
 __WEAK void prj_i2c_error_callback(I2C_TypeDef* p_i2c);
 
+/*!
+ * @brief Handle i2c ev interrupt request.
+ *
+ * This function is used to handle i2c ev interrupt request.
+ *
+ * @param[in] p_i2c		A pointer to I2Cx peripheral.
+ *
+ * @return None.
+ */
+void prj_i2c_irq_handler(I2C_TypeDef* p_i2c);
+
 #endif /* ush_stm32f4xx_i2c_h */

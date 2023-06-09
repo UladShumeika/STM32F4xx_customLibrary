@@ -446,6 +446,46 @@ __WEAK void prj_i2c_error_callback(I2C_TypeDef* p_i2c)
 	macro_prj_common_unused(p_i2c);
 }
 
+/*!
+ * @brief Handle i2c ev interrupt request.
+ *
+ * This function is used to handle i2c ev interrupt request.
+ *
+ * @param[in] p_i2c		A pointer to I2Cx peripheral.
+ *
+ * @return None.
+ */
+void prj_i2c_irq_handler(I2C_TypeDef* p_i2c)
+{
+	/* Read SR1, SR2 and CR2 registers */
+	uint32_t sr1_reg = p_i2c->SR1;
+	uint32_t sr2_reg = p_i2c->SR2;
+	uint32_t cr2_reg = p_i2c->CR2;
+
+	if((sr2_reg & PRJ_I2C_MODE_TRANSMITTER) == PRJ_I2C_MODE_TRANSMITTER)
+	{
+		if(((sr1_reg & I2C_SR1_BTF) == I2C_SR1_BTF) && ((cr2_reg & I2C_CR2_ITEVTEN) == I2C_CR2_ITEVTEN))
+		{
+			/* Disable EVT and ERR interrupts */
+			p_i2c->CR2 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
+
+			/* Generate stop */
+			p_i2c->CR1 |= I2C_CR1_STOP;
+
+			/* Call I2C RX complete callback */
+			prj_i2c_rx_complete_callback(p_i2c);
+		}
+		else
+		{
+			/* DO NOTHING */
+		}
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+}
+
 //---------------------------------------------------------------------------
 // STATIC
 //---------------------------------------------------------------------------
