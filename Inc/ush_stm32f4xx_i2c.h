@@ -211,6 +211,33 @@ uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx);
 uint32_t prj_i2c_read_dma(prj_i2c_transmission_t* p_i2c_rx);
 
 /*!
+ * @brief Check device availability on the i2c bus.
+ *
+ * This function is used to check the specified device availability several times.
+ *
+ * @param[in] p_i2c			A pointer to I2Cx peripheral.
+ * @param[in] dev_address	A target device address.
+ * @param[in] trials		Number of trials.
+ *
+ * @return @ref PRJ_STATUS_OK if the device is available.
+ * @return @ref PRJ_STATUS_ERROR if a null pointer to the peripheral is passed
+ * 		   or the device is not detected.
+ * @return @ref PRJ_STATUS_TIMEOUT if the timeout has passed.
+ */
+uint32_t prj_i2c_is_device_ready(I2C_TypeDef* p_i2c, uint16_t dev_address, uint32_t trials);
+
+/*!
+ * @brief Handle i2c ev interrupt request.
+ *
+ * This function is used to handle i2c ev interrupt request.
+ *
+ * @param[in] p_i2c		A pointer to I2Cx peripheral.
+ *
+ * @return None.
+ */
+void prj_i2c_irq_handler(I2C_TypeDef* p_i2c);
+
+/*!
  * @brief i2c tx completed callbacks.
  *
  * @note This function should not be modified, when the callback is needed,
@@ -245,16 +272,5 @@ __WEAK void prj_i2c_rx_complete_callback(I2C_TypeDef* p_i2c);
  * @return None.
  */
 __WEAK void prj_i2c_error_callback(I2C_TypeDef* p_i2c);
-
-/*!
- * @brief Handle i2c ev interrupt request.
- *
- * This function is used to handle i2c ev interrupt request.
- *
- * @param[in] p_i2c		A pointer to I2Cx peripheral.
- *
- * @return None.
- */
-void prj_i2c_irq_handler(I2C_TypeDef* p_i2c);
 
 #endif /* ush_stm32f4xx_i2c_h */

@@ -403,6 +403,142 @@ uint32_t prj_i2c_read_dma(prj_i2c_transmission_t* p_i2c_rx)
 }
 
 /*!
+ * @brief Check device availability on the i2c bus.
+ *
+ * This function is used to check the specified device availability several times.
+ *
+ * @param[in] p_i2c			A pointer to I2Cx peripheral.
+ * @param[in] dev_address	A target device address.
+ * @param[in] trials		Number of trials.
+ *
+ * @return @ref PRJ_STATUS_OK if the device is available.
+ * @return @ref PRJ_STATUS_ERROR if a null pointer to the peripheral is passed
+ * 		   or the device is not detected.
+ * @return @ref PRJ_STATUS_TIMEOUT if the timeout has passed.
+ */
+uint32_t prj_i2c_is_device_ready(I2C_TypeDef* p_i2c, uint16_t dev_address, uint32_t trials)
+{
+	uint32_t status = PRJ_STATUS_OK;
+	uint32_t i2c_trials = 0U;
+
+	/* Check the pointer */
+	if(p_i2c == NULL)
+	{
+		status = PRJ_STATUS_ERROR;
+	}
+	else
+	{
+		; /* DO NOTHING */
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Wait until BUSY flag is reset */
+		status = i2c_wait_on_reset_flags(p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_BUSY_FLAG);
+
+		/* Enable I2C peripherals if they are disabled */
+		if((p_i2c->CR1 & I2C_CR1_PE) == 0U)
+		{
+			p_i2c->CR1 |= I2C_CR1_PE;
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
+
+		/* Disable Pos */
+		p_i2c->CR1 &= ~I2C_CR1_POS;
+
+		while(i2c_trials < trials)
+		{
+			/* Generate start */
+			p_i2c->CR1 |= I2C_CR1_START;
+
+			/* Wait until SB flag is set */
+			status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_SB, PRJ_I2C_TIMEOUT_FLAG);
+
+			if(status == PRJ_STATUS_OK)
+			{
+				/* Send slave address with write request */
+				p_i2c->DR = (dev_address << 1U) & (uint8_t)(~I2C_OAR1_ADD0);
+
+				/* Wait until ADDR flag is set */
+				status = i2c_wait_on_set_flags(p_i2c, PRJ_I2C_FLAG_ADDR, PRJ_I2C_TIMEOUT_FLAG);
+
+				if(status == PRJ_STATUS_OK)
+				{
+					/* Generate stop */
+					p_i2c->CR1 |= I2C_CR1_STOP;
+
+					/* Clear ADDR flag */
+					i2c_clear_addr_flag(p_i2c);
+				}
+				else
+				{
+					/* Generate stop */
+					p_i2c->CR1 |= I2C_CR1_STOP;
+
+					/* Clear AF flag */
+					p_i2c->SR1 = ~(I2C_SR1_AF & PRJ_I2C_FLAG_MASK);
+				}
+			}
+			else
+			{
+				/* DO NOTHING */
+			}
+
+			i2c_trials++;
+		}
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+
+	return status;
+}
+
+/*!
+ * @brief Handle i2c ev interrupt request.
+ *
+ * This function is used to handle i2c ev interrupt request.
+ *
+ * @param[in] p_i2c		A pointer to I2Cx peripheral.
+ *
+ * @return None.
+ */
+void prj_i2c_irq_handler(I2C_TypeDef* p_i2c)
+{
+	/* Read SR1, SR2 and CR2 registers */
+	uint32_t sr1_reg = p_i2c->SR1;
+	uint32_t sr2_reg = p_i2c->SR2;
+	uint32_t cr2_reg = p_i2c->CR2;
+
+	if((sr2_reg & PRJ_I2C_MODE_TRANSMITTER) == PRJ_I2C_MODE_TRANSMITTER)
+	{
+		if(((sr1_reg & I2C_SR1_BTF) == I2C_SR1_BTF) && ((cr2_reg & I2C_CR2_ITEVTEN) == I2C_CR2_ITEVTEN))
+		{
+			/* Disable EVT and ERR interrupts */
+			p_i2c->CR2 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
+
+			/* Generate stop */
+			p_i2c->CR1 |= I2C_CR1_STOP;
+
+			/* Call I2C RX complete callback */
+			prj_i2c_rx_complete_callback(p_i2c);
+		}
+		else
+		{
+			/* DO NOTHING */
+		}
+	}
+	else
+	{
+		/* DO NOTHING */
+	}
+}
+
+/*!
  * @brief i2c tx completed callbacks.
  *
  * @note This function should not be modified, when the callback is needed,
@@ -445,46 +581,6 @@ __WEAK void prj_i2c_rx_complete_callback(I2C_TypeDef* p_i2c)
 __WEAK void prj_i2c_error_callback(I2C_TypeDef* p_i2c)
 {
 	macro_prj_common_unused(p_i2c);
-}
-
-/*!
- * @brief Handle i2c ev interrupt request.
- *
- * This function is used to handle i2c ev interrupt request.
- *
- * @param[in] p_i2c		A pointer to I2Cx peripheral.
- *
- * @return None.
- */
-void prj_i2c_irq_handler(I2C_TypeDef* p_i2c)
-{
-	/* Read SR1, SR2 and CR2 registers */
-	uint32_t sr1_reg = p_i2c->SR1;
-	uint32_t sr2_reg = p_i2c->SR2;
-	uint32_t cr2_reg = p_i2c->CR2;
-
-	if((sr2_reg & PRJ_I2C_MODE_TRANSMITTER) == PRJ_I2C_MODE_TRANSMITTER)
-	{
-		if(((sr1_reg & I2C_SR1_BTF) == I2C_SR1_BTF) && ((cr2_reg & I2C_CR2_ITEVTEN) == I2C_CR2_ITEVTEN))
-		{
-			/* Disable EVT and ERR interrupts */
-			p_i2c->CR2 &= ~(I2C_CR2_ITEVTEN | I2C_CR2_ITERREN);
-
-			/* Generate stop */
-			p_i2c->CR1 |= I2C_CR1_STOP;
-
-			/* Call I2C RX complete callback */
-			prj_i2c_rx_complete_callback(p_i2c);
-		}
-		else
-		{
-			/* DO NOTHING */
-		}
-	}
-	else
-	{
-		/* DO NOTHING */
-	}
 }
 
 //---------------------------------------------------------------------------
