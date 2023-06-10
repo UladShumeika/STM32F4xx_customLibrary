@@ -377,6 +377,7 @@ uint32_t prj_i2c_read_dma(prj_i2c_transmission_t* p_i2c_rx)
 		}
 		else
 		{
+			/* Disable Last */
 			p_i2c_rx->p_i2c->CR2 |= I2C_CR2_LAST;
 		}
 
@@ -712,7 +713,7 @@ static uint32_t i2c_wait_on_reset_flags(I2C_TypeDef* p_i2c, uint32_t flag, uint3
  * This function is used to wait on set the specified i2c flag.
  *
  * @param[in] p_i2c		A pointer to i2c peripheral.
- * @param[in] flag		I2C flag. This parameter can be a value of @ref i2c_flags.
+ * @param[in] flag		i2c flag. This parameter can be a value of @ref i2c_flags.
  * @param[in] timeout 	Timeout for i2c flags.
  *
  * @return @ref PRJ_STATUS_OK if the specified flag is set.
