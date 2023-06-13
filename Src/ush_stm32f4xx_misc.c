@@ -163,6 +163,24 @@ uint32_t MISC_timeoutGetTick(void)
 	return timeoutTicks;
 }
 
+/**
+ * @brief 	This function provides minimum delay (in milliseconds) based
+ *          on variable incremented.
+ * @param	delay - The delay time length, in milliseconds.
+ * @retval	None.
+ */
+void MISC_timeoutDelay(uint32_t delay)
+{
+  uint32_t start_ticks = MISC_timeoutGetTick();
+  uint32_t past_ticks = 0;
+
+  do
+  {
+	  past_ticks = MISC_timeoutGetTick() - start_ticks;
+
+  } while(past_ticks < delay);
+}
+
 //---------------------------------------------------------------------------
 // The section of NVIC
 //---------------------------------------------------------------------------
