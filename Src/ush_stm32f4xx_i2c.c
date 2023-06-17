@@ -524,8 +524,8 @@ void prj_i2c_irq_handler(I2C_TypeDef* p_i2c)
 			/* Generate stop */
 			p_i2c->CR1 |= I2C_CR1_STOP;
 
-			/* Call I2C RX complete callback */
-			prj_i2c_rx_complete_callback(p_i2c);
+			/* Call I2C TX complete callback */
+			prj_i2c_tx_complete_callback(p_i2c);
 		}
 		else
 		{
