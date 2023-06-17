@@ -514,6 +514,7 @@ void prj_i2c_irq_handler(I2C_TypeDef* p_i2c)
 	uint32_t sr2_reg = p_i2c->SR2;
 	uint32_t cr2_reg = p_i2c->CR2;
 
+	/* I2C in mode transmitter */
 	if((sr2_reg & PRJ_I2C_MODE_TRANSMITTER) == PRJ_I2C_MODE_TRANSMITTER)
 	{
 		if(((sr1_reg & I2C_SR1_BTF) == I2C_SR1_BTF) && ((cr2_reg & I2C_CR2_ITEVTEN) == I2C_CR2_ITEVTEN))
