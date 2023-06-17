@@ -280,6 +280,16 @@ uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx)
 			/* Disable I2C peripheral */
 			p_i2c_tx->p_i2c->CR1 &= ~I2C_CR1_PE;
 		}
+
+		if(status == PRJ_STATUS_OK)
+		{
+			/* Wait until BUSY flag is reset */
+			status = i2c_wait_on_reset_flags(p_i2c_tx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_FLAG);
+		}
+		else
+		{
+			; /* DO NOTHING */
+		}
 	}
 	else
 	{
@@ -396,6 +406,16 @@ uint32_t prj_i2c_read_dma(prj_i2c_transmission_t* p_i2c_rx)
 
 		/* Disable I2C peripherals */
 		p_i2c_rx->p_i2c->CR1 &= ~I2C_CR1_PE;
+	}
+
+	if(status == PRJ_STATUS_OK)
+	{
+		/* Wait until BUSY flag is reset */
+		status = i2c_wait_on_reset_flags(p_i2c_rx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_FLAG);
+	}
+	else
+	{
+		; /* DO NOTHING */
 	}
 
 	return status;
