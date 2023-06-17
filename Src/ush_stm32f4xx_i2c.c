@@ -51,7 +51,6 @@
  * @{
  */
 #define PRJ_I2C_TIMEOUT_FLAG							(35U)	/*!< 35 ms */
-#define PRJ_I2C_TIMEOUT_BUSY_FLAG						(25U)	/*!< 25 ms */
 #define PRJ_I2C_TIMEOUT_STOP_FLAG						(5U)	/*!< 5 ms */
 
 /*! @} */
@@ -225,7 +224,7 @@ uint32_t prj_i2c_write_dma(prj_i2c_transmission_t* p_i2c_tx)
 	if((p_i2c_tx->data_size != 0U) || p_i2c_tx->p_dma != NULL)
 	{
 		/* Wait until BUSY flag is reset */
-		status = i2c_wait_on_reset_flags(p_i2c_tx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_BUSY_FLAG);
+		status = i2c_wait_on_reset_flags(p_i2c_tx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_FLAG);
 
 		if(status == PRJ_STATUS_OK)
 		{
@@ -322,7 +321,7 @@ uint32_t prj_i2c_read_dma(prj_i2c_transmission_t* p_i2c_rx)
 	if(status == PRJ_STATUS_OK)
 	{
 		/* Wait until BUSY flag is reset */
-		status = i2c_wait_on_reset_flags(p_i2c_rx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_BUSY_FLAG);
+		status = i2c_wait_on_reset_flags(p_i2c_rx->p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_FLAG);
 
 		/* Enable I2C peripherals if they are disabled */
 		if((p_i2c_rx->p_i2c->CR1 & I2C_CR1_PE) == 0U)
@@ -434,7 +433,7 @@ uint32_t prj_i2c_is_device_ready(I2C_TypeDef* p_i2c, uint16_t dev_address, uint3
 	if(status == PRJ_STATUS_OK)
 	{
 		/* Wait until BUSY flag is reset */
-		status = i2c_wait_on_reset_flags(p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_BUSY_FLAG);
+		status = i2c_wait_on_reset_flags(p_i2c, PRJ_I2C_FLAG_BUSY, PRJ_I2C_TIMEOUT_FLAG);
 
 		/* Enable I2C peripherals if they are disabled */
 		if((p_i2c->CR1 & I2C_CR1_PE) == 0U)
