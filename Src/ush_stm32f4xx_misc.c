@@ -121,15 +121,15 @@ void MISC_timeoutTimerInit(void)
 	TIM14->CR1 &= ~TIM_CR1_ARPE;
 
 	// Set the Autoreload value
-	TIM14->ARR = (uint32_t)((500U) - 1U);
+	TIM14->ARR = (uint32_t)(5625U);		// 5625
 
 	// Set the Prescaler value
-	if(RCC_getFlagStatus(RCC_FLAG_HSIRDY))
+	if(RCC_getFlagStatus(RCC_FLAG_HSERDY))
 	{
-		TIM14->PSC = 16 - 1;		// HSI enabled. 16 MHz
+		TIM14->PSC = 16U - 1U;		// HSI enabled. 16 MHz
 	} else
 	{
-		TIM14->PSC = 180 - 1;		// HSE enabled and system clock is 180 MHz
+		TIM14->PSC = 90U - 1U;		// HSE enabled and system clock is 180 MHz
 	}
 
 	TIM14->EGR = TIM_EGR_UG;
@@ -161,6 +161,24 @@ void MISC_timeoutTimerIncTick(void)
 uint32_t MISC_timeoutGetTick(void)
 {
 	return timeoutTicks;
+}
+
+/**
+ * @brief 	This function provides minimum delay (in milliseconds) based
+ *          on variable incremented.
+ * @param	delay - The delay time length, in milliseconds.
+ * @retval	None.
+ */
+void MISC_timeoutDelay(uint32_t delay)
+{
+  uint32_t start_ticks = MISC_timeoutGetTick();
+  uint32_t past_ticks = 0;
+
+  do
+  {
+	  past_ticks = MISC_timeoutGetTick() - start_ticks;
+
+  } while(past_ticks < delay);
 }
 
 //---------------------------------------------------------------------------

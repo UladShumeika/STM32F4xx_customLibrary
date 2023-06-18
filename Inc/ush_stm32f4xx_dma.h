@@ -174,9 +174,28 @@
 // Typedefs and enumerations
 //---------------------------------------------------------------------------
 
-/**
-  * @brief DMA initialization structure definition
-  */
+/*!
+ * @brief DMA configuration structure definition.
+ * @note  This structure is used to configure DMA from another peripheral
+ * 		  (set data size, destination address, source address).
+ */
+typedef struct
+{
+	DMA_Stream_TypeDef* p_dma_stream;	/*!< A pointer to dma stream which will be used for data transfer */
+
+	uint32_t data_size;		 	 		/*!< Amount of data to be sent */
+
+	uint32_t destination_address;		/*!< The destination memory Buffer address */
+
+	uint32_t sourse_address;			/*!< The source memory Buffer address */
+
+	uint32_t direction;					/*!< Transfer direction.
+											 This parameter can be a value of @ref dma_data_transfer_direction */
+} prj_dma_config_t;
+
+/*!
+ * @brief DMA initialization structure definition
+ */
 typedef struct
 {
 	uint32_t channel;							/*!< A channel to be used for the specified stream.
@@ -221,9 +240,9 @@ typedef struct
 
 } prj_dma_init_t;
 
-/**
-  * @brief DMA handler structure definition
-  */
+/*!
+ * @brief DMA handler structure definition
+ */
 typedef struct
 {
 	DMA_Stream_TypeDef *p_dma_stream;						/*!< A pointer to the stream peripheral.
@@ -231,10 +250,12 @@ typedef struct
 
 	prj_dma_init_t dma_init;								/*!< DMA initialization structure. */
 
-	void *controls_peripherals;								/*!< A pointer to the peripheral structure
-																 that uses this DMA stream */
+	void *p_controls_peripherals;							/*!< A pointer to the peripheral structure
+															     that uses this DMA stream */
 
-	void (*p_complete_callback) (void*);					/*!< A pointer to complete callback function. */
+	void (*p_complete_callback) (void*);					/*!< A pointer to complete callback function */
+
+	void (*p_error_callback) (void*);						/*!< A pointer to error callback function */
 
 } prj_dma_handler_t;
 
@@ -253,6 +274,19 @@ typedef struct
  * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
  */
 uint32_t prj_dma_init(prj_dma_handler_t *p_dma);
+
+/*!
+ * @brief Configure DMA peripherals
+ *
+ * This function is used to configure DMA registers from another peripheral like I2C, SPI, UART and etc.
+ *
+ * @param[in] p_dma_config		A pointer to a configuration structure that contains all the necessary data
+ * 								to set up sending or receiving via DMA.
+ *
+ * @return @ref PRJ_STATUS_OK if DMA configuration was successful.
+ * @return @ref PRJ_STATUS_ERROR if there are problems with the input parameters.
+ */
+uint32_t prj_dma_config(prj_dma_config_t *p_dma_config);
 
 /*!
  * @brief Handle DMA interrupt request.

@@ -32,9 +32,10 @@
 #define PRJ_MISC_DRIVER				/*!< Miscellaneous module */
 #define PRJ_RCC_DRIVER				/*!< RCC module */
 #define PRJ_GPIO_DRIVER				/*!< GPIO module */
-/* #define PRJ_DMA_DRIVER  */		/*!< DMA module */
+#define PRJ_DMA_DRIVER 				/*!< DMA module */
 /* #define PRJ_SPI_DRIVER  */		/*!< SPI module */
 /* #define PRJ_UART_DRIVER */		/*!< UART module */
+#define PRJ_I2C_DRIVER				/*!< I2C module */
 #define PRJ_CAN_DRIVER				/*!< CAN module */
 
 /*! @}*/
@@ -101,6 +102,10 @@
 
 #ifdef PRJ_UART_DRIVER
 	#include "ush_stm32f4xx_uart.h"
+#endif
+
+#ifdef PRJ_I2C_DRIVER
+	#include "ush_stm32f4xx_i2c.h"
 #endif
 
 #ifdef PRJ_CAN_DRIVER
