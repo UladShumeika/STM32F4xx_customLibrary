@@ -6,6 +6,9 @@
   * @date    27 May 2023
   * @brief   Header file of I2C module.
   *
+  *	@DOTO
+  * 	- add assert param tests;
+  *
   * NOTE: This driver is not a full-fledged I2C driver, but contains only some of
   * 	  the functions were necessary at the time of development of this driver.
   * 	  However, if necessary, the function of this driver will be expanded.
