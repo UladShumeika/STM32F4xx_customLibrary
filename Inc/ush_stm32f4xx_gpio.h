@@ -6,7 +6,10 @@
   * @date    13-January-2023
   * @brief   Header file of GPIO module
   *
-  *
+  * @DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c and dma drivers;
   *
   * @Major changes v1.1
   * 	- deleted IS_GPIO_INSTANCE macro;
