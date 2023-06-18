@@ -2,19 +2,27 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_usart.h
   * @author  Ulad Shumeika
-  * @version v1.1
+  * @version v1.2
   * @date    21-February-2023
   * @brief   Header file of U(S)ART module.
   *
   * NOTE: This file is not a full-fledged U(S)ART driver, but contains only some of
   * 	  the functions that are needed for the current project.
   *
-  *
+  *	@DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c and dma drivers;
+  * 	- use only one return in functions;
+  * 	- refactor this driver (delete pin picks);
   *
   * @Major changes v1.1
   *		- USART_getDmaStream function changed and moved to "static" section;
   *		- split macro section into two sections and renamed USART enable/disable macros;
   *		- deleted IS_USART_ALL_INSTENCE macro;
+  *
+  * @Major changes v1.2
+  * 	- periphery status enumeration replaced with definitions.
   *
   ******************************************************************************
   */
@@ -201,7 +209,7 @@ void USART_init(USH_USART_initTypeDef *initStructure);
  * @param 	size - The data transfer size.
  * @return	The periphery status.
  */
-USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size);
+uint32_t USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size);
 
 /**
  * @brief	This function transmits data using DMA.
@@ -210,7 +218,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
  * @param 	size - The data transfer size.
  * @retval	The periphery status.
  */
-USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size);
+uint32_t USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size);
 
 /**
  * @brief 	This function clears U(S)ART flags.

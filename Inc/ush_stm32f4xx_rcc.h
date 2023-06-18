@@ -2,12 +2,23 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_rcc.h
   * @author  Ulad Shumeika
-  * @version v1.0
+  * @version v1.1
   * @date    21 March 2023
   * @brief   Header file of RCC module.
   *
   * NOTE: This file is not a full-fledged RCC driver, but contains only some of
   * 	  the functions that are needed for the current project.
+  *
+  * @DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c and dma drivers;
+  *
+  * @Major changes v1.1
+  *		- periphery status enumeration replaced with definitions;
+  *		- added RCC_getHCLKfreq, RCC_getPCLK1freq and RCC_getPCLK2freq functions;
+  *		- added I2C clock enable/disable;
+  *
   ******************************************************************************
   */
 
@@ -122,7 +133,7 @@ typedef enum
 	RCC_FLAG_HSERDY			= RCC_CR_HSERDY,		/* HSE clock ready flag */
 	RCC_FLAG_PLLRDY			= RCC_CR_PLLRDY,		/* PLL clock ready flag */
 
-#if defined(STM32F429)
+#if defined(STM32F429xx)
 	RCC_FLAG_PLLSAIRDY		= RCC_CR_PLLSAIRDY,		/* PLLSAI clock ready flag */
 #endif
 
@@ -267,6 +278,36 @@ typedef enum
 #define __RCC_TIM14_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_TIM14EN)
 #define __RCC_TIM14_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_TIM14RST)
 
+/*
+ * I2C1 clock enable/disable
+ */
+#define __RCC_I2C1_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C1EN)
+#define __RCC_I2C1_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C1RST)
+
+/*
+ * I2C2 clock enable/disable
+ */
+#define __RCC_I2C2_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C2EN)
+#define __RCC_I2C2_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C2RST)
+
+/*
+ * I2C3 clock enable/disable
+ */
+#define __RCC_I2C3_CLOCK_ENABLE()					(RCC->APB1ENR |= RCC_APB1ENR_I2C3EN)
+#define __RCC_I2C3_CLOCK_DISABLE()					(RCC->APB1RSTR |= RCC_APB1RSTR_I2C3RST)
+
+/*
+ * DMA1 clock enable/disable
+ */
+#define __RCC_DMA1_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN)
+#define __RCC_DMA1_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_DMA1RST)
+
+/*
+ * DMA2 clock enable/disable
+ */
+#define __RCC_DMA2_CLOCK_ENABLE()					(RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN)
+#define __RCC_DMA2_CLOCK_DISABLE()					(RCC->AHB1RSTR |= RCC_AHB1RSTR_DMA2RST)
+
 //---------------------------------------------------------------------------
 // External function prototypes
 //---------------------------------------------------------------------------
@@ -275,7 +316,7 @@ typedef enum
  * @brief 	This function initializes HSE oscillator.
  * @retval	The periphery status.
  */
-USH_peripheryStatus RCC_initHSE(void);
+uint32_t RCC_initHSE(void);
 
 /**
  * @brief 	This function initializes PLL.
@@ -283,7 +324,7 @@ USH_peripheryStatus RCC_initHSE(void);
  * 							information for PLL.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
+uint32_t RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
 
 /**
  * @brief 	This function configures SYSCLK, HCLK and PCLKs.
@@ -291,7 +332,7 @@ USH_peripheryStatus RCC_initPLL(USH_RCC_PLL_settingsTypeDef *initStructure);
  * 							information for SYSCLK, HCLK and PCLKs.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure);
+uint32_t RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure);
 
 /**
  * @brief 	This function returns flags status.
@@ -299,5 +340,23 @@ USH_peripheryStatus RCC_initClocks(USH_RCC_clocksInitTypeDef *initStructure);
  * @retval	Flags status.
  */
 FlagStatus RCC_getFlagStatus(USH_RCC_flags flags);
+
+/**
+  * @brief  This function is used to return the HCLK frequency.
+  * @retval HCLK frequency.
+  */
+uint32_t RCC_getHCLKfreq(void);
+
+/**
+  * @brief  This function is used to return the PCLK1 frequency.
+  * @retval PCLK1 frequency.
+  */
+uint32_t RCC_getPCLK1freq(void);
+
+/**
+  * @brief  This function is used to return the PCLK2 frequency.
+  * @retval PCLK2 frequency.
+  */
+uint32_t RCC_getPCLK2freq(void);
 
 #endif /* __USH_STM32F4XX_MISC_H */

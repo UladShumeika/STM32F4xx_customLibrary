@@ -2,17 +2,24 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_gpio.h
   * @author  Ulad Shumeika
-  * @version v1.1
+  * @version v1.2
   * @date    13-January-2023
   * @brief   Header file of GPIO module
   *
-  *
+  * @DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c and dma drivers;
   *
   * @Major changes v1.1
-  * 	- delete IS_GPIO_INSTANCE macro;
+  * 	- deleted IS_GPIO_INSTANCE macro;
   * 	- replaced warnings with TO_DO for module features;
   *		- added alternative functions for CAN1/CAN2;
-  *		- GPIO_init function has been changed to take into account the use of flag strategy;
+  *		- GPIO_init function has been changed to take into account the use of flag strategy.
+  *
+  *	@Major changes v1.2
+  *		- periphery status enumeration replaced with definitions;
+  *		- added alternative functions for I2C1, I2C2 and I2C3;
   *
   ******************************************************************************
   */
@@ -95,6 +102,10 @@ typedef enum
  */
 typedef enum
 {
+	GPIO_AF4_I2C1 		= 0x04UL,		/* I2C1 alternate function mapping */
+	GPIO_AF4_I2C2 		= 0x04UL,		/* I2C2 alternate function mapping */
+	GPIO_AF4_I2C3 		= 0x04UL,		/* I2C3 alternate function mapping */
+
 	GPIO_AF5_SPI1 		= 0x05UL,		/* SPI1/I2S1 alternate function mapping */
 	GPIO_AF5_SPI2 		= 0x05UL,		/* SPI2/I2S2 alternate function mapping */
 	GPIO_AF5_SPI4 		= 0x05UL,		/* SPI4/I2S4 alternate function mapping */
@@ -200,7 +211,7 @@ typedef enum
  * 						    for the specified GPIO peripheral.
  * @retval	The periphery status.
  */
-USH_peripheryStatus GPIO_init(USH_GPIO_initTypeDef *initStructure);
+uint32_t GPIO_init(USH_GPIO_initTypeDef *initStructure);
 
 /**
  * @brief	This function sets or clears the selected data port bits.

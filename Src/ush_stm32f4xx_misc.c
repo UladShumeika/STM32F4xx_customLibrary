@@ -14,6 +14,7 @@
 // Includes
 //---------------------------------------------------------------------------
 #include "ush_stm32f4xx_misc.h"
+#include "ush_stm32f4xx_conf.h"
 #include <stdio.h>
 
 //---------------------------------------------------------------------------
@@ -51,7 +52,7 @@ void MISC_PWR_mainRegulatorModeConfig(USH_PWR_voltageScaling voltageScaling)
 	uint32_t tempReg = 0;
 
 	// Check parameters
-	assert_param(IS_MISC_PWR_VOLTAGE_SCALING(voltageScaling));
+	macro_prj_assert_param(IS_MISC_PWR_VOLTAGE_SCALING(voltageScaling));
 
 	// Enable power interface clock
 	__RCC_PWR_CLOCK_ENABLE();
@@ -78,7 +79,7 @@ FlagStatus MISC_PWR_getFlagStatus(USH_PWR_flags flags)
 	FlagStatus status = RESET;
 
 	// check parameters
-	assert_param(IS_MISC_PWR_FLAGS(flags));
+	macro_prj_assert_param(IS_MISC_PWR_FLAGS(flags));
 
 	// Read PWR->CR register
 	statusReg = PWR->CR;
@@ -120,15 +121,15 @@ void MISC_timeoutTimerInit(void)
 	TIM14->CR1 &= ~TIM_CR1_ARPE;
 
 	// Set the Autoreload value
-	TIM14->ARR = (uint32_t)((500U) - 1U);
+	TIM14->ARR = (uint32_t)(5625U);		// 5625
 
 	// Set the Prescaler value
-	if(RCC_getFlagStatus(RCC_FLAG_HSIRDY))
+	if(RCC_getFlagStatus(RCC_FLAG_HSERDY))
 	{
-		TIM14->PSC = 16 - 1;		// HSI enabled. 16 MHz
+		TIM14->PSC = 16U - 1U;		// HSI enabled. 16 MHz
 	} else
 	{
-		TIM14->PSC = 180 - 1;		// HSE enabled and system clock is 180 MHz
+		TIM14->PSC = 90U - 1U;		// HSE enabled and system clock is 180 MHz
 	}
 
 	TIM14->EGR = TIM_EGR_UG;
@@ -162,6 +163,24 @@ uint32_t MISC_timeoutGetTick(void)
 	return timeoutTicks;
 }
 
+/**
+ * @brief 	This function provides minimum delay (in milliseconds) based
+ *          on variable incremented.
+ * @param	delay - The delay time length, in milliseconds.
+ * @retval	None.
+ */
+void MISC_timeoutDelay(uint32_t delay)
+{
+  uint32_t start_ticks = MISC_timeoutGetTick();
+  uint32_t past_ticks = 0;
+
+  do
+  {
+	  past_ticks = MISC_timeoutGetTick() - start_ticks;
+
+  } while(past_ticks < delay);
+}
+
 //---------------------------------------------------------------------------
 // The section of NVIC
 //---------------------------------------------------------------------------
@@ -177,7 +196,7 @@ uint32_t MISC_timeoutGetTick(void)
 void MISC_NVIC_setPriorityGrouping(USH_NVIC_priorityGroup priorityGroup)
 {
 	// Check the parameters
-	assert_param(IS_MISC_NVIC_PRIORITY_GROUP(priorityGroup));
+	macro_prj_assert_param(IS_MISC_NVIC_PRIORITY_GROUP(priorityGroup));
 
 	// Set the PRIGROUP[10:8] bits according to the PriorityGroup parameter value
 	NVIC_SetPriorityGrouping(priorityGroup);
@@ -201,9 +220,9 @@ void MISC_NVIC_setPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t su
   uint32_t prioritygroup = 0x00U;
 
   // Check the parameters
-  assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));
-  assert_param(IS_MISC_NVIC_SUB_PRIORITY(subPriority));
-  assert_param(IS_MISC_NVIC_PREEMPTION_PRIORITY(preemptPriority));
+  macro_prj_assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));
+  macro_prj_assert_param(IS_MISC_NVIC_SUB_PRIORITY(subPriority));
+  macro_prj_assert_param(IS_MISC_NVIC_PREEMPTION_PRIORITY(preemptPriority));
 
   prioritygroup = NVIC_GetPriorityGrouping();
 
@@ -222,7 +241,7 @@ void MISC_NVIC_setPriority(IRQn_Type IRQn, uint32_t preemptPriority, uint32_t su
 void MISC_NVIC_enableIRQ(IRQn_Type IRQn)
 {
 	// Check the parameters
-	assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));
+	macro_prj_assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));
 
 	// Enable interrupt
 	NVIC_EnableIRQ(IRQn);
@@ -238,7 +257,7 @@ void MISC_NVIC_enableIRQ(IRQn_Type IRQn)
 void MISC_NVIC_disableIRQ(IRQn_Type IRQn)
 {
   // Check the parameters
-  assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));
+  macro_prj_assert_param(IS_MISC_NVIC_DEVICE_IRQ(IRQn));
 
   // Disable interrupt
   NVIC_DisableIRQ(IRQn);
@@ -257,7 +276,7 @@ void MISC_NVIC_disableIRQ(IRQn_Type IRQn)
 void MISC_FLASH_prefetchBufferCmd(FunctionalState newState)
 {
   // Check the parameters
-  assert_param(IS_FUNCTIONAL_STATE(newState));
+  macro_prj_assert_param(IS_FUNCTIONAL_STATE(newState));
 
   // Enable or disable the prefetch buffer
   if(newState != DISABLE)
@@ -279,7 +298,7 @@ void MISC_FLASH_prefetchBufferCmd(FunctionalState newState)
 void MISC_FLASH_instructionCacheCmd(FunctionalState newState)
 {
   // Check the parameters
-  assert_param(IS_FUNCTIONAL_STATE(newState));
+  macro_prj_assert_param(IS_FUNCTIONAL_STATE(newState));
 
   if(newState != DISABLE)
   {
@@ -300,7 +319,7 @@ void MISC_FLASH_instructionCacheCmd(FunctionalState newState)
 void MISC_FLASH_dataCacheCmd(FunctionalState newState)
 {
   // Check the parameters
-  assert_param(IS_FUNCTIONAL_STATE(newState));
+  macro_prj_assert_param(IS_FUNCTIONAL_STATE(newState));
 
   if(newState != DISABLE)
   {
@@ -328,7 +347,7 @@ void MISC_FLASH_dataCacheCmd(FunctionalState newState)
 void MISC_FLASH_setLatency(USH_FLASH_latency flashLatency)
 {
   // Check the parameters
-  assert_param(IS_MISC_FLASH_LATENCY(flashLatency));
+  macro_prj_assert_param(IS_MISC_FLASH_LATENCY(flashLatency));
 
   // Perform Byte access to FLASH_ACR[8:0] to set the Latency value
   *(__IO uint8_t *)FLASH_ACR_BYTE0_ADDRESS = (uint8_t)flashLatency;
@@ -337,16 +356,20 @@ void MISC_FLASH_setLatency(USH_FLASH_latency flashLatency)
 //---------------------------------------------------------------------------
 // Function's parameters check.
 //---------------------------------------------------------------------------
+
 #ifdef USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
+
+/*!
+ * @brief  Reports the name of the source file and the source line number
+ *         where the macro_prj_assert_param error has occurred.
+ *
+ * @param[in] file 		pointer to the source file name
+ * @param[in] line 		macro_prj_assert_param error line source number
+ * @return None.
+ */
+void prj_misc_assert_failed(uint8_t* file, uint32_t line)
 {
 	printf("Wrong parameters value: file %s on line %ld\r\n", file, line);
 }
-#endif /* USE_FULL_ASSERT */
+
+#endif

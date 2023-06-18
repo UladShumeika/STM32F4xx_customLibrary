@@ -14,9 +14,9 @@
 //---------------------------------------------------------------------------
 // Includes
 //---------------------------------------------------------------------------
-#include "ush_stm32f4xx_gpio.h"
-#include "ush_stm32f4xx_dma.h"
 #include "ush_stm32f4xx_uart.h"
+#include "ush_stm32f4xx_conf.h"
+#include "ush_stm32f4xx_dma.h"
 #include <stddef.h>
 
 //---------------------------------------------------------------------------
@@ -41,8 +41,8 @@
 //---------------------------------------------------------------------------
 // Private variables
 //---------------------------------------------------------------------------
-USH_DMA_initTypeDef initDMA_txStructure = {0};
-USH_DMA_initTypeDef initDMA_rxStructure = {0};
+//USH_DMA_initTypeDef initDMA_txStructure = {0};
+//USH_DMA_initTypeDef initDMA_rxStructure = {0};
 
 //---------------------------------------------------------------------------
 // Static function prototypes
@@ -77,10 +77,10 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	uint32_t pclk = 0;
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(initStructure->USARTx));
-	assert_param(IS_USART_PINSPACK(initStructure->PinsPack));
-	assert_param(IS_USART_BAUDRATE(initStructure->BaudRate));
-	assert_param(IS_USART_MODE(initStructure->Mode));
+	macro_prj_assert_param(IS_UART_INSTANCE(initStructure->USARTx));
+	macro_prj_assert_param(IS_USART_PINSPACK(initStructure->PinsPack));
+	macro_prj_assert_param(IS_USART_BAUDRATE(initStructure->BaudRate));
+	macro_prj_assert_param(IS_USART_MODE(initStructure->Mode));
 
 	/* ----------------------- GPIO configuration -------------------------- */
 
@@ -162,17 +162,17 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 			MISC_NVIC_setPriority(DMA2_Stream7_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
 			MISC_NVIC_enableIRQ(DMA2_Stream7_IRQn);
 
-			initDMA_txStructure.DMAy_Streamx  			= DMA2_Stream7;
-			initDMA_txStructure.Channel 				= DMA_CHANNEL_4;
-			initDMA_txStructure.Direction 				= DMA_MEMORY_TO_PERIPH;
-			initDMA_txStructure.PeriphInc 				= DMA_PINC_DISABLE;
-			initDMA_txStructure.MemInc 			  		= DMA_MINC_ENABLE;
-			initDMA_txStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
-			initDMA_txStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
-			initDMA_txStructure.Mode 				 	= DMA_NORMAL_MODE;
-			initDMA_txStructure.Priority 			 	= DMA_PRIORITY_LOW;
-			initDMA_txStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
-			DMA_init(&initDMA_txStructure);
+//			initDMA_txStructure.DMAy_Streamx  			= DMA2_Stream7;
+//			initDMA_txStructure.Channel 				= DMA_CHANNEL_4;
+//			initDMA_txStructure.Direction 				= DMA_MEMORY_TO_PERIPH;
+//			initDMA_txStructure.PeriphInc 				= DMA_PINC_DISABLE;
+//			initDMA_txStructure.MemInc 			  		= DMA_MINC_ENABLE;
+//			initDMA_txStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
+//			initDMA_txStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
+//			initDMA_txStructure.Mode 				 	= DMA_NORMAL_MODE;
+//			initDMA_txStructure.Priority 			 	= DMA_PRIORITY_LOW;
+//			initDMA_txStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
+//			DMA_init(&initDMA_txStructure);
 		}
 
 		// Check RX or TX/RX mode
@@ -182,17 +182,17 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 			MISC_NVIC_setPriority(DMA2_Stream2_IRQn, PREEMPTION_PRIORITY_TX, SUBPRIORITY_TX);
 			MISC_NVIC_enableIRQ(DMA2_Stream2_IRQn);
 
-			initDMA_rxStructure.DMAy_Streamx			= DMA2_Stream2;
-			initDMA_rxStructure.Channel 				= DMA_CHANNEL_4;
-			initDMA_rxStructure.Direction 				= DMA_PERIPH_TO_MEMORY;
-			initDMA_rxStructure.PeriphInc 				= DMA_PINC_DISABLE;
-			initDMA_rxStructure.MemInc 			  		= DMA_MINC_ENABLE;
-			initDMA_rxStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
-			initDMA_rxStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
-			initDMA_rxStructure.Mode 				 	= DMA_CIRCULAR_MODE;
-			initDMA_rxStructure.Priority 			 	= DMA_PRIORITY_LOW;
-			initDMA_rxStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
-			DMA_init(&initDMA_rxStructure);
+//			initDMA_rxStructure.DMAy_Streamx			= DMA2_Stream2;
+//			initDMA_rxStructure.Channel 				= DMA_CHANNEL_4;
+//			initDMA_rxStructure.Direction 				= DMA_PERIPH_TO_MEMORY;
+//			initDMA_rxStructure.PeriphInc 				= DMA_PINC_DISABLE;
+//			initDMA_rxStructure.MemInc 			  		= DMA_MINC_ENABLE;
+//			initDMA_rxStructure.PeriphDataAlignment 	= DMA_PERIPH_SIZE_BYTE;
+//			initDMA_rxStructure.MemDataAlignment    	= DMA_MEMORY_SIZE_BYTE;
+//			initDMA_rxStructure.Mode 				 	= DMA_CIRCULAR_MODE;
+//			initDMA_rxStructure.Priority 			 	= DMA_PRIORITY_LOW;
+//			initDMA_rxStructure.FIFOMode 			 	= DMA_FIFO_MODE_DISABLE;
+//			DMA_init(&initDMA_rxStructure);
 		}
 	}
 		//TODO There are only DMA settings for USART1
@@ -200,7 +200,7 @@ void USART_init(USH_USART_initTypeDef *initStructure)
 	/* ----------------------- USART configuration ------------------------- */
 
 	// Check parameters
-	assert_param(IS_UART_BAUDRATE(initStructure->BaudRate));
+	macro_prj_assert_param(IS_UART_BAUDRATE(initStructure->BaudRate));
 
 	// Oversampling by 16, 8 data bits, parity control disabled, multiprocessor communication disabled
 	if(initStructure->Mode == USART_MODE_RX_TX)
@@ -254,20 +254,20 @@ void USART_init(USH_USART_initTypeDef *initStructure)
  * @param 	size - The data transfer size.
  * @return	The periphery status.
  */
-USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
+uint32_t USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
 {
 	uint32_t startTicks = MISC_timeoutGetTick();
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_MESSAGE_SIZE(size));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_MESSAGE_SIZE(size));
 
 	if(!(usart->SR & USART_SR_TC))
 	{
 		// Check timeout
 		if((MISC_timeoutGetTick() - startTicks) > TIMEOUT)
 		{
-			return STATUS_TIMEOUT;
+			return PRJ_STATUS_TIMEOUT;
 		}
 	}
 
@@ -280,7 +280,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
 	DMA_Stream->M0AR = (uint32_t)data;			// Set memory address
 
 	// Clear interrupt flags
-	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
+//	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
 
 	// Enable DMA interrupts
 	DMA_Stream->CR |= DMA_SxCR_TCIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE;
@@ -288,7 +288,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
 	USART_clearFlags(usart, USART_FLAG_ORE);
 
 	// Enable DMA stream
-	DMA_state(DMA_Stream, ENABLE);
+//	DMA_state(DMA_Stream, ENABLE);
 
 	// Enable U(S)ART RX DMA
 	usart->CR3 |= USART_CR3_DMAR;
@@ -298,7 +298,7 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
 	// Enable IDLE interrupt
 	usart->CR1 |= USART_CR1_IDLEIE;
 
-	return STATUS_OK;
+	return PRJ_STATUS_OK;
 }
 
 /**
@@ -308,20 +308,20 @@ USH_peripheryStatus USART_receiveToIdleDMA(USART_TypeDef* usart, uint8_t* data, 
  * @param 	size - The data transfer size.
  * @retval	The periphery status.
  */
-USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
+uint32_t USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint16_t size)
 {
 	uint32_t startTicks = MISC_timeoutGetTick();
 
 	// check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_MESSAGE_SIZE(size));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_MESSAGE_SIZE(size));
 
 	if(!(usart->SR & USART_SR_TC))
 	{
 		// Check timeout
 		if((MISC_timeoutGetTick() - startTicks) > TIMEOUT)
 		{
-			return STATUS_TIMEOUT;
+			return PRJ_STATUS_TIMEOUT;
 		}
 	}
 
@@ -334,13 +334,13 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
 	DMA_Stream->M0AR = (uint32_t)data;			// Set memory address
 
 	// Clear interrupt flags
-	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
+//	DMA_clearFlags(DMA_Stream, DMA_FLAG_ALL);
 
 	// Enable interrupts
 	DMA_Stream->CR |= DMA_SxCR_TCIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE;
 
 	// Enable DMA stream
-	DMA_state(DMA_Stream, ENABLE);
+//	DMA_state(DMA_Stream, ENABLE);
 
 	// Clear transmission complete flag
 	USART_clearFlags(usart, USART_FLAG_TC);
@@ -348,7 +348,7 @@ USH_peripheryStatus USART_transmitDMA(USART_TypeDef* usart, uint8_t* data, uint1
 	// Enable U(S)ART TX DMA
 	usart->CR3 |= USART_CR3_DMAT;
 
-	return STATUS_OK;
+	return PRJ_STATUS_OK;
 }
 
 /**
@@ -362,8 +362,8 @@ void USART_clearFlags(USART_TypeDef* usart, USH_USART_flags flags)
 	uint16_t temp = 0;
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_CLEAR_FLAGS(flags));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_CLEAR_FLAGS(flags));
 
 	if((flags == USART_FLAG_TXE) || (flags < USART_FLAG_RXNE))
 	{
@@ -468,8 +468,8 @@ static DMA_Stream_TypeDef* USART_getDmaStream(USART_TypeDef* usart, USH_USART_mo
 	DMA_Stream_TypeDef* DMA_Stream;
 
 	// Check parameters
-	assert_param(IS_UART_INSTANCE(usart));
-	assert_param(IS_USART_MODE(mode));
+	macro_prj_assert_param(IS_UART_INSTANCE(usart));
+	macro_prj_assert_param(IS_USART_MODE(mode));
 
 	if(mode == USART_MODE_RX_TX) mode = USART_MODE_TX;
 

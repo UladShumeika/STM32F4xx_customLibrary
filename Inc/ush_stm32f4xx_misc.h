@@ -2,16 +2,23 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_misc.h
   * @author  Ulad Shumeika
-  * @version v1.1
+  * @version v1.2
   * @date    27-February-2023
   * @brief   Header file of miscellaneous module.
   *
-  *
+  *	@DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c driver;
+  * 	- divide the module into two parts (flash and misc);
   *
   *	@Major changes v1.1
   *		- added the ability to configure a preemption priority group;
   *		- added PWR section for stm32f407 and stm32f429;
-  *   	- redisigned MISC_timeoutTimerInit function;
+  *   	- redesigned MISC_timeoutTimerInit function;
+  *
+  * @Major changes v1.2
+  *   	- added assert macro and assert function;
   *
   ******************************************************************************
   */
@@ -140,6 +147,13 @@ typedef enum
 //---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
+
+#ifdef USE_FULL_ASSERT
+	#define macro_prj_assert_param(expr) 			((expr) ? (void)0 : prj_misc_assert_failed((uint8_t *)__FILE__, __LINE__))
+#else
+	#define macro_prj_assert_param(expr) 			((void)0)
+#endif
+
 #define IS_MISC_PWR_FLAGS(FLAG)						   (((FLAG) == PWR_FLAG_ODSWRDY) || \
 														((FLAG) == PWR_FLAG_ODRDY))
 
@@ -248,6 +262,14 @@ void MISC_timeoutTimerIncTick(void);
  */
 uint32_t MISC_timeoutGetTick(void);
 
+/**
+ * @brief 	This function provides minimum delay (in milliseconds) based
+ *          on variable incremented.
+ * @param	delay - The delay time length, in milliseconds.
+ * @retval	None.
+ */
+void MISC_timeoutDelay(uint32_t delay);
+
 //---------------------------------------------------------------------------
 // The section of NVIC
 //---------------------------------------------------------------------------
@@ -339,5 +361,19 @@ void MISC_FLASH_dataCacheCmd(FunctionalState newState);
   * @retval None
   */
 void MISC_FLASH_setLatency(USH_FLASH_latency flashLatency);
+
+#ifdef USE_FULL_ASSERT
+
+/*!
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ *
+ *  @param[in] file 		pointer to the source file name
+  * @param[in] line 		macro_prj_assert_param error line source number
+  * @return None.
+ */
+void prj_misc_assert_failed(uint8_t* file, uint32_t line);
+
+#endif
 
 #endif /* __USH_STM32F4XX_MISC_H */

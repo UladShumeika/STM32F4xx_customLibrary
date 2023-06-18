@@ -15,6 +15,7 @@
 // Includes
 //---------------------------------------------------------------------------
 #include "ush_stm32f4xx_can.h"
+#include "ush_stm32f4xx_conf.h"
 
 //---------------------------------------------------------------------------
 // Defines
@@ -33,30 +34,30 @@
  * 							information for the specified CAN peripheral.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
+uint32_t CAN_init(USH_CAN_settingsTypeDef* initStructure)
 {
 	USH_GPIO_initTypeDef initGpioStructure = {0};
 
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 	uint32_t ticksStart = 0;
 
 	// Check parameters
-	if(initStructure == 0) status = STATUS_ERROR;
+	if(initStructure == 0) status = PRJ_STATUS_ERROR;
 
-	if(status == STATUS_OK)
+	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
-		assert_param(IS_CAN_ALL_INSTANCE(initStructure->CANx));
-		assert_param(IS_CAN_BAUDRATE_PRESCALER(initStructure->Timings->BaudratePrescaler));
-		assert_param(IS_CAN_TS1(initStructure->Timings->TimeSegment1));
-		assert_param(IS_CAN_TS2(initStructure->Timings->TimeSegment2));
-		assert_param(IS_CAN_SJW(initStructure->Timings->ResynchJumpWidth));
-		assert_param(IS_CAN_MODE(initStructure->Mode));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoBusOff));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoWakeUp));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoRetransmission));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->ReceiveFifoLocked));
-		assert_param(IS_FUNCTIONAL_STATE(initStructure->TransmitFifoPriority));
+		macro_prj_assert_param(IS_CAN_ALL_INSTANCE(initStructure->CANx));
+		macro_prj_assert_param(IS_CAN_BAUDRATE_PRESCALER(initStructure->Timings.BaudratePrescaler));
+		macro_prj_assert_param(IS_CAN_TS1(initStructure->Timings.TimeSegment1));
+		macro_prj_assert_param(IS_CAN_TS2(initStructure->Timings.TimeSegment2));
+		macro_prj_assert_param(IS_CAN_SJW(initStructure->Timings.ResynchJumpWidth));
+		macro_prj_assert_param(IS_CAN_MODE(initStructure->Mode));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoBusOff));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoWakeUp));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->AutoRetransmission));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->ReceiveFifoLocked));
+		macro_prj_assert_param(IS_FUNCTIONAL_STATE(initStructure->TransmitFifoPriority));
 
 		/* -------------------------- GPIO configuration -------------------------- */
 
@@ -93,14 +94,14 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 
 		/* -------------------------- CAN interrupts configuration ---------------- */
 
-		if(status == STATUS_OK)
+		if(status == PRJ_STATUS_OK)
 		{
 			CAN_initGlobalInterrupts();
 		}
 
 		/* -------------------------- CAN configuration --------------------------- */
 
-		if(status == STATUS_OK)
+		if(status == PRJ_STATUS_OK)
 		{
 			// Enable CAN1/CAN2 clock
 			__RCC_CAN1_CLOCK_ENABLE();
@@ -115,7 +116,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			{
 				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
 				{
-					status = STATUS_TIMEOUT;
+					status = PRJ_STATUS_TIMEOUT;
 					break;
 				}
 			}
@@ -129,7 +130,7 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
 			{
 				if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
 				{
-					status = STATUS_TIMEOUT;
+					status = PRJ_STATUS_TIMEOUT;
 					break;
 				}
 			}
@@ -203,9 +204,9 @@ USH_peripheryStatus CAN_init(USH_CAN_settingsTypeDef* initStructure)
  * @param 	initFilterStructure - A pointer to a USH_CAN_filterTypeDef structure.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
+uint32_t CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* initFilterStructure)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 	CAN_TypeDef *can_ip = can;
 
 	uint32_t filterNumberBitPos = 0;
@@ -213,22 +214,22 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
 	if(can_ip == CAN2) can_ip = CAN1;
 
 	// Check parameters
-	if(initFilterStructure == 0) status = STATUS_ERROR;
+	if(initFilterStructure == 0) status = PRJ_STATUS_ERROR;
 
-	if(status == STATUS_OK)
+	if(status == PRJ_STATUS_OK)
 	{
 		// Check parameters
-		assert_param(IS_CAN_ALL_INSTANCE(can));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdHigh));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdLow));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdHigh));
-		assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdLow));
-		assert_param(IS_CAN_FILTER_FIFO(initFilterStructure->FilterFIFOAssignment));
-		assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->FilterBank));
-		assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->SlaveStartFilterBank));
-		assert_param(IS_CAN_FILTER_MODE(initFilterStructure->FilterMode));
-		assert_param(IS_CAN_FILTER_SCALE(initFilterStructure->FilterScale));
-		assert_param(IS_CAN_FILTER_ACTIVATION(initFilterStructure->FilterActivation));
+		macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdHigh));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterIdLow));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdHigh));
+		macro_prj_assert_param(IS_CAN_FILTER_ID_HALFWORD(initFilterStructure->FilterMaskIdLow));
+		macro_prj_assert_param(IS_CAN_FILTER_FIFO(initFilterStructure->FilterFIFOAssignment));
+		macro_prj_assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->FilterBank));
+		macro_prj_assert_param(IS_CAN_FILTER_BANK_DUAL(initFilterStructure->SlaveStartFilterBank));
+		macro_prj_assert_param(IS_CAN_FILTER_MODE(initFilterStructure->FilterMode));
+		macro_prj_assert_param(IS_CAN_FILTER_SCALE(initFilterStructure->FilterScale));
+		macro_prj_assert_param(IS_CAN_FILTER_ACTIVATION(initFilterStructure->FilterActivation));
 
 		// Enable initialization mode for the filter
 		can_ip->FMR |= CAN_FMR_FINIT;
@@ -319,13 +320,13 @@ USH_peripheryStatus CAN_filtersConfig(CAN_TypeDef* can, USH_CAN_filterTypeDef* i
  * @param 	can - A pointer to CAN peripheral to be used where x is 1 or 2.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_enable(CAN_TypeDef* can)
+uint32_t CAN_enable(CAN_TypeDef* can)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 	uint32_t ticksStart = 0;
 
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
 
 	// Request leave initialization
 	can->MCR &= ~CAN_MCR_INRQ;
@@ -336,7 +337,7 @@ USH_peripheryStatus CAN_enable(CAN_TypeDef* can)
 	{
 		if((MISC_timeoutGetTick() - ticksStart) > CAN_TIMEOUT_VALUE)
 		{
-			status = STATUS_TIMEOUT;
+			status = PRJ_STATUS_TIMEOUT;
 			break;
 		}
 	}
@@ -363,26 +364,26 @@ __WEAK void CAN_initGlobalInterrupts(void)
  * @param 	pData - A pointer to an array containing the payload of the Tx frame.
  * @retval	The peripheral status.
  */
-USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* pHeader, uint8_t* pData)
+uint32_t CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* pHeader, uint8_t* pData)
 {
-	USH_peripheryStatus status = STATUS_OK;
+	uint32_t status = PRJ_STATUS_OK;
 
 	uint32_t tsrReg = can->TSR;
 	uint32_t transmitMailbox = 0;
 
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_IDTYPE(pHeader->IDE));
-	assert_param(IS_CAN_RTR(pHeader->RTR));
-	assert_param(IS_CAN_DLC(pHeader->DLC));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_IDTYPE(pHeader->IDE));
+	macro_prj_assert_param(IS_CAN_RTR(pHeader->RTR));
+	macro_prj_assert_param(IS_CAN_DLC(pHeader->DLC));
 
 	if(pHeader->IDE == CAN_ID_STD)
 	{
-		assert_param(IS_CAN_STDID(pHeader->StdId));
+		macro_prj_assert_param(IS_CAN_STDID(pHeader->StdId));
 	}
 	else
 	{
-		assert_param(IS_CAN_EXTID(pHeader->ExtId));
+		macro_prj_assert_param(IS_CAN_EXTID(pHeader->ExtId));
 	}
 
 	// Check that all the Tx mailboxes are not full
@@ -392,7 +393,7 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* 
 		transmitMailbox = (tsrReg & CAN_TSR_CODE) >> CAN_TSR_CODE_Pos;
 
 		// Check transmit mailbox value
-		if(transmitMailbox > 2) status = STATUS_ERROR;
+		if(transmitMailbox > 2) status = PRJ_STATUS_ERROR;
 
 		// Set up the ID
 		if(pHeader->IDE == CAN_ID_STD)
@@ -435,8 +436,8 @@ USH_peripheryStatus CAN_addTxMessage(CAN_TypeDef* can, USH_CAN_txHeaderTypeDef* 
 void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, USH_CAN_rxHeaderTypeDef* pHeader, uint8_t* pData)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_FILTER_FIFO(rxFifo));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_FILTER_FIFO(rxFifo));
 
 	// Get the frame information
 	pHeader->IDE = can->sFIFOMailBox[rxFifo].RIR & CAN_RI0R_IDE;
@@ -482,8 +483,8 @@ void CAN_getRxMessage(CAN_TypeDef* can, USH_CAN_filterFIFO rxFifo, USH_CAN_rxHea
 void CAN_interruptEnable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_INTERRUPT(interrupt));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_INTERRUPT(interrupt));
 
 	uint32_t ierReg = can->IER;
 
@@ -500,8 +501,8 @@ void CAN_interruptEnable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 void CAN_interruptDisable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
-	assert_param(IS_CAN_INTERRUPT(interrupt));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_INTERRUPT(interrupt));
 
 	uint32_t ierReg = can->IER;
 
@@ -518,7 +519,7 @@ void CAN_interruptDisable(CAN_TypeDef* can, USH_CAN_interrupts interrupt)
 void CAN_clearFlag(CAN_TypeDef* can, uint32_t flag)
 {
 	// Check parameters
-	assert_param(IS_CAN_ALL_INSTANCE(can));
+	macro_prj_assert_param(IS_CAN_ALL_INSTANCE(can));
 
 	if(flag <= CAN_FLAG_TERR2)
 	{
