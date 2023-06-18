@@ -74,8 +74,8 @@
  * @name i2c_memory_address_size
  * @{
  */
-#define PRJ_I2C_MEM_ADDRESS_SIZE_8BIT					(0x00000010U)	/*!< Memory address 8 bit */
-#define PRJ_I2C_MEM_ADDRESS_SIZE_16BIT					(0x00000001U)	/*!< Memory address 16 bit */
+#define PRJ_I2C_MEM_ADDRESS_SIZE_8BIT					(0x00000008U)	/*!< Memory address 8 bit */
+#define PRJ_I2C_MEM_ADDRESS_SIZE_16BIT					(0x00000010U)	/*!< Memory address 16 bit */
 
 /*! @} */
 
