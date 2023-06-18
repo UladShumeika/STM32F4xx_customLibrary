@@ -948,7 +948,7 @@ static uint32_t i2c_request_memory_write(prj_i2c_data_request_t* request_write)
 		else
 		{
 			/* Send MSB of memory address */
-			request_write->p_i2c->DR = (uint8_t)(request_write->mem_address & 0xFF00U);
+			request_write->p_i2c->DR = (uint8_t)((request_write->mem_address & 0xFF00U) >> 8U);
 
 			/* Wait until TXE flag is set */
 			status = i2c_wait_on_set_flags(request_write->p_i2c, PRJ_I2C_FLAG_TXE, PRJ_I2C_TIMEOUT_FLAG);
@@ -1066,7 +1066,7 @@ static uint32_t i2c_request_memory_read(prj_i2c_data_request_t* request_read)
 		else
 		{
 			/* Send MSB of memory address */
-			request_read->p_i2c->DR = (uint8_t)(request_read->mem_address & 0xFF00U);
+			request_read->p_i2c->DR = (uint8_t)((request_read->mem_address & 0xFF00U) >> 8U);
 
 			/* Wait until TXE flag is set */
 			status = i2c_wait_on_set_flags(request_read->p_i2c, PRJ_I2C_FLAG_TXE, PRJ_I2C_TIMEOUT_FLAG);
