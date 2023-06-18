@@ -9,7 +9,10 @@
   * NOTE: This file is not a full-fledged RCC driver, but contains only some of
   * 	  the functions that are needed for the current project.
   *
-  *
+  * @DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c driver;
   *
   * @Major changes v1.1
   * 	- periphery status enumeration replaced with definitions.
