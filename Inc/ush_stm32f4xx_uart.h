@@ -9,7 +9,12 @@
   * NOTE: This file is not a full-fledged U(S)ART driver, but contains only some of
   * 	  the functions that are needed for the current project.
   *
-  *
+  *	@DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c and dma drivers;
+  * 	- use only one return in functions;
+  * 	- refactor this driver (delete pin picks);
   *
   * @Major changes v1.1
   *		- USART_getDmaStream function changed and moved to "static" section;

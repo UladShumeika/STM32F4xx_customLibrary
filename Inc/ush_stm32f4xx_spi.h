@@ -6,6 +6,13 @@
   * @date    16-January-2023
   * @brief   Header file of SPI module.
   *
+  *	@DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c and dma drivers;
+  * 	- use only one return in functions;
+  * 	- refactor this driver (delete pin picks and add dma using);
+  *
   ******************************************************************************
   */
   
