@@ -6,6 +6,11 @@
   * @date    27-February-2023
   * @brief   Header file of miscellaneous module.
   *
+  *	@DOTO
+  * 	- replace enumerations with definitions;
+  * 	- add pointer checks;
+  * 	- change the code style to the one used in the i2c driver;
+  * 	- divide the module into two parts (flash and misc);
   *
   *	@Major changes v1.1
   *		- added the ability to configure a preemption priority group;
