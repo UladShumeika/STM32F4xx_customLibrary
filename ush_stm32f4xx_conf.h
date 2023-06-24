@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    ush_stm32f4xx_conf.h
   * @author  Ulad Shumeika
-  * @version v1.2
+  * @version v1.3
   * @date    03-March-2023
   * @brief   Library configuration file.
   *
@@ -13,7 +13,10 @@
   *	@Major changes v1.2
   *		- changed code style;
   *		- periphery status enumeration replaced with definitions;
-  *		- moved parameter check macro to misc module;
+  *		- moved parameter check macro to misc module.
+  *
+  *	@Major changes v1.3
+  *		- periphery status definition replaced with enumeration.
   *
   ******************************************************************************
   */
@@ -37,16 +40,6 @@
 /* #define PRJ_UART_DRIVER */		/*!< UART module */
 #define PRJ_I2C_DRIVER				/*!< I2C module */
 #define PRJ_CAN_DRIVER				/*!< CAN module */
-
-/*! @}*/
-
-/*!
- * @name status_definitions
- * @{
- */
-#define PRJ_STATUS_OK						(0x00000000U)	/*!< Periphery status OK */
-#define PRJ_STATUS_ERROR					(0x00000001U)	/*!< Periphery status error */
-#define PRJ_STATUS_TIMEOUT					(0x00000002U)	/*!< Periphery status timeout */
 
 /*! @}*/
 
@@ -75,6 +68,20 @@
 
 #define macro_prj_check_functional_state(state)		((state == PRJ_STATE_ENABLE) || \
 													 (state == PRJ_STATE_DISABLE))
+
+//---------------------------------------------------------------------------
+// Types
+//---------------------------------------------------------------------------
+
+/*!
+ * @brief common status enumeration.
+ */
+typedef enum
+{
+	PRJ_STATUS_OK,								/*!< Periphery status OK */
+	PRJ_STATUS_ERROR,							/*!< Periphery status error */
+	PRJ_STATUS_TIMEOUT							/*!< Periphery status timeout */
+} prj_common_status_e;
 
 //---------------------------------------------------------------------------
 // Includes' modules
